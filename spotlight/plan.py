@@ -64,3 +64,8 @@ class BasePlan(models.AbstractFunction):
         """ Function to be optimized.
         """
         raise NotImplementedError("Plan does not have function!")
+
+    def constraint(self, p):
+        """ Applies constraints.
+        """
+        return p
