@@ -7,8 +7,12 @@ class BasePlan(models.AbstractFunction):
     """ This class describes a refinement plan to optimize. Users should implement
     their own version of this class.
 
+    name = "default"
+
     Attributes
     ----------
+    name : str
+        Name for refinement plan.
     idxs : dict
         A ``dict`` with key parameter and value index of parameter.
     bounds : dict
