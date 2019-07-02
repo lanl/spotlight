@@ -90,7 +90,7 @@ class BasePlan(models.AbstractFunction):
         """
         return p
 
-    @static
+    @staticmethod
     def get_value(p, name):
         """ Helper function for returning the value of the variable.
 
