@@ -69,3 +69,9 @@ class BasePlan(models.AbstractFunction):
         """ Applies constraints.
         """
         return p
+
+    @static
+    def get_value(p, name):
+        """ Helper function for returning the value of the variable.
+        """
+        return p[self.idxs[name]]
