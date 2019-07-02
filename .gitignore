@@ -1,5 +1,6 @@
-build
-dist
+build/
+dist/
+docs/_build/
 *.DS_Store
 *.egg-info
 examples/*/tmp*
