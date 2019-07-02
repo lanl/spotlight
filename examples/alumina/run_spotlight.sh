@@ -13,17 +13,16 @@ gsas_convert_cif alumina.cif alumina.exp
 
 # run
 mpirun -n 4 spotlight_minimize \
-    --config-overrides \
-        phases:phase_1-file:alumina.exp \
-        phases:phase_1-number:1 \
-    --output-file solution_alumina.pkl \
     --config-files \
         config_base.ini \
         config_alumina.ini \
+    --config-overrides \
+        phases:phase_1-file:alumina.exp \
+        phases:phase_1-number:1 \
     --data-file al2o3001.gsa \
     --refinement-plan-file plan_alumina.py \
-    --tag alumina \
+    --output-file solution_alumina.pkl \
     --tmp-dir tmp_alumina \
     --num-solvers 1 \
-    --seed 123
-
+    --seed 123 \
+    --tag alumina
