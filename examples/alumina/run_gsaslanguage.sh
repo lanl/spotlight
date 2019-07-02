@@ -3,8 +3,8 @@
 set -e
 
 # make a temporary directory for analysis
-mkdir -p tmp_done
-cd tmp_done
+mkdir -p tmp_gsaslanguage
+cd tmp_gsaslanguage
 cp ../al2o3001.gsa ../alumina.cif ../bt1demo.ins .
 
 # intialize the experiment
