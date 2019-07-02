@@ -123,14 +123,22 @@ See the ``examples`` directory for examples of refinement plans.
 ## Output data file format
 
 Output files are stored as a ``klepto.archive.archive_file``.
-This can be treated like a ``dict``.
-The key ``names`` is a list of the parameter names.
+When loaded, this can be treated like a ``dict``.
+
+There is a special key ``names`` which is a list of the parameter names.
 The remaining keys are tuples with format ``(rank, num_solver, tag)`` where
 ``rank`` is the process rank, ``num_solver`` is the index of the solver from
 that process, and ``tag`` is a string provided on the command line.
+The simplest interaction with a ``klepto`` file is
+```
+from klepto import archives
+fp = archives.file_archives(input_file)
+fp.load()
+print(fp["names"])
+```
 
 See the ``spotlight.archive.Archive`` class for the function that
-writes the output files.
+writes the output files, and a convenience function for reading the data.
 
 ## Executables
 
