@@ -26,3 +26,11 @@ mpirun -n 4 spotlight_minimize \
     --num-solvers 1 \
     --seed 123 \
     --tag alumina
+
+# plot global minima
+spotlight_plot_minima \
+    --input-files solution_alumina.pkl \
+    --config-file tmp_alumina_0/config.ini \
+    --data-file al2o3001.gsa \
+    --refinement-plan-file plan_alumina.py \
+    --tmp-dir tmp_minima
