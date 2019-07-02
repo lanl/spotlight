@@ -12,7 +12,7 @@ cp ../config_base.ini ../config_alumina.ini ../plan_alumina.py .
 gsas_convert_cif alumina.cif alumina.exp
 
 # run
-mpirun -n 1 spotlight_minimize \
+mpirun -n 4 spotlight_minimize \
     --config-overrides \
         phases:phase_1-file:alumina.exp \
         phases:phase_1-number:1 \
