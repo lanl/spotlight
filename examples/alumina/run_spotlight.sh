@@ -11,7 +11,7 @@ cp ../config_base.ini ../config_alumina.ini ../plan_alumina.py .
 # convert from CIF to EXP
 gsas_convert_cif alumina.cif alumina.exp
 
-# run
+# run optimazation search
 mpirun -n 4 spotlight_minimize \
     --config-files \
         config_base.ini \
@@ -28,9 +28,17 @@ mpirun -n 4 spotlight_minimize \
     --tag alumina
 
 # setup gsas for global minima
+# do not plot though
 spotlight_plot_minima \
     --input-files solution_alumina.pkl \
     --config-file tmp_alumina_0/config.ini \
     --data-file al2o3001.gsa \
     --refinement-plan-file plan_alumina.py \
     --tmp-dir tmp_minima
+
+# make CSV
+cd tmp_minima
+gsas_write_csv 1 TRIAL hist1.txt
+
+# make PDF
+gsas_done
