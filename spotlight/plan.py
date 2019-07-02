@@ -62,16 +62,48 @@ class BasePlan(models.AbstractFunction):
 
     def function(self, p):
         """ Function to be optimized.
+        
+        Parameters
+        ----------
+        p : list
+            A `list` of the floating-point values. 
+
+        Returns
+        -------
+        float
+           The value of the evaluated cost function.
         """
         raise NotImplementedError("Plan does not have function!")
 
     def constraint(self, p):
         """ Applies constraints.
+
+        Parameters
+        ----------
+        p : list
+            A `list` of the floating-point values.
+
+        Returns
+        -------
+        p : list
+            A `list` of the floating-point values.
         """
         return p
 
     @static
     def get_value(p, name):
         """ Helper function for returning the value of the variable.
+
+        Parameters
+        ----------
+        p : list
+            A `list` of the floating-point values.
+        name : str
+            Name of the parameter to query.
+
+        Returns
+        -------
+        float
+           The floating-point value for the variable.
         """
         return p[self.idxs[name]]
