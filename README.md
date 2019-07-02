@@ -108,11 +108,8 @@ the configuration file.
 The user creates a module with a ``Plan`` class.
 
 Refinement plans available are:
-  * The ``umo_all.py`` refinement plan shows how to optimize all parameters
-with Mystic for the UMo analysis.
-  * The ``umo_lattice.py`` refinement plan shows how to mix a user-defined
-refinement plan with Mystic selecting values for lattice parameters in the
-UMo analysis.
+  * The ``plan_alumina.py`` refinement plan shows how to optimize all parameters
+with Mystic for the alumina analysis.
 
 Inside the ``__init__`` class function define any upfront operations such as
 GSAS initialization, adding phases, or background corrections.
