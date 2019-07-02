@@ -27,7 +27,7 @@ mpirun -n 4 spotlight_minimize \
     --seed 123 \
     --tag alumina
 
-# plot global minima
+# setup gsas for global minima
 spotlight_plot_minima \
     --input-files solution_alumina.pkl \
     --config-file tmp_alumina_0/config.ini \
