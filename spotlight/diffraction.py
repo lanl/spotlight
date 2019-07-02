@@ -51,6 +51,8 @@ class Diffraction(object):
     ----------
     config_file : str
         Path to configuration file.
+    refinement_plan_file : str
+        Path to refinement plan file.
     data_file : str
         Path to experimental data file.
     tmp_dir : str
