@@ -129,6 +129,9 @@ There is a special key ``names`` which is a list of the parameter names.
 The remaining keys are tuples with format ``(rank, num_solver, tag)`` where
 ``rank`` is the process rank, ``num_solver`` is the index of the solver from
 that process, and ``tag`` is a string provided on the command line.
+Each has a tuple with four quantities: a (nsteps,nparams) array of the parameter
+values, a (nsteps) array of the chi-squared values, a (nparams) array of the best
+parameter values, and a floating-point number of the best chi-squared value.
 The simplest interaction with a ``klepto`` file is
 ```
 from klepto import archives
