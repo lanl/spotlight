@@ -17,7 +17,6 @@ class Plan(plan.BasePlan):
         phase_numbers = [p.phase_number for p in self.phases]
         for phase_file, phase_number in zip(phase_files, phase_numbers):
             gsas.gsas_read_phase(phase_file, phase_number)
-            print("READ PHASE")
 
         # add histograms
         for bank_num in range(self.detector.bank_number):
