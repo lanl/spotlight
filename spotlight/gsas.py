@@ -88,6 +88,14 @@ def gsas_change_phase_fraction(bank_number, phase_number, val, debug=False):
     cmd = ["gsas_change_phase_fraction", bank_number, phase_number, val]
     _external_call(cmd, debug)
 
+def gsas_change_profile_parameter(bank_number, phase_number, param_number,
+                                  val, debug=False):
+    """ This function changes the profile parameter for a phase.
+    """
+    cmd = ["gsas_change_profile_parameter", bank_number, phase_number,
+           param_number, val]
+    _external_call(cmd, debug)
+
 def gsas_change_sample_orientation(phase_number, omg, chi, phi, debug=False):
     """ This function changes the sample orientation.
     """
