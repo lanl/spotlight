@@ -64,19 +64,23 @@ class Diffraction(object):
     """
 
     def __init__(self, config_files, refinement_plan_file=None, data_file=None,
-                 tmp_dir=None, names=None, change=True):
+                 tmp_dir=None, names=None, change=True, config_overrides=None):
+
+        # create temporary dir
+        filesystem.mkdir(tmp_dir)
 
         # concatenate configuration files
         # copy to temporary dir
-        if len(config_files) > 1:
-            cp = ConfigParser.ConfigParser()
-            cp.read(config_files)
-            self.config_file = "config.ini"
-            with open(tmp_dir + "/" + self.config_file, "w") as fp:
-                cp.write(fp)
-        else:
-            self.config_file = filesystem.cp(config_files[0], tmp_dir) \
-                                   if tmp_dir else config_files[0]
+        cp = ConfigParser.ConfigParser()
+        cp.read(config_files)
+        for override in config_overrides:
+            section, option, value = override.split(":")
+            if not cp.has_section(section):
+                cp.add_section(section)
+            cp.set(section, option, value)
+        self.config_file = "config.ini"
+        with open(tmp_dir + "/" + self.config_file, "w") as fp:
+            cp.write(fp)
 
         # copy files to temporary dir
         self.data_file = filesystem.cp(data_file, tmp_dir) \
