@@ -84,6 +84,7 @@ class Plan(plan.BasePlan):
         gsas.gsas_refine(2, plot=False)
         chisq = gsas.gsas_get_chisq("TRIAL")
 
-        print(chisq, p)
+        ## print statement
+        #print(chisq, p)
 
         return chisq
