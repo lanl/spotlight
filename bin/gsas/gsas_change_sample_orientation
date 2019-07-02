@@ -1,0 +1,20 @@
+#! /bin/bash
+
+PHASE=${1}
+OMEGA=${2}
+CHI=${3}
+PHI=${4}
+
+echo "k l o o h" > temp.txt
+echo "p ${PHASE}" >> temp.txt
+echo "a" >> temp.txt
+echo "${OMEGA}" >> temp.txt
+echo "${CHI}" >> temp.txt
+echo "${PHI}" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+expedt `cat GSAS_EXP` < temp.txt
+

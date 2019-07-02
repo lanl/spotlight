@@ -1,0 +1,19 @@
+#! /bin/bash
+
+PHASE=${1}
+L=${2}
+M=${3}
+N=${4}
+COEFF=${5}
+
+echo "k l o o h" > temp.txt
+echo "p ${PHASE}" >> temp.txt
+echo "c ${L} ${M} ${N}" >> temp.txt
+echo "${COEFF}" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+expedt `cat GSAS_EXP` < temp.txt
+

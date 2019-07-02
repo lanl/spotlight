@@ -1,0 +1,18 @@
+#! /bin/bash
+
+set -e
+
+HIST=${1}
+NAME=${2}
+OUT_FILE=${3}
+
+echo "z" > temp_write_csv.txt
+echo "z" >> temp_write_csv.txt
+echo "e" >> temp_write_csv.txt
+echo "b m d t s" >> temp_write_csv.txt
+echo "h ${HIST}" >> temp_write_csv.txt
+echo "i a" >> temp_write_csv.txt
+echo "${OUT_FILE}" >> temp_write_csv.txt
+echo "x" >> temp_write_csv.txt
+
+powplot ${NAME} < temp_write_csv.txt

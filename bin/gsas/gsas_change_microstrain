@@ -1,0 +1,20 @@
+#! /bin/bash
+
+PHASE=${1}
+VAL=${2}
+
+echo "k l o p" > temp.txt
+echo "p ${PHASE}" >> temp.txt
+echo "c" >> temp.txt
+echo "/" >> temp.txt
+echo "/" >> temp.txt
+echo "/" >> temp.txt
+echo "/" >> temp.txt
+echo "/" >> temp.txt
+echo ". ${VAL} ." >> temp.txt
+echo "/" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+expedt `cat GSAS_EXP` < temp.txt

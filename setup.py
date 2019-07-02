@@ -54,13 +54,25 @@ install_requires = [
 
 # a list of all executables to be installed
 scripts_list = [
-    "src/bash/gsas_write_csv",
-    "src/python/gsas_minimize",
+    "bin/gsas/gsas_change_absorption",
+    "bin/gsas/gsas_change_background_coeff",
+    "bin/gsas/gsas_change_difc",
+    "bin/gsas/gsas_change_hscale",
+    "bin/gsas/gsas_change_phase_fraction",
+    "bin/gsas/gsas_change_microstrain",
+    "bin/gsas/gsas_change_sample_orientation",
+    "bin/gsas/gsas_change_sigma1",
+    "bin/gsas/gsas_change_spherical_harmonic_order",
+    "bin/gsas/gsas_change_spherical_harmonic_coeff",
+    "bin/gsas/gsas_write_csv",
+    "bin/spotlight_minimize",
+    "bin/spotlight_plot_chisq",
+    "bin/spotlight_plot_minima",
 ]
 
 # a list of all python packages to be installed
 packages_list = [
-    "",
+    "spotlight",
 ]
 
 # a dict of all data to be installed
@@ -72,6 +84,9 @@ data_dict = {
 cmd_dict = {
 }
 
+# test suite
+test_suite = None
+
 # run setup
 core.setup(name=project_name,
            description=project_description,
@@ -81,5 +96,6 @@ core.setup(name=project_name,
            scripts=scripts_list,
            packages=packages_list,
            package_data=data_dict,
+           test_suite=test_suite,
            cmdclass=cmd_dict,
            zip_safe=False)

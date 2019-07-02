@@ -1,0 +1,61 @@
+#! /usr/bin/env python
+""" Creates a plot of chi-squared versus parameter values.
+"""
+
+import argparse
+import numpy
+from matplotlib import pyplot as plt
+from spotlight import archive
+from spotlight import diffraction
+
+# parse command line
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--input-files", nargs="+")
+parser.add_argument("--config-file", required=True)
+parser.add_argument("--tmp-dir", default="tmp")
+parser.add_argument("--seed", type=int, default=0)
+parser.add_argument("--only-minima", action="store_true")
+opts = parser.parse_args()
+
+# read configuration file to get parameter bounds
+diff = diffraction.Diffraction(opts.config_file, change=False)
+
+# read data
+names, x, y, _, _ = archive.Archive.read_data(
+                                  opts.input_files, verbose=True)
+
+# skip any parameters not varied
+print("Removing parameters not varied...")
+tmp_names = []
+idxs = []
+for param, (lb, ub) in diff.bounds.items():
+    if lb != ub:
+        idx = names.index(param)
+        idxs.append(idx)
+        tmp_names.append(names[idx])
+names = tmp_names
+
+# create matrix for subplots
+print("Plotting...")
+num_cols = 3
+num_rows = len(names) / num_cols if not len(names) % num_cols \
+               else len(names) / num_cols + 1
+fig, axs = plt.subplots(num_rows, num_cols, sharex=False, figsize=(20, 16))
+
+# loop over axes and plot parameters
+sl = -1 if opts.only_minima else slice(None)
+for i, (name, idx) in enumerate(zip(names, idxs)):
+    ax = axs.flatten()[i]
+    ax.set_ylabel("CHISQ")
+    ax.set_xlabel(name)
+    for xx, yy in zip(x, y):
+        ax.plot(xx[sl, idx], yy[sl], c="red", marker="o")
+    ax.axvline(x=diff.bounds[name][0], c="black", ls="--")
+    ax.axvline(x=diff.bounds[name][1], c="black", ls="--")
+
+# save plot
+plt.show()
+
+# print statement
+print("Done!")
+

@@ -1,0 +1,15 @@
+#! /bin/bash
+
+HIST=${1}
+FUNC=${2}
+VAL=${3}
+
+echo "k l o a h ${HIST}" > temp.txt
+echo "c" >> temp.txt
+echo "${VAL}" >> temp.txt
+echo "t ${FUNC}" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+expedt `cat GSAS_EXP` < temp.txt

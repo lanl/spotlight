@@ -1,0 +1,16 @@
+#! /bin/bash
+
+PHASE=${1}
+ORDER=${2}
+
+echo "k l o o h" > temp.txt
+echo "p ${PHASE}" >> temp.txt
+echo "o" >> temp.txt
+echo "${ORDER}" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+expedt `cat GSAS_EXP` < temp.txt
+

@@ -1,0 +1,76 @@
+#! /usr/bin/env python
+""" Optimizes a refinement plan.
+"""
+
+import argparse
+import numpy
+import os
+import socket
+import time
+from mpi4py import MPI
+from mystic import tools
+from spotlight import archive
+from spotlight import diffraction
+from spotlight import solver
+
+# parse command line
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--config-file", required=True)
+parser.add_argument("--data-file", required=True)
+parser.add_argument("--refinement-plan-file", required=True)
+parser.add_argument("--output-file", default="solution.pkl")
+parser.add_argument("--tmp-dir", default="tmp")
+parser.add_argument("--seed", type=int, default=0)
+parser.add_argument("--num-solvers", type=int, default=1)
+parser.add_argument("--tag", default=None)
+parser.add_argument("--verbose", action="store_true")
+opts = parser.parse_args()
+
+# get parallel-processing information
+hostname = socket.gethostname()
+run_dir = os.getcwd()
+comm = MPI.COMM_WORLD
+size = comm.Get_size()
+rank = comm.Get_rank()
+
+# set random seed
+seed = rank + opts.seed
+numpy.random.seed(seed)
+tools.random_seed(seed)
+
+# move to temporary dir, read configuration file, and get refinement plan
+tmp_dir = "{}_{}".format(opts.tmp_dir, rank)
+diff = diffraction.Diffraction(opts.config_file, opts.refinement_plan_file,
+                               opts.data_file, tmp_dir, change=True)
+cost = diff.get_refinement_plan()
+
+# create a cached archive file for output
+output_file = opts.output_file if opts.output_file.startswith("/") \
+                  else run_dir + "/" + opts.output_file
+arch = archive.Archive(output_file, diff.names)
+
+# make sure index of parameters in diffraction and archive match
+arch.names = diff.names
+
+# run one of ensemble of solvers
+for i in range(opts.num_solvers):
+
+    # print statement
+    print "Process", rank + 1, "of", size, \
+          "running walker", i + 1, "of", opts.num_solvers, "on", hostname
+
+    # initialize local solver from configuration file
+    local_solver = solver.Solver(diff.lower_bounds, diff.upper_bounds,
+                                 diff.config_file, arch=arch, iteration=i)
+
+    # run minimization
+    t1 = time.time()
+    local_solver.solve(cost)
+
+    # print statement
+    print "Evaluation time for process", rank, "of", size, \
+          "running walker", i + 1, "of", opts.num_solvers, "on", hostname, \
+          "is", time.time() - t1, "s"
+
+    # save output
+    arch.save_data((rank, i, opts.tag), local_solver)

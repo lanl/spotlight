@@ -1,0 +1,16 @@
+#! /bin/bash
+
+HIST=${1}
+VAL=${2}
+
+echo "k l o c" > temp.txt
+echo "h ${HIST}" >> temp.txt
+echo "c" >> temp.txt
+echo "DIFC" >> temp.txt
+echo "${VAL}" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+expedt `cat GSAS_EXP` < temp.txt
+

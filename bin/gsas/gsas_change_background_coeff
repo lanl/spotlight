@@ -1,0 +1,22 @@
+#! /bin/bash
+
+HIST=${1}
+BKG_FUNC=${2}
+BKG_TERMS=${3}
+
+shift
+shift
+shift
+
+echo "k l o b" > temp.txt
+echo "h ${HIST}" >> temp.txt
+echo "v" >> temp.txt
+echo "c" >> temp.txt
+echo "${BKG_FUNC}" >> temp.txt
+echo "${BKG_TERMS}" >> temp.txt
+echo "${@}" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+expedt `cat GSAS_EXP` < temp.txt

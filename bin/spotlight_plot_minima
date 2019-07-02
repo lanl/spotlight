@@ -1,0 +1,54 @@
+#! /usr/bin/env python
+""" Creates a PDF for best match.
+"""
+
+import argparse
+import numpy
+from matplotlib import pyplot as plt
+from spotlight import archive
+from spotlight import diffraction
+from spotlight import gsas
+
+# parse command line
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--input-files", nargs="+")
+parser.add_argument("--config-file", required=True)
+parser.add_argument("--refinement-plan-file", required=True)
+parser.add_argument("--data-file", required=True)
+parser.add_argument("--tmp-dir", default="tmp")
+parser.add_argument("--seed", type=int, default=0)
+opts = parser.parse_args()
+
+# set random seed
+numpy.random.seed(opts.seed)
+
+# read data
+names, _, _, best_x, best_y = archive.Archive.read_data(opts.input_files,
+                                                        verbose=True)
+
+# print best parameters
+print("Best parameters are...")
+print("CHISQ {}".format(best_y))
+for name, val in zip(names, best_x):
+    print("{} {}".format(name, val))
+
+# move to temporary dir, read configuration file, and get refinement plan
+print("Run refinement plan to get output...")
+diff = diffraction.Diffraction(opts.config_file, opts.refinement_plan_file,
+                               opts.data_file, opts.tmp_dir, names=names,
+                               change=True)
+cost = diff.get_refinement_plan()
+
+# run refinement plan
+print("Create PDF...")
+cost.function(best_x)
+
+# refine once for plot
+gsas.gsas_refine(1)
+
+# create PDF of refinement
+gsas.gsas_done()
+
+# print statement
+print("Output file named {}/TRIAL.pdf...".format(opts.tmp_dir))
+print("Done!")
