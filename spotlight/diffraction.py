@@ -61,6 +61,9 @@ class Diffraction(object):
         A list of parameter names in preferred ordered.
     change : bool
         Change into temporary directory. Default is ``True``.
+    config_overrides : {None, list}
+        A list of `str` delimited by colons to add options to the configuration
+        file. The format is "section:option:value".
     """
 
     def __init__(self, config_files, refinement_plan_file=None, data_file=None,
