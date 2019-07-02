@@ -15,7 +15,7 @@ from spotlight import solver
 
 # parse command line
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("--config-file", required=True)
+parser.add_argument("--config-files", nargs="+", required=True)
 parser.add_argument("--data-file", required=True)
 parser.add_argument("--refinement-plan-file", required=True)
 parser.add_argument("--output-file", default="solution.pkl")
@@ -40,7 +40,7 @@ tools.random_seed(seed)
 
 # move to temporary dir, read configuration file, and get refinement plan
 tmp_dir = "{}_{}".format(opts.tmp_dir, rank)
-diff = diffraction.Diffraction(opts.config_file, opts.refinement_plan_file,
+diff = diffraction.Diffraction(opts.config_files, opts.refinement_plan_file,
                                opts.data_file, tmp_dir, change=True)
 cost = diff.get_refinement_plan()
 

@@ -26,7 +26,7 @@ class Diffraction(object):
     Attributes
     ----------
     config_file : str
-        Path to configuration file.
+        Path to concatenated configuration file.
     data_file : str
         Path to experimental data file.
     bounds : dict
@@ -49,8 +49,8 @@ class Diffraction(object):
 
     Parameters
     ----------
-    config_file : str
-        Path to configuration file.
+    config_files : list
+        Paths to configuration files.
     refinement_plan_file : str
         Path to refinement plan file.
     data_file : str
@@ -63,12 +63,22 @@ class Diffraction(object):
         Change into temporary directory. Default is ``True``.
     """
 
-    def __init__(self, config_file, refinement_plan_file=None, data_file=None,
+    def __init__(self, config_files, refinement_plan_file=None, data_file=None,
                  tmp_dir=None, names=None, change=True):
 
+        # concatenate configuration files
+        # copy to temporary dir
+        if len(config_files) > 1:
+            cp = ConfigParser.ConfigParser()
+            cp.read(config_files)
+            self.config_file = "config.ini"
+            with open(tmp_dir + "/" + self.config_file, "w") as fp:
+                cp.write(fp)
+        else:
+            self.config_file = filesystem.cp(config_files[0], tmp_dir) \
+                                   if tmp_dir else config_files[0]
+
         # copy files to temporary dir
-        self.config_file = filesystem.cp(config_file, tmp_dir) \
-                               if tmp_dir else config_file
         self.data_file = filesystem.cp(data_file, tmp_dir) \
                              if tmp_dir else data_file
         self.refinement_plan_file = \
@@ -76,7 +86,7 @@ class Diffraction(object):
                              if tmp_dir else data_file
 
         # read configuration
-        self.bounds, self.det, self.phases = self.read_config(config_file)
+        self.bounds, self.det, self.phases = self.read_config(tmp_dir + "/" + self.config_file)
         self.names = names if names is not None else self.bounds.keys()
         self.idxs = {name : i for i, name in enumerate(self.names)}
 
