@@ -76,11 +76,12 @@ class Diffraction(object):
         # copy to temporary dir
         cp = ConfigParser.ConfigParser()
         cp.read(config_files)
-        for override in config_overrides:
-            section, option, value = override.split(":")
-            if not cp.has_section(section):
-                cp.add_section(section)
-            cp.set(section, option, value)
+        if config_overrides:
+            for override in config_overrides:
+                section, option, value = override.split(":")
+                if not cp.has_section(section):
+                    cp.add_section(section)
+                cp.set(section, option, value)
         self.config_file = "config.ini"
         with open(tmp_dir + "/" + self.config_file, "w") as fp:
             cp.write(fp)
