@@ -1,2 +1,8 @@
-klepto
-sphinxcontrib.napoleon
+dill==0.2.8.1
+klepto==0.1.5.2
+matplotlib==2.0.0
+mpi4py==3.0.0
+numpy==1.13.1
+scipy==1.0.0
+sphinxcontrib.napoleon==0.7
+sympy==1.1.1
