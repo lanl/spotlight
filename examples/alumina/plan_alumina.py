@@ -80,7 +80,7 @@ class Plan(plan.BasePlan):
             gsas.gsas_change_hscale(j + 1, self.get_value(p, "HSCL"))
 
         # refine to get chi-squared
-        gsas.gsas_refine(2, plot=False)
+        gsas.gsas_refine(1, plot=False)
         chisq = gsas.gsas_get_chisq("TRIAL")
 
         ## print statement
