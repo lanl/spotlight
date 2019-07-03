@@ -44,6 +44,7 @@ rm proxy.txt
 # install gsaslanguage scripts
 cd ${CONDA_PREFIX}/gsas
 git clone https://github.com/Svennito/gsaslanguage.git scripts
+chmod +x ${CONDA_PREFIX}/gsas/scripts/gsas_get_current_wtfrac_esd
 
 # install patchelf
 cd ${CONDA_PREFIX}/src
