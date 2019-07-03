@@ -2,6 +2,9 @@
 
 set -e
 
+# store location of this script
+TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 # clean env
 module purge
 module load openmpi/2.1.3-gcc_6.4.0
@@ -62,6 +65,10 @@ for RPM in `ls *.rpm`; do rpm2cpio ${RPM} | cpio -id; done
 for EXE in `ls ${CONDA_PREFIX}/gsas/exe/*`; do
 patchelf --set-interpreter ${PWD}/lib/ld-linux.so.2 ${EXE}
 done
+
+# install spotlight
+cd ${TOOLS_DIR}/..
+python setup.py install
 
 # update virtual environment
 mkdir -p ${CONDA_PREFIX}/etc/conda/activate.d
