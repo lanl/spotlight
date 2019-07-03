@@ -12,7 +12,7 @@ cp ../config_base.ini ../config_alumina.ini ../plan_alumina.py .
 gsas_convert_cif alumina.cif alumina.exp
 
 # run optimazation search
-mpirun -n 4 spotlight_minimize \
+mpirun --oversubscribe -n 4 spotlight_minimize \
     --config-files \
         config_base.ini \
         config_alumina.ini \
@@ -40,5 +40,14 @@ spotlight_plot_minima \
 cd tmp_minima
 gsas_write_csv 1 TRIAL hist1.txt
 
-# make PDF
-gsas_done
+# plot
+spotlight_plot_profile \
+    --input-file hist1.TXT \
+    --profile-file profile.png \
+    --residual-file residual.png \
+    --reflections-file reflections.png \
+    --phase-labels Alumina
+convert -append profile.png reflections.png residual.png alumina.pdf
+
+## make PDF
+#gsas_done
