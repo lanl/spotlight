@@ -46,5 +46,8 @@ gsas_vary_atom 1 1:99 x 9
 gsas_vary_atom 1 1:99 u 9
 gsas_refine 20
 
-# create PDF
-gsas_done
+# create CSV
+gsas_write_csv 1 `cat GSAS_EXP` hist1
+
+## create PDF
+#gsas_done
