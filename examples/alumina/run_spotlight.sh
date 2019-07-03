@@ -12,7 +12,7 @@ cp ../config_base.ini ../config_alumina.ini ../plan_alumina.py .
 gsas_convert_cif alumina.cif alumina.exp
 
 # run optimazation search
-mpirun --oversubscribe -n 4 spotlight_minimize \
+mpirun spotlight_minimize \
     --config-files \
         config_base.ini \
         config_alumina.ini \
