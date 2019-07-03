@@ -49,5 +49,14 @@ gsas_refine 20
 # create CSV
 gsas_write_csv 1 `cat GSAS_EXP` hist1
 
+# plot
+spotlight_plot_profile \
+    --input-file hist1.TXT \
+    --profile-file profile.png \
+    --residual-file residual.png \
+    --reflections-file reflections.png \
+    --phase-labels Alumina
+convert -append profile.png reflections.png residual.png alumina.pdf
+
 ## create PDF
 #gsas_done

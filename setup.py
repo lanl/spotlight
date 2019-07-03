@@ -68,6 +68,7 @@ scripts_list = [
     "bin/spotlight_minimize",
     "bin/spotlight_plot_chisq",
     "bin/spotlight_plot_minima",
+    "bin/spotlight_plot_profile",
 ]
 
 # a list of all python packages to be installed
