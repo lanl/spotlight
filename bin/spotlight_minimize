@@ -65,14 +65,30 @@ for i in range(opts.num_solvers):
     local_solver = solver.Solver(diff.lower_bounds, diff.upper_bounds,
                                  diff.config_file, arch=arch, iteration=i)
 
-    # run minimization
+    # set timer
     t1 = time.time()
-    local_solver.solve(cost)
+
+    # main optimization loop with checkpointing
+    if local_solver.checkpoint_stride:
+        stop = False
+        while not stop:
+    
+            # take steps in optimization
+            print "Running next set of steps for process", rank, "of", size, \
+                  "running walker", i + 1, "of", opts.num_solvers, "on", hostname
+            for _ in range(local_solver.checkpoint_stride):
+                stop = local_solver.step(cost)
+    
+            # save output
+            print "Checkpointing for process", rank, "of", size, \
+                  "running walker", i + 1, "of", opts.num_solvers, "on", hostname
+            arch.save_data((rank, i, opts.tag), local_solver)
+
+    # main optimization loop without checkpointing
+    else:
+        local_solver.solve(cost)
 
     # print statement
     print "Evaluation time for process", rank, "of", size, \
           "running walker", i + 1, "of", opts.num_solvers, "on", hostname, \
           "is", time.time() - t1, "s"
-
-    # save output
-    arch.save_data((rank, i, opts.tag), local_solver)
