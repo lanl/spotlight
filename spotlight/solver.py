@@ -143,10 +143,16 @@ class Solver(object):
         ----------
         cost : Plan
             A refinement plan class.
+
+        Returns
+        -------
+        stop : bool
+            A ``bool`` that indicates if termination condition has been met.
         """
-        self.local_solver.Step(cost, termination=self.stop, disp=1,
-                               ExtraArgs=(), callback=None,
-                               **self.extra_options)
+        stop = self.local_solver.Step(cost, termination=self.stop, disp=1,
+                                      ExtraArgs=(), callback=None,
+                                      **self.extra_options)
+        return stop
 
 # dict of local solvers
 local_solvers = {
