@@ -60,16 +60,21 @@ arch.names = diff.names
 
 # run one of ensemble of solvers
 for i in range(opts.num_solvers):
+    local_tag = (rank, i, opts.tag)
 
     # check if there is a previous state for a local solver
+    # if the local solver has not terminated then start from there
     # otherwise initialize a local solver from configuration file
     local_solver = None
     if (rank, i, opts.tag) in arch.arch.keys():
         if arch.arch[key]["state"] != None:
-            print "Loading a previous state for", (rank, i, opts.tag)
+            print "Loading a previous state for", local_tag
             local_solver = arch.arch[key]["state"]
+        else:
+            print "Optimization loop already terminated for", local_tag
+            continue
     if local_solver == None:
-        print "Initializing a state for", (rank, i, opts.tag)
+        print "Initializing a state for", local_tag
         local_solver = solver.Solver(diff.lower_bounds, diff.upper_bounds,
                                      diff.config_file, arch=arch, iteration=i)
 
@@ -90,12 +95,12 @@ for i in range(opts.num_solvers):
                 stop = local_solver.step(cost)
     
             # save output
-            arch.save_data((rank, i, opts.tag), local_solver)
+            arch.save_data(local_tag, local_solver)
 
     # main optimization loop without checkpointing
     else:
         local_solver.solve(cost)
-        arch.save_data((rank, i, opts.tag), local_solver)
+        arch.save_data(local_tag, local_solver)
 
     # print statement
     print "Evaluation time for process", rank, "of", size, \
