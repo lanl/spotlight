@@ -27,6 +27,8 @@ class Solver(object):
         A Mystic termination instance.
     stepmon : monitor
         A Mystic monitor instance.
+    checkpoint_stride : int
+        Number of optimization steps to take before checkpoint.
     sampling_method : str
         Name of sampling method that was used.
 
@@ -71,7 +73,7 @@ class Solver(object):
         special_options = ["local_solver", "sampling_method",
                            "sampling_iteration_switch",
                            "max_iterations", "max_evaluations", "stop_change",
-                           "stop_generations"]
+                           "stop_generations", "checkpoint_stride"]
         for option in special_options:
             if option == "local_solver":
                 _local_solver = options[option]
@@ -123,7 +125,7 @@ class Solver(object):
         return x, y, best_x, best_y
 
     def solve(self, cost):
-        """ Runs solver.
+        """ Minimize a cost function with given termination conditions.
 
         Parameters
         ----------
@@ -133,6 +135,24 @@ class Solver(object):
         self.local_solver.Solve(cost, termination=self.stop, disp=1,
                                 ExtraArgs=(), callback=None,
                                 **self.extra_options)
+
+    def step(self, cost):
+        """ Take a single optimization step using the given cost function.
+
+        Parameters
+        ----------
+        cost : Plan
+            A refinement plan class.
+
+        Returns
+        -------
+        stop : bool
+            A ``bool`` that indicates if termination condition has been met.
+        """
+        stop = self.local_solver.Step(cost, termination=self.stop, disp=1,
+                                      ExtraArgs=(), callback=None,
+                                      **self.extra_options)
+        return stop
 
 # dict of local solvers
 local_solvers = {

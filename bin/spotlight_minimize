@@ -8,6 +8,7 @@ import os
 import socket
 import time
 from mpi4py import MPI
+from mystic import termination
 from mystic import tools
 from spotlight import archive
 from spotlight import diffraction
@@ -34,6 +35,10 @@ comm = MPI.COMM_WORLD
 size = comm.Get_size()
 rank = comm.Get_rank()
 
+# wait a bit because the klepto file seems to drop some initial results
+# we hope later its not an issue
+time.sleep(rank)
+
 # set random seed
 seed = rank + opts.seed
 numpy.random.seed(seed)
@@ -50,29 +55,67 @@ cost = diff.get_refinement_plan()
 output_file = opts.output_file if opts.output_file.startswith("/") \
                   else run_dir + "/" + opts.output_file
 arch = archive.Archive(output_file, diff.names)
+arch.arch.load()
 
 # make sure index of parameters in diffraction and archive match
 arch.names = diff.names
 
 # run one of ensemble of solvers
 for i in range(opts.num_solvers):
+    local_tag = (rank, i, opts.tag)
+
+    # check if there is a previous state for a local solver
+    local_solver = None
+    if local_tag in arch.arch.keys():
+
+        # if the local solver has not terminated then start from there
+        # we have to explicltly set the termination conditions because Mystic
+        # parses ``__doc__`` for getting the conditions YIKES!
+        if arch.arch[local_tag][4] != None:
+            print "Loading a previous state for", local_tag
+            local_solver = arch.arch[local_tag][4]
+            local_solver.local_solver.SetEvaluationLimits(
+                local_solver.max_iterations,
+                local_solver.max_evaluations)
+            local_solver.stop = termination.NormalizedChangeOverGeneration(
+                local_solver.stop_change, local_solver.stop_generations)
+
+        # otherwise initialize a local solver from configuration file
+        else:
+            print "Optimization loop already terminated for", local_tag
+            continue
+
+    # if there is not a previous state initialize local solver
+    if local_solver == None:
+        print "Initializing a state for", local_tag
+        local_solver = solver.Solver(diff.lower_bounds, diff.upper_bounds,
+                                     diff.config_file, arch=arch, iteration=i)
 
     # print statement
     print "Process", rank + 1, "of", size, \
           "running walker", i + 1, "of", opts.num_solvers, "on", hostname
 
-    # initialize local solver from configuration file
-    local_solver = solver.Solver(diff.lower_bounds, diff.upper_bounds,
-                                 diff.config_file, arch=arch, iteration=i)
-
-    # run minimization
+    # set timer
     t1 = time.time()
-    local_solver.solve(cost)
+
+    # main optimization loop with checkpointing
+    if local_solver.checkpoint_stride:
+        stop = False
+        while not stop:
+    
+            # take steps in optimization
+            for _ in range(local_solver.checkpoint_stride):
+                stop = local_solver.step(cost)
+    
+            # save output
+            arch.save_data(local_tag, local_solver)
+
+    # main optimization loop without checkpointing
+    else:
+        local_solver.solve(cost)
+        arch.save_data(local_tag, local_solver)
 
     # print statement
     print "Evaluation time for process", rank, "of", size, \
           "running walker", i + 1, "of", opts.num_solvers, "on", hostname, \
           "is", time.time() - t1, "s"
-
-    # save output
-    arch.save_data((rank, i, opts.tag), local_solver)
