@@ -53,7 +53,7 @@ class Archive(object):
             assert(self.names == self.arch[names_key])
 
         # add this solution
-        sol = list(local_solver.solution)
+        sol = list(local_solver.solution) + [None]
         if key in self.arch.keys():
             self.arch[key][0] += sol[0]
             self.arch[key][1] += sol[1]
@@ -65,10 +65,10 @@ class Archive(object):
 
         # check if termination condition met
         # if not then add the local_solver instance
-        if local_solver.local_solver.Terminated():
-            self.arch[key].append(None)
+        if local_solver.local_solver.Terminated(disp=1, info=True):
+            self.arch[key][4] = None
         else:
-            self.arch[key].append(local_solver)
+            self.arch[key][4] = local_solver
 
         # save new data to archive file
         self.arch.dump()

@@ -13,6 +13,8 @@ from spotlight import archive
 from spotlight import diffraction
 from spotlight import solver
 
+from mystic import termination
+
 # parse command line
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--config-files", nargs="+", required=True)
@@ -54,6 +56,7 @@ cost = diff.get_refinement_plan()
 output_file = opts.output_file if opts.output_file.startswith("/") \
                   else run_dir + "/" + opts.output_file
 arch = archive.Archive(output_file, diff.names)
+arch.arch.load()
 
 # make sure index of parameters in diffraction and archive match
 arch.names = diff.names
@@ -63,16 +66,27 @@ for i in range(opts.num_solvers):
     local_tag = (rank, i, opts.tag)
 
     # check if there is a previous state for a local solver
-    # if the local solver has not terminated then start from there
-    # otherwise initialize a local solver from configuration file
     local_solver = None
-    if (rank, i, opts.tag) in arch.arch.keys():
-        if arch.arch[key]["state"] != None:
+    if local_tag in arch.arch.keys():
+
+        # if the local solver has not terminated then start from there
+        # we have to explicltly set the termination conditions because Mystic
+        # parses ``__doc__`` for getting the conditions YIKES!
+        if arch.arch[local_tag][4] != None:
             print "Loading a previous state for", local_tag
-            local_solver = arch.arch[key]["state"]
+            local_solver = arch.arch[local_tag][4]
+            local_solver.local_solver.SetEvaluationLimits(
+                local_solver.max_iterations,
+                local_solver.max_evaluations)
+            local_solver.stop = termination.NormalizedChangeOverGeneration(
+                local_solver.stop_change, local_solver.stop_generations)
+
+        # otherwise initialize a local solver from configuration file
         else:
             print "Optimization loop already terminated for", local_tag
             continue
+
+    # if there is not a previous state initialize  local solver
     if local_solver == None:
         print "Initializing a state for", local_tag
         local_solver = solver.Solver(diff.lower_bounds, diff.upper_bounds,
