@@ -19,7 +19,7 @@ for key in keys:
     sol = arch[key]
     print("The key is", key)
     print("The shape of the parameters array is", numpy.array(sol[0]).shape)
-    print("The shape of the solution array is", numpy.array(sol[1]).shape)
+    print("The shape of the solution array is", numpy.array(sol[1]).shape, sol[1])
     print("The best parameters are:")
     for i, x in enumerate(sol[2]):
         print(arch["names"][i], x)
