@@ -1,4 +1,4 @@
-#! Alumina
+# Alumina
 
 This is an quick start example on analyzing an alumina (AlO2) dataset.
 
