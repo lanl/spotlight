@@ -8,12 +8,11 @@ import os
 import socket
 import time
 from mpi4py import MPI
+from mystic import termination
 from mystic import tools
 from spotlight import archive
 from spotlight import diffraction
 from spotlight import solver
-
-from mystic import termination
 
 # parse command line
 parser = argparse.ArgumentParser(description=__doc__)
