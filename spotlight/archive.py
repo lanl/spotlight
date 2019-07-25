@@ -63,6 +63,13 @@ class Archive(object):
         else:
             self.arch[key] = sol
 
+        # check if termination condition met
+        # if not then add the local_solver instance
+        if local_solver.local_solver.Terminated():
+            self.arch[key].append(None)
+        else:
+            self.arch[key].append(local_solver)
+
         # save new data to archive file
         self.arch.dump()
 

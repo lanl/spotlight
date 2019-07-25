@@ -61,13 +61,21 @@ arch.names = diff.names
 # run one of ensemble of solvers
 for i in range(opts.num_solvers):
 
+    # check if there is a previous state for a local solver
+    # otherwise initialize a local solver from configuration file
+    local_solver = None
+    if (rank, i, opts.tag) in arch.arch.keys():
+        if arch.arch[key]["state"] != None:
+            print "Loading a previous state for", (rank, i, opts.tag)
+            local_solver = arch.arch[key]["state"]
+    if local_solver == None:
+        print "Initializing a state for", (rank, i, opts.tag)
+        local_solver = solver.Solver(diff.lower_bounds, diff.upper_bounds,
+                                     diff.config_file, arch=arch, iteration=i)
+
     # print statement
     print "Process", rank + 1, "of", size, \
           "running walker", i + 1, "of", opts.num_solvers, "on", hostname
-
-    # initialize local solver from configuration file
-    local_solver = solver.Solver(diff.lower_bounds, diff.upper_bounds,
-                                 diff.config_file, arch=arch, iteration=i)
 
     # set timer
     t1 = time.time()
