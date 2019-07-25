@@ -1,11 +1,15 @@
 #! /usr/bin/env python
 
+import argparse
 import numpy
 from klepto import archives
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--input-file", default="tmp_spotlight/solution_alumina.pkl")
+opts = parser.parse_args()
+
 # read solutions
-input_file = "tmp_spotlight/solution_alumina.pkl"
-arch = archives.file_archive(input_file)
+arch = archives.file_archive(opts.input_file)
 arch.load()
 
 # print information about each local solver
@@ -32,6 +36,6 @@ for key in keys:
 # print aggregate information about ensemble of local solvers
 print("{} of {} local solvers have terminated".format(nsolvers_terminated, nsolvers))
 
+# for reference
 #from spotlight import archive
-#archive_file = "tmp_spotlight/solution_alumina.pkl"
-#arch = archive.Arch.read_data(solution_file)
+#arch = archive.Arch.read_data(opts.input_file)
