@@ -11,6 +11,9 @@ cp ../config_base.ini ../config_alumina.ini ../plan_alumina.py .
 # convert from CIF to EXP
 gsas_convert_cif alumina.cif alumina.exp
 
+# random seed
+SEED=123
+
 # run optimazation search
 mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` spotlight_minimize \
     --config-files \
@@ -24,8 +27,8 @@ mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` spotlight_minimize \
     --output-file solution_alumina.pkl \
     --tmp-dir tmp_alumina \
     --num-solvers 1 \
-    --seed 123 \
-    --tag alumina
+    --seed ${SEED} \
+    --tag alumina_${SEED}
 
 # setup gsas for global minima
 # do not plot though
