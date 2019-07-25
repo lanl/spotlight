@@ -138,7 +138,7 @@ class Archive(object):
                     continue
                 x = numpy.array([])
                 y = numpy.array([])
-                vecs, fopts, result_x, result_y = input_file[key]
+                vecs, fopts, result_x, result_y = input_file[key][:4]
     
                 # check if new best
                 if result_y < best_y:
