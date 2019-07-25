@@ -1,6 +1,6 @@
 # Alumina
 
-This is an quick start example on analyzing an alumina (AlO2) dataset.
+This is a quick start example on analyzing an alumina (AlO2) dataset.
 
 ## Spotlight instructions
 
