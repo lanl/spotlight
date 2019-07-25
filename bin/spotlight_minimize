@@ -86,7 +86,7 @@ for i in range(opts.num_solvers):
             print "Optimization loop already terminated for", local_tag
             continue
 
-    # if there is not a previous state initialize  local solver
+    # if there is not a previous state initialize local solver
     if local_solver == None:
         print "Initializing a state for", local_tag
         local_solver = solver.Solver(diff.lower_bounds, diff.upper_bounds,
