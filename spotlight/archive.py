@@ -53,7 +53,15 @@ class Archive(object):
             assert(self.names == self.arch[names_key])
 
         # add this solution
-        self.arch[key] = local_solver.solution
+        sol = list(local_solver.solution)
+        if key in self.arch.keys():
+            self.arch[key][0] += sol[0]
+            self.arch[key][1] += sol[1]
+            if sol[3] < self.arch[key][3]:
+                self.arch[key][2] = sol[2]
+                self.arch[key][3] = sol[3]
+        else:
+            self.arch[key] = sol
 
         # save new data to archive file
         self.arch.dump()
