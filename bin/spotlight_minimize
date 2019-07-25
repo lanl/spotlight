@@ -34,6 +34,10 @@ comm = MPI.COMM_WORLD
 size = comm.Get_size()
 rank = comm.Get_rank()
 
+# wait a bit because the klepto file seems to drop some initial results
+# we hope later its not an issue
+time.sleep(rank)
+
 # set random seed
 seed = rank + opts.seed
 numpy.random.seed(seed)
@@ -74,19 +78,16 @@ for i in range(opts.num_solvers):
         while not stop:
     
             # take steps in optimization
-            print "Running next set of steps for process", rank, "of", size, \
-                  "running walker", i + 1, "of", opts.num_solvers, "on", hostname
             for _ in range(local_solver.checkpoint_stride):
                 stop = local_solver.step(cost)
     
             # save output
-            print "Checkpointing for process", rank, "of", size, \
-                  "running walker", i + 1, "of", opts.num_solvers, "on", hostname
             arch.save_data((rank, i, opts.tag), local_solver)
 
     # main optimization loop without checkpointing
     else:
         local_solver.solve(cost)
+        arch.save_data((rank, i, opts.tag), local_solver)
 
     # print statement
     print "Evaluation time for process", rank, "of", size, \
