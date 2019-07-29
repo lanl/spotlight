@@ -30,7 +30,7 @@ def uniform(lower_bounds, upper_bounds):
         pts[j] = numpy.random.uniform(lb, ub)
     return pts
 
-def tolerance(lower_bounds, upper_bounds, data):
+def tolerance(lower_bounds, upper_bounds, data=None):
     """ Returns a new, single point some tolerence away from existing points.
 
     Parameters
@@ -39,7 +39,7 @@ def tolerance(lower_bounds, upper_bounds, data):
         List of ``float`` that are lower bounds. List is indexed by parameter.
     upper_bounds : list
         List of ``float`` that are upper bounds. List is indexed by parameter.
-    data : list
+    data : {None, list}
         List of tuples. Each tuple is a list of ``float`` that are previous
         data points.
 
@@ -51,8 +51,9 @@ def tolerance(lower_bounds, upper_bounds, data):
     rtol = None
     dist = None
     n_new_pts = 1
+    data = [] if data == None else data
     if len(data) == 0:
-        return uniform(lower_bounds, upper_bounds)
+        return midpoint(lower_bounds, upper_bounds)
     pts = math.fillpts(lower_bounds, upper_bounds, n_new_pts, data, rtol, dist)
     return pts[0]
 

@@ -106,8 +106,9 @@ class Solver(object):
         if (self.sampling_method == "tolerance" and
                 iteration > self.sampling_iteration_switch):
             sampling_data = archive.Archive.read_data([arch.path])[1]
-            sampling_data = tuple(map(tuple, numpy.vstack(sampling_data)))
-            args += [sampling_data]
+            if len(sampling_data):
+                sampling_data = tuple(map(tuple, numpy.vstack(sampling_data)))
+                args += [sampling_data]
         elif self.sampling_method == "tolerance" and iteration != None:
             args += [[]]
         elif self.sampling_method == "tolerance":
