@@ -16,6 +16,8 @@ class ArchiveFile(object):
         A Klepto file archive.
     names : list
         A list of names. This list is ordered how packages will return a list.
+    restricted_keys : list
+        A list of specially named keys.
     path : str
         Path to archive file.
 
@@ -27,10 +29,26 @@ class ArchiveFile(object):
         A list of names. This list is ordered how packages will return a list.
     """
 
+    # special keys
+    restricted_keys = ["names"]
+
     def __init__(self, path, names):
+
+        # store information
         self.path = path
         self.arch = archives.file_archive(path)
         self.names = names
+
+        # load new data in archive file
+        self.arch.load(*self.restricted_keys)
+
+        # add names of parameters
+        names_key = "names"
+        if names_key not in self.arch.keys():
+            self.arch[names_key] = self.names
+            self.arch.dump(names_key)
+        else:
+            assert(self.names == self.arch[names_key])
 
     def save_data(self, key, local_solver):
         """ Writes output data from a local solver. Adds the given solution to
@@ -45,14 +63,7 @@ class ArchiveFile(object):
         """
 
         # load new data in archive file
-        self.arch.load()
-
-        # add names of parameters
-        names_key = "names"
-        if names_key not in self.arch.keys():
-            self.arch[names_key] = self.names
-        else:
-            assert(self.names == self.arch[names_key])
+        self.arch.load(key)
 
         # add this solution
         sol = list(local_solver.solution) + [None]
@@ -75,16 +86,18 @@ class ArchiveFile(object):
             self.arch[key][4] = local_solver
 
         # save new data to archive file
-        self.arch.dump()
+        self.arch.dump(key)
 
     @classmethod
-    def read_data(cls, input_files, verbose=False):
+    def read_data(cls, input_files, keys=None, verbose=False):
         """ Reads output data.
 
         Parameters
         ----------
         input_files : list
             List of files to read.
+        keys : {None, list}
+            List of specific keys to load instead of all keys.
         verbose : bool
             Print some messages to ``stdout``.
 
@@ -105,9 +118,6 @@ class ArchiveFile(object):
             Best cost function minimized value.
         """
 
-        # keys to ignore
-        restricted_keys = ["names"]
-
         # initialize some values
         names = None
         all_x = []
@@ -125,7 +135,10 @@ class ArchiveFile(object):
 
             # open input file
             input_file = archives.file_archive(input_file)
-            input_file.load()
+            if keys:
+                input_file.load(*self.restricted_keys + keys)
+            else:
+                input_file.load()
 
             # read parameter names
             if "names" not in input_file.keys():
@@ -138,7 +151,7 @@ class ArchiveFile(object):
 
             # loop over solvers in file
             for key in input_file.keys():
-                if key in restricted_keys:
+                if key in self.restricted_keys:
                     continue
                 x = numpy.array([])
                 y = numpy.array([])
