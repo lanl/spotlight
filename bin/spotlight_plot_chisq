@@ -21,7 +21,7 @@ opts = parser.parse_args()
 diff = diffraction.Diffraction(opts.config_file, change=False)
 
 # read data
-names, x, y, _, _ = archive.Archive.read_data(
+names, x, y, _, _ = archive.ArchiveFile.read_data(
                                   opts.input_files, verbose=True)
 
 # skip any parameters not varied

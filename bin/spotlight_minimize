@@ -54,7 +54,7 @@ cost = diff.get_refinement_plan()
 # create a cached archive file for output
 output_file = opts.output_file if opts.output_file.startswith("/") \
                   else run_dir + "/" + opts.output_file
-arch = archive.Archive(output_file, diff.names)
+arch = archive.ArchiveFile(output_file, diff.names)
 arch.arch.load()
 
 # make sure index of parameters in diffraction and archive match
