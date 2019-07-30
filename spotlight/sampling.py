@@ -53,7 +53,7 @@ def tolerance(lower_bounds, upper_bounds, data=None):
     n_new_pts = 1
     data = [] if data == None else data
     if len(data) == 0:
-        return midpoint(lower_bounds, upper_bounds)
+        return uniform(lower_bounds, upper_bounds)
     pts = math.fillpts(lower_bounds, upper_bounds, n_new_pts, data, rtol, dist)
     return pts[0]
 
