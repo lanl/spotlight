@@ -105,7 +105,7 @@ class Solver(object):
         args = [self.lower_bounds, self.upper_bounds]
         if (self.sampling_method == "tolerance" and
                 iteration > self.sampling_iteration_switch):
-            sampling_data = archive.ArchiveFile.read_data([arch.path])[1]
+            sampling_data = archive_file.ArchiveFile.read_data([arch.path])[1]
             if len(sampling_data):
                 sampling_data = tuple(map(tuple, numpy.vstack(sampling_data)))
                 args += [sampling_data]
