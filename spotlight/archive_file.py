@@ -136,7 +136,7 @@ class ArchiveFile(object):
             # open input file
             input_file = archives.file_archive(input_file)
             if keys:
-                input_file.load(*self.restricted_keys + keys)
+                input_file.load(*cls.restricted_keys + keys)
             else:
                 input_file.load()
 
@@ -151,7 +151,7 @@ class ArchiveFile(object):
 
             # loop over solvers in file
             for key in input_file.keys():
-                if key in self.restricted_keys:
+                if key in cls.restricted_keys:
                     continue
                 x = numpy.array([])
                 y = numpy.array([])
