@@ -6,7 +6,7 @@ import numpy
 from mystic import monitors
 from mystic import solvers
 from mystic import termination
-from spotlight import archive
+from spotlight import archive_file
 from spotlight import sampling
 
 class Solver(object):
@@ -40,8 +40,8 @@ class Solver(object):
         A ``list`` of upper bounds indexed by parameter.
     config_file : str
         Path to configuration file.
-    arch : Archive
-        An ``Archive`` instance. Only required for some sampling methods.
+    arch : ArchiveFile
+        An ``ArchiveFile`` instance. Only required for some sampling methods.
     iteration : int
         Number of solvers already run. Only required for some sampling methods.
     """
@@ -105,7 +105,7 @@ class Solver(object):
         args = [self.lower_bounds, self.upper_bounds]
         if (self.sampling_method == "tolerance" and
                 iteration > self.sampling_iteration_switch):
-            sampling_data = archive.Archive.read_data([arch.path])[1]
+            sampling_data = archive.ArchiveFile.read_data([arch.path])[1]
             if len(sampling_data):
                 sampling_data = tuple(map(tuple, numpy.vstack(sampling_data)))
                 args += [sampling_data]

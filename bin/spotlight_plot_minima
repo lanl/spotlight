@@ -6,7 +6,7 @@ import argparse
 import matplotlib as mpl; mpl.use("Agg")
 import numpy
 from matplotlib import pyplot as plt
-from spotlight import archive
+from spotlight import archive_file
 from spotlight import diffraction
 from spotlight import gsas
 
@@ -25,8 +25,8 @@ opts = parser.parse_args()
 numpy.random.seed(opts.seed)
 
 # read data
-names, _, _, best_x, best_y = archive.Archive.read_data(opts.input_files,
-                                                        verbose=True)
+names, _, _, best_x, best_y = archive.ArchiveFile.read_data(opts.input_files,
+                                                            verbose=True)
 
 # print best parameters
 print("Best parameters are...")

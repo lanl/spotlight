@@ -1,10 +1,11 @@
-""" This module contains classes for reading and writing output data.
+""" This module contains classes for reading and writing output data
+using the klepto archive file.
 """
 
 import numpy
 from klepto import archives
 
-class Archive(object):
+class ArchiveFile(object):
     """ This class handles reading and writing output data from the
     optimization analysis.
 

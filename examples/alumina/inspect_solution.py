@@ -4,11 +4,13 @@ import argparse
 import numpy
 from klepto import archives
 
+# parse command line
 parser = argparse.ArgumentParser()
 parser.add_argument("--input-file", default="tmp_spotlight/solution_alumina.pkl")
 opts = parser.parse_args()
 
 # read solutions
+print("Reading file", opts.input_file)
 arch = archives.file_archive(opts.input_file)
 arch.load()
 
@@ -37,5 +39,5 @@ for key in keys:
 print("{} of {} local solvers have terminated".format(nsolvers_terminated, nsolvers))
 
 # for reference
-#from spotlight import archive
-#arch = archive.Arch.read_data(opts.input_file)
+#from spotlight import archive_file
+#arch = archive_file.ArchiveFile.read_data(opts.input_file)
