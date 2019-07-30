@@ -39,5 +39,5 @@ for key in keys:
 print("{} of {} local solvers have terminated".format(nsolvers_terminated, nsolvers))
 
 # for reference
-#from spotlight import archive
-#arch = archive.Arch.read_data(opts.input_file)
+#from spotlight import archive_file
+#arch = archive_file.ArchiveFile.read_data(opts.input_file)

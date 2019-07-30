@@ -5,7 +5,7 @@
 import argparse
 import numpy
 from matplotlib import pyplot as plt
-from spotlight import archive
+from spotlight import archive_file
 from spotlight import diffraction
 
 # parse command line

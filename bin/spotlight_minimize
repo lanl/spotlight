@@ -10,7 +10,7 @@ import time
 from mpi4py import MPI
 from mystic import termination
 from mystic import tools
-from spotlight import archive
+from spotlight import archive_file
 from spotlight import diffraction
 from spotlight import solver
 

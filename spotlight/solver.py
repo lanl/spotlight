@@ -6,7 +6,7 @@ import numpy
 from mystic import monitors
 from mystic import solvers
 from mystic import termination
-from spotlight import archive
+from spotlight import archive_file
 from spotlight import sampling
 
 class Solver(object):

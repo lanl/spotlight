@@ -6,7 +6,7 @@ import argparse
 import matplotlib as mpl; mpl.use("Agg")
 import numpy
 from matplotlib import pyplot as plt
-from spotlight import archive
+from spotlight import archive_file
 from spotlight import diffraction
 from spotlight import gsas
 
