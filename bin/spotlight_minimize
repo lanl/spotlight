@@ -65,7 +65,6 @@ for i in range(opts.num_solvers):
     local_tag = (rank, i, opts.tag)
 
     # check if there is a previous state for a local solver
-    local_solver = None
     if local_tag in arch.arch.keys():
 
         # if the local solver has not terminated then start from there
@@ -86,7 +85,7 @@ for i in range(opts.num_solvers):
             continue
 
     # if there is not a previous state initialize local solver
-    if local_solver == None:
+    else:
         print "Initializing a state for", local_tag
         local_solver = solver.Solver(diff.lower_bounds, diff.upper_bounds,
                                      diff.config_file, arch=arch, iteration=i)
