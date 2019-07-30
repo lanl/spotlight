@@ -6,10 +6,6 @@ import dill
 import numpy
 from klepto import archives
 
-# set the recurse option in dill such that dependencies of instances
-# are stored as well
-#dill.settings["recurse"] = True
-
 class ArchiveFile(object):
     """ This class handles reading and writing output data from the
     optimization analysis.
