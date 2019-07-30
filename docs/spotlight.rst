@@ -4,10 +4,10 @@ spotlight package
 Submodules
 ----------
 
-spotlight.archive module
+spotlight.archive_file module
 ------------------------
 
-.. automodule:: spotlight.archive
+.. automodule:: spotlight.archive_file
     :members:
     :undoc-members:
     :show-inheritance:
