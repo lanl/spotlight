@@ -57,9 +57,6 @@ output_file = opts.output_file if opts.output_file.startswith("/") \
 arch = archive_file.ArchiveFile(output_file, diff.names)
 arch.arch.load()
 
-# make sure index of parameters in diffraction and archive match
-arch.names = diff.names
-
 # run one of ensemble of solvers
 for i in range(opts.num_solvers):
     local_tag = (rank, i, opts.tag)
