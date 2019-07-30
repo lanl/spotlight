@@ -2,6 +2,7 @@
 using the klepto archive file.
 """
 
+import dill
 import numpy
 from klepto import archives
 
@@ -66,9 +67,11 @@ class ArchiveFile(object):
 
         # check if termination condition met
         # if not then add the local_solver instance
+        # clear cost function from local solver due to pickling issues
         if local_solver.local_solver.Terminated(disp=1, info=True):
             self.arch[key][4] = None
         else:
+            local_solver._cost = None
             self.arch[key][4] = local_solver
 
         # save new data to archive file
