@@ -1,6 +1,7 @@
 build/
 dist/
 docs/_build/
+docs/spotlight*.rst
 *.DS_Store
 *.egg-info
 examples/*/slurm*
