@@ -49,7 +49,7 @@ class BasePlan(models.AbstractFunction):
         # store map to parameters
         self.idxs = idxs
         self.bounds = bounds
-        self._p = 
+        self._p = None
 
         # store input files
         self.data_file = data_file
