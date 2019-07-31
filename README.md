@@ -135,7 +135,8 @@ parameter values, and a floating-point number of the best chi-squared value.
 The simplest interaction with a ``klepto`` file is
 ```
 from klepto import archives
-fp = archives.file_archives(input_file)
+input_file = "solution.pkl"
+fp = archives.file_archive(input_file)
 fp.load()
 print(fp["names"])
 ```
