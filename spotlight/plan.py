@@ -24,6 +24,9 @@ class BasePlan(models.AbstractFunction):
         A ``Dectector`` instance.
     phases : list
         A list of ``Phase`` instances.
+    _p : list
+        A list of the latest parameters sent to the optimized function. The list should
+        be indexed by ``idxs``.
 
     Parameters
     ----------
@@ -46,6 +49,7 @@ class BasePlan(models.AbstractFunction):
         # store map to parameters
         self.idxs = idxs
         self.bounds = bounds
+        self._p = 
 
         # store input files
         self.data_file = data_file
@@ -73,7 +77,7 @@ class BasePlan(models.AbstractFunction):
         float
            The value of the evaluated cost function.
         """
-        self.p = p
+        self._p = p
         return self.compute()
         
     def compute(self):
@@ -116,4 +120,4 @@ class BasePlan(models.AbstractFunction):
         float
            The floating-point value for the variable.
         """
-        return self.p[self.idxs[name]]
+        return self._p[self.idxs[name]]
