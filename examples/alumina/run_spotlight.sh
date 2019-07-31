@@ -27,7 +27,8 @@ mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` spotlight_minimize \
         phases:phase_1-number:1 \
     --data-file al2o3001.gsa \
     --refinement-plan-file plan_alumina.py \
-    --output-file solution_alumina.pkl \
+    --output-file solution.pkl \
+    --state-file state.pkl \
     --tmp-dir tmp_alumina \
     --num-solvers 1 \
     --seed ${SEED} \
@@ -36,7 +37,7 @@ mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` spotlight_minimize \
 # setup GSAS for global minima
 # do not plot though
 spotlight_plot_minima \
-    --input-files solution_alumina.pkl \
+    --input-files solution.pkl \
     --config-file tmp_alumina_0/config.ini \
     --data-file al2o3001.gsa \
     --refinement-plan-file plan_alumina.py \
