@@ -119,11 +119,22 @@ class Solver(object):
 
     @property
     def solution(self):
+        """ Returns the history of the parameters and energy, as well as the
+        parameters that produced the lowest energy along with the lowest energy
+        found.
+        """
         x = self.stepmon.x
         y = self.stepmon.y
         best_x = self.local_solver.bestSolution
         best_y = self.local_solver.bestEnergy
         return x, y, best_x, best_y
+
+    @property
+    def diagnostics(self):
+        """ Returns the number of generations in the optimization algorithm and
+        the total number of function calls.
+        """
+        return self.local_solver.generations, self.local_solver.evaluations
 
     def solve(self, cost):
         """ Minimize a cost function with given termination conditions.

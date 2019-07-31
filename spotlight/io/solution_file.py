@@ -50,7 +50,7 @@ class SolutionFile(object):
         else:
             assert(self.names == self.arch[names_key])
 
-    def save_data(self, key, local_solver):
+    def save_data(self, key, local_solver, time=None):
         """ Writes output data from a local solver. Adds the given solution to
         an archive file.
  
@@ -60,16 +60,21 @@ class SolutionFile(object):
             The ``dict`` key to use for this solution in archive file.
         local_solver : Solver
             A ``Solver`` instance.
+        time : float
+            An optional argument to store time to completion.
         """
 
         # load new data in archive file
         self.arch.load(key)
 
         # add this solution
-        sol = list(local_solver.solution) + [None]
+        sol = list(local_solver.solution) + [None, time] + list(local_solver.diagnostics)
         if key in self.arch.keys():
             self.arch[key][0] += sol[0]
             self.arch[key][1] += sol[1]
+            self.arch[key][5] += sol[5]
+            self.arch[key][6] += sol[6]
+            self.arch[key][7] += sol[7]
             if sol[3] < self.arch[key][3]:
                 self.arch[key][2] = sol[2]
                 self.arch[key][3] = sol[3]
