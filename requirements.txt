@@ -4,5 +4,6 @@ matplotlib==2.0.0
 mpi4py==3.0.0
 numpy==1.13.1
 scipy==1.0.0
+sphinx==1.8.5
 sphinxcontrib.napoleon==0.7
 sympy==1.1.1
