@@ -65,6 +65,10 @@ class Plan(plan.BasePlan):
                     gsas.gsas_change_profile_parameter(j + 1, i + 1, 3,
                                                        self.get("PF3_ALUMINA"))
 
+            # otherwise raise error because refinement plan does not support this phase
+            else:
+                raise NotImplementedError("Refinement plan cannot handle phase {}".format(phase))
+
         # loop over detector banks
         for j in range(self.detector.bank_number):
 
