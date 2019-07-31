@@ -33,7 +33,7 @@ mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` spotlight_minimize \
     --seed ${SEED} \
     --tag alumina_${SEED}
 
-# setup gsas for global minima
+# setup GSAS for global minima
 # do not plot though
 spotlight_plot_minima \
     --input-files solution_alumina.pkl \
