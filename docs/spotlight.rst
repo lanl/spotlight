@@ -5,7 +5,7 @@ Submodules
 ----------
 
 spotlight.archive_file module
-------------------------
+-----------------------------
 
 .. automodule:: spotlight.archive_file
     :members:
