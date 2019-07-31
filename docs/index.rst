@@ -12,7 +12,6 @@ Welcome to spotlight's documentation!
 
    spotlight
 
-
 Indices and tables
 ==================
 
