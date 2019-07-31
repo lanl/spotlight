@@ -1,23 +1,19 @@
-""" This module contains classes for reading and writing output data
-using the klepto archive file.
+""" This module contains classes for reading and writing local optimization
+state data using the klepto archive file.
 """
 
 import dill
 import numpy
 from klepto import archives
 
-class ArchiveFile(object):
-    """ This class handles reading and writing output data from the
-    optimization analysis.
+class StateFile(object):
+    """ This class handles reading and writing local optimization state data
+    from the optimization analysis.
 
     Attributes
     ----------
     arch : file_archive
         A Klepto file archive.
-    names : list
-        A list of names. This list is ordered how packages will return a list.
-    restricted_keys : list
-        A list of specially named keys.
     path : str
         Path to archive file.
 
@@ -25,34 +21,22 @@ class ArchiveFile(object):
     ----------
     path : str
         Path to archive file.
-    names : list
-        A list of names. This list is ordered how packages will return a list.
     """
 
     # special keys
     restricted_keys = ["names"]
 
-    def __init__(self, path, names):
+    def __init__(self, path):
 
         # store information
         self.path = path
         self.arch = archives.file_archive(path)
-        self.names = names
 
         # load new data in archive file
-        self.arch.load(*self.restricted_keys)
+        self.arch.load()
 
-        # add names of parameters
-        names_key = "names"
-        if names_key not in self.arch.keys():
-            self.arch[names_key] = self.names
-            self.arch.dump(names_key)
-        else:
-            assert(self.names == self.arch[names_key])
-
-    def save_data(self, key, local_solver):
-        """ Writes output data from a local solver. Adds the given solution to
-        an archive file.
+    def save_state(self, key, local_solver):
+        """ Writes state data from a local solver.
  
         Parameters
         ----------
@@ -65,32 +49,21 @@ class ArchiveFile(object):
         # load new data in archive file
         self.arch.load(key)
 
-        # add this solution
-        sol = list(local_solver.solution) + [None]
-        if key in self.arch.keys():
-            self.arch[key][0] += sol[0]
-            self.arch[key][1] += sol[1]
-            if sol[3] < self.arch[key][3]:
-                self.arch[key][2] = sol[2]
-                self.arch[key][3] = sol[3]
-        else:
-            self.arch[key] = sol
-
         # check if termination condition met
         # if not then add the local_solver instance
         # clear cost function from local solver due to pickling issues
         if local_solver.local_solver.Terminated(disp=1, info=True):
-            self.arch[key][4] = None
+            self.arch[key] = None
         else:
             local_solver._cost = None
-            self.arch[key][4] = local_solver
+            self.arch[key] = local_solver
 
         # save new data to archive file
         self.arch.dump(key)
 
     @classmethod
-    def read_data(cls, input_files, keys=None, verbose=False):
-        """ Reads output data.
+    def read_state(cls, input_files, keys=None, verbose=False):
+        """ Reads state data.
 
         Parameters
         ----------

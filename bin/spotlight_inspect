@@ -4,6 +4,8 @@
 
 import argparse
 import numpy
+import os
+import sys
 from klepto import archives
 
 # parse command line
@@ -32,14 +34,14 @@ for key in keys:
     for i, x in enumerate(sol[2]):
         print(arch["names"][i], x)
     print("The best cost function value is", sol[3])
-    print("The state of this local optimization is", sol[4])
+    print("The local optimization completion is", sol[4])
     print()
     nsolvers += 1
-    nsolvers_terminated += 1 if sol[4] == None else 0
+    nsolvers_terminated += 1 if sol[4] == True else 0
 
 # print aggregate information about ensemble of local solvers
 print("{} of {} local solvers have terminated".format(nsolvers_terminated, nsolvers))
 
 # for reference
-#from spotlight import archive_file
-#arch = archive_file.ArchiveFile.read_data(opts.input_file)
+#from spotlight.io import solution_file
+#arch = solution_file.SolutionFile.read_data(opts.input_file)

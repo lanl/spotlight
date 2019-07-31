@@ -75,6 +75,7 @@ scripts_list = [
 # a list of all python packages to be installed
 packages_list = [
     "spotlight",
+    "spotlight.io",
 ]
 
 # a dict of all data to be installed

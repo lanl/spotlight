@@ -10,9 +10,10 @@ import time
 from mpi4py import MPI
 from mystic import termination
 from mystic import tools
-from spotlight import archive_file
 from spotlight import diffraction
 from spotlight import solver
+from spotlight.io import solution_file
+from spotlight.io import state_file
 
 # parse command line
 parser = argparse.ArgumentParser(description=__doc__)
@@ -21,6 +22,7 @@ parser.add_argument("--config-overrides", nargs="+")
 parser.add_argument("--data-file", required=True)
 parser.add_argument("--refinement-plan-file", required=True)
 parser.add_argument("--output-file", default="solution.pkl")
+parser.add_argument("--state-file", default="state.pkl")
 parser.add_argument("--tmp-dir", default="tmp")
 parser.add_argument("--seed", type=int, default=0)
 parser.add_argument("--num-solvers", type=int, default=1)
@@ -51,25 +53,31 @@ diff = diffraction.Diffraction(opts.config_files, opts.refinement_plan_file,
                                config_overrides=opts.config_overrides)
 cost = diff.get_refinement_plan()
 
-# create a cached archive file for output
+# create a cached archive file for output data
 output_file = opts.output_file if opts.output_file.startswith("/") \
                   else run_dir + "/" + opts.output_file
-arch = archive_file.ArchiveFile(output_file, diff.names)
-arch.arch.load()
+fp_sol = solution_file.SolutionFile(output_file, diff.names)
+
+# create a cached archive file for state data
+output_file = opts.state_file if opts.state_file.startswith("/") \
+                  else run_dir + "/" + opts.state_file
+fp_state = state_file.StateFile(output_file)
 
 # run one of ensemble of solvers
 for i in range(opts.num_solvers):
     local_tag = (rank, i, opts.tag)
 
     # check if there is a previous state for a local solver
-    if local_tag in arch.arch.keys():
+    fp_sol.arch.load(local_tag)
+    if local_tag in fp_sol.arch.keys():
 
         # if the local solver has not terminated then start from there
         # we have to explicltly set the termination conditions because Mystic
         # parses ``__doc__`` for getting the conditions YIKES!
-        if arch.arch[local_tag][4] != None:
+        fp_state.arch.load(local_tag)
+        if fp_sol.arch[local_tag][4] == False and local_tag in fp_state.arch.keys():
             print "Loading a previous state for", local_tag
-            local_solver = arch.arch[local_tag][4]
+            local_solver = fp_state.arch[local_tag]
             local_solver.local_solver.SetEvaluationLimits(
                 local_solver.max_iterations,
                 local_solver.max_evaluations)
@@ -85,7 +93,7 @@ for i in range(opts.num_solvers):
     else:
         print "Initializing a state for", local_tag
         local_solver = solver.Solver(diff.lower_bounds, diff.upper_bounds,
-                                     diff.config_file, arch=arch, iteration=i)
+                                     diff.config_file, arch=fp_sol, iteration=i)
 
     # print statement
     print "Process", rank + 1, "of", size, \
@@ -104,12 +112,14 @@ for i in range(opts.num_solvers):
                 stop = local_solver.step(cost)
     
             # save output
-            arch.save_data(local_tag, local_solver)
+            fp_sol.save_data(local_tag, local_solver)
+            fp_state.save_state(local_tag, local_solver)
 
     # main optimization loop without checkpointing
     else:
         local_solver.solve(cost)
-        arch.save_data(local_tag, local_solver)
+        fp_sol.save_data(local_tag, local_solver)
+        fp_state.save_state(local_tag, local_solver)
 
     # print statement
     print "Evaluation time for process", rank, "of", size, \
