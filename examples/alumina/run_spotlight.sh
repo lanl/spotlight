@@ -14,6 +14,9 @@ gsas_convert_cif alumina.cif alumina.exp
 # random seed
 SEED=123
 
+# set the number of threads to use for parallel regions
+export OMP_NUM_THREADS=1
+
 # run optimazation search
 mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` spotlight_minimize \
     --config-files \
