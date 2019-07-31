@@ -101,7 +101,7 @@ class BasePlan(models.AbstractFunction):
         """
         return p
 
-    def get_value(self, p, name):
+    def get(self, name):
         """ Helper function for returning the value of the variable.
 
         Parameters
@@ -116,4 +116,4 @@ class BasePlan(models.AbstractFunction):
         float
            The floating-point value for the variable.
         """
-        return p[self.idxs[name]]
+        return self.p[self.idxs[name]]
