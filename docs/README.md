@@ -12,5 +12,6 @@ open _build/html/index.html
 
 To auto-generate the Spotlight modules documentation, do:
 ```
+rm spotlight.rst spotlight.io.rst
 sphinx-apidoc -F -o . ../spotlight
 ```
