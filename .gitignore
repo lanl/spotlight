@@ -3,6 +3,7 @@ dist/
 docs/_build/
 *.DS_Store
 *.egg-info
+examples/*/slurm*
 examples/*/tmp*
 *.pkl
 *.pyc
