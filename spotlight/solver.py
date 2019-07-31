@@ -7,7 +7,7 @@ from mystic import monitors
 from mystic import solvers
 from mystic import termination
 from spotlight import sampling
-from spotlight.io import archive_file
+from spotlight.io import solution_file
 
 class Solver(object):
     """ This manages an optimizer. This is the top-level interface for
@@ -105,7 +105,7 @@ class Solver(object):
         args = [self.lower_bounds, self.upper_bounds]
         if (self.sampling_method == "tolerance" and
                 iteration > self.sampling_iteration_switch):
-            sampling_data = archive_file.ArchiveFile.read_data([arch.path])[1]
+            sampling_data = solution_file.SolutionFile.read_data([arch.path])[1]
             if len(sampling_data):
                 sampling_data = tuple(map(tuple, numpy.vstack(sampling_data)))
                 args += [sampling_data]
