@@ -15,6 +15,19 @@ Alternatively, on a Slurm cluster, to run do:
 sbatch -N 1 -t 600 run_spotlight.sh 
 ```
 
+You can inspect results as they run.
+Note in order to do this, its important that the refinement plan file is in your `PYTHONPATH`.
+To run do:
+```
+export PYTHONPATH=${PWD}:${PYTHONPATH}
+spotlight_inspect --input-file tmp_spotlight/alumina_solution.pkl
+```
+
+Once the example has completed, then you can view the results:
+```
+display tmp_spotlight/tmp_minima/alumina.pdf
+```
+
 ## gsaslanguage instructions
 
 There is also an example using gsaslanguage.
