@@ -7,13 +7,26 @@ import numpy
 import os
 import socket
 import time
-from mpi4py import MPI
 from mystic import termination
 from mystic import tools
 from spotlight import diffraction
 from spotlight import solver
 from spotlight.io import solution_file
 from spotlight.io import state_file
+
+# get parallel-processing information
+hostname = socket.gethostname()
+run_dir = os.getcwd()
+try:
+    from mpi4py import MPI
+    comm = MPI.COMM_WORLD
+    size = comm.Get_size()
+    rank = comm.Get_rank()
+except ImportError:
+    print("The mpi4py packages was not found!")
+    comm = None
+    size = 1
+    rank = 0
 
 # parse command line
 parser = argparse.ArgumentParser(description=__doc__)
@@ -29,13 +42,6 @@ parser.add_argument("--num-solvers", type=int, default=1)
 parser.add_argument("--tag", default=None)
 parser.add_argument("--verbose", action="store_true")
 opts = parser.parse_args()
-
-# get parallel-processing information
-hostname = socket.gethostname()
-run_dir = os.getcwd()
-comm = MPI.COMM_WORLD
-size = comm.Get_size()
-rank = comm.Get_rank()
 
 # wait a bit because the klepto file seems to drop some initial results
 # we hope later its not an issue
@@ -99,29 +105,40 @@ for i in range(opts.num_solvers):
     print "Process", rank + 1, "of", size, \
           "running walker", i + 1, "of", opts.num_solvers, "on", hostname
 
-    # set timer
-    t1 = time.time()
-
     # main optimization loop with checkpointing
     if local_solver.checkpoint_stride:
         stop = False
         while not stop:
+
+            # set timer
+            t_start = time.time()
     
             # take steps in optimization
             for _ in range(local_solver.checkpoint_stride):
                 stop = local_solver.step(cost)
-    
+
+            # end timer
+            duration = time.time() - t_start
+
             # save output
-            fp_sol.save_data(local_tag, local_solver)
+            fp_sol.save_data(local_tag, local_solver, duration)
             fp_state.save_state(local_tag, local_solver)
 
     # main optimization loop without checkpointing
     else:
+        t_start = time.time()
         local_solver.solve(cost)
-        fp_sol.save_data(local_tag, local_solver)
+        duration = time.time() - t_start
+        fp_sol.save_data(local_tag, local_solver, duration)
         fp_state.save_state(local_tag, local_solver)
 
     # print statement
     print "Evaluation time for process", rank, "of", size, \
           "running walker", i + 1, "of", opts.num_solvers, "on", hostname, \
-          "is", time.time() - t1, "s"
+          "is", fp_sol.arch[local_tag][5], "s"
+
+# finish
+if comm:
+    comm.Barrier()
+if rank == 0:
+    print("Finished!")

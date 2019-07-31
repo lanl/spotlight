@@ -72,12 +72,13 @@ class SolutionFile(object):
         if key in self.arch.keys():
             self.arch[key][0] += sol[0]
             self.arch[key][1] += sol[1]
-            self.arch[key][5] += sol[5]
             self.arch[key][6] += sol[6]
             self.arch[key][7] += sol[7]
             if sol[3] < self.arch[key][3]:
                 self.arch[key][2] = sol[2]
                 self.arch[key][3] = sol[3]
+            if self.arch[key][5] != None and sol[5] != None:
+                self.arch[key][5] += sol[5]
         else:
             self.arch[key] = sol
 
@@ -177,4 +178,3 @@ class SolutionFile(object):
                 all_y.append(numpy.array(y))
     
         return names, all_x, all_y, best_x, best_y
-
