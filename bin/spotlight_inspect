@@ -1,4 +1,6 @@
 #! /usr/bin/env python
+""" Inspects the contents of a solution file created with Spotlight.
+"""
 
 import argparse
 import numpy
