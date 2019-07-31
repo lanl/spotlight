@@ -88,7 +88,7 @@ class BasePlan(models.AbstractFunction):
         float
            The value of the evaluated cost function.
         """
-        raise NotImplementedError("Plan does not have function!")
+        raise NotImplementedError("Plan does not have a compute function!")
 
     def constraint(self, p):
         """ Applies constraints.
