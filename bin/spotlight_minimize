@@ -60,9 +60,15 @@ diff = diffraction.Diffraction(opts.config_files, opts.refinement_plan_file,
 cost = diff.get_refinement_plan()
 
 # create a cached archive file for output data
+# offset because klepto file seems to drop the names key sometimes
 output_file = opts.output_file if opts.output_file.startswith("/") \
                   else run_dir + "/" + opts.output_file
-fp_sol = solution_file.SolutionFile(output_file, diff.names)
+if rank == 0:
+    fp_sol = solution_file.SolutionFile(output_file, diff.names)
+if comm:
+    comm.Barrier()
+if rank != 0:
+    fp_sol = solution_file.SolutionFile(output_file, diff.names)
 
 # create a cached archive file for state data
 output_file = opts.state_file if opts.state_file.startswith("/") \
