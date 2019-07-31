@@ -61,13 +61,24 @@ class BasePlan(models.AbstractFunction):
         pass
 
     def function(self, p):
-        """ Function to be optimized.
-        
+        """ Function used by Mystic for optimization.
+
         Parameters
         ----------
         p : list
             A `list` of the floating-point values. 
 
+        Returns
+        -------
+        float
+           The value of the evaluated cost function.
+        """
+        self.p = p
+        return self.compute()
+        
+    def compute(self):
+        """ Function to be optimized.
+        
         Returns
         -------
         float

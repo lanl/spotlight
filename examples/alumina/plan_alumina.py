@@ -26,9 +26,7 @@ class Plan(plan.BasePlan):
                                     self.detector.min_d_spacing,
                                     self.detector.max_d_spacing)
 
-    def function(self, p):
-        """ Function to be optimized.
-        """
+    def compute(self):
 
         # copy experimental file
         gsas.gsas_copy_expfile(self.name, "TRIAL", "Test Parameters")
@@ -40,16 +38,16 @@ class Plan(plan.BasePlan):
             if phase.phase_file == "alumina.exp":
 
                 # set lattice parameters
-                gsas.gsas_change_lattice(i + 1, [self.get_value(p, "A_ALUMINA"),
-                                                 self.get_value(p, "C_ALUMINA")])
+                gsas.gsas_change_lattice(i + 1, [self.get("A_ALUMINA"),
+                                                 self.get("C_ALUMINA")])
 
                 # set atom positions
-                gsas.gsas_change_atom(i + 1, 1, "X", self.get_value(p, "X_ALUMINA"))
-                gsas.gsas_change_atom(i + 1, 2, "Z", self.get_value(p, "Z_ALUMINA"))
+                gsas.gsas_change_atom(i + 1, 1, "X", self.get("X_ALUMINA"))
+                gsas.gsas_change_atom(i + 1, 2, "Z", self.get("Z_ALUMINA"))
 
                 # set isotropic thermal
-                gsas.gsas_change_atom(i + 1, 1, "UISO", self.get_value(p, "UISO1_ALUMINA"))
-                gsas.gsas_change_atom(i + 1, 2, "UISO", self.get_value(p, "UISO2_ALUMINA"))
+                gsas.gsas_change_atom(i + 1, 1, "UISO", self.get("UISO1_ALUMINA"))
+                gsas.gsas_change_atom(i + 1, 2, "UISO", self.get("UISO2_ALUMINA"))
 
                 # loop over detector banks
                 for j in range(self.detector.bank_number):
@@ -57,27 +55,27 @@ class Plan(plan.BasePlan):
                     # set phase scales
                     gsas.gsas_change_phase_fraction(
                                         j + 1, i + 1,
-                                        self.get_value(p, "PHFR_ALUMINA"))
+                                        self.get("PHFR_ALUMINA"))
 
                     # set profile parameters
                     gsas.gsas_change_profile_parameter(j + 1, i + 1, 1,
-                                                       self.get_value(p, "PF1_ALUMINA"))
+                                                       self.get("PF1_ALUMINA"))
                     gsas.gsas_change_profile_parameter(j + 1, i + 1, 2,
-                                                       self.get_value(p, "PF2_ALUMINA"))
+                                                       self.get("PF2_ALUMINA"))
                     gsas.gsas_change_profile_parameter(j + 1, i + 1, 3,
-                                                       self.get_value(p, "PF3_ALUMINA"))
+                                                       self.get("PF3_ALUMINA"))
 
         # loop over detector banks
         for j in range(self.detector.bank_number):
 
             # set background coefficients
             gsas.gsas_change_background_coeff(j + 1, 1, 6,
-                [self.get_value(p, "BK1"), self.get_value(p, "BK2"),
-                 self.get_value(p, "BK3"), self.get_value(p, "BK4"),
-                 self.get_value(p, "BK5"), self.get_value(p, "BK6")])
+                [self.get("BK1"), self.get("BK2"),
+                 self.get("BK3"), self.get("BK4"),
+                 self.get("BK5"), self.get("BK6")])
 
             # set histogram scale
-            gsas.gsas_change_hscale(j + 1, self.get_value(p, "HSCL"))
+            gsas.gsas_change_hscale(j + 1, self.get("HSCL"))
 
         # refine to get chi-squared
         gsas.gsas_refine(1, plot=False)
