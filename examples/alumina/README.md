@@ -17,7 +17,7 @@ sbatch -N 1 -t 600 run_spotlight.sh
 
 You can inspect results as they run, to run do:
 ```
-spotlight_inspect --input-file tmp_spotlight/alumina_solution.pkl
+spotlight_inspect --input-file tmp_spotlight/solution.pkl
 ```
 
 Once the example has completed, then you can view the results:
