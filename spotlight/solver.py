@@ -6,8 +6,8 @@ import numpy
 from mystic import monitors
 from mystic import solvers
 from mystic import termination
-from spotlight import archive_file
 from spotlight import sampling
+from spotlight.io import archive_file
 
 class Solver(object):
     """ This manages an optimizer. This is the top-level interface for
