@@ -12,8 +12,8 @@ class StateFile(object):
 
     Attributes
     ----------
-    arch : file_archive
-        A Klepto file archive.
+    arch : dir_archive
+        A Klepto directory-based archive.
     path : str
         Path to archive file.
 
@@ -30,7 +30,7 @@ class StateFile(object):
 
         # store information
         self.path = path
-        self.arch = archives.file_archive(path)
+        self.arch = archives.dir_archive(self.path)
 
         # load new data in archive file
         self.arch.load()

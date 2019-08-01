@@ -12,8 +12,8 @@ class SolutionFile(object):
 
     Attributes
     ----------
-    arch : sql_archive
-        A Klepto file archive.
+    arch : dir_archive
+        A Klepto directory-based archive.
     names : list
         A list of names. This list is ordered how packages will return a list.
     restricted_keys : list
@@ -35,8 +35,8 @@ class SolutionFile(object):
     def __init__(self, path, names):
 
         # store information
-        self.path = "sqlite:///{}".format(path)
-        self.arch = archives.sql_archive(self.path)
+        self.path = path
+        self.arch = archives.dir_archive(self.path)
         self.names = names
 
     def save_names(self, names=None):
@@ -94,12 +94,11 @@ class SolutionFile(object):
 
         # check if termination condition met and store result
         if local_solver.local_solver.Terminated(disp=1, info=True):
-            self.arch[key][4] = True
+            self.arch[key][4] = 1
         else:
-            self.arch[key][4] = False
+            self.arch[key][4] = 0
 
         # save new data to archive file
-        print("Writing key {}".format(key))
         self.arch.dump(key)
 
     @classmethod
@@ -148,7 +147,7 @@ class SolutionFile(object):
                                                                  input_file))
 
             # open input file
-            input_file = archives.sql_archive(input_file)
+            input_file = archives.dir_archive(input_file)
             if keys:
                 input_file.load(*cls.restricted_keys + keys)
             else:

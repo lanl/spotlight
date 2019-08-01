@@ -34,8 +34,8 @@ parser.add_argument("--config-files", nargs="+", required=True)
 parser.add_argument("--config-overrides", nargs="+")
 parser.add_argument("--data-file", required=True)
 parser.add_argument("--refinement-plan-file", required=True)
-parser.add_argument("--output-file", default="solution.pkl")
-parser.add_argument("--state-file", default="state.pkl")
+parser.add_argument("--output-file", default="solution.sql")
+parser.add_argument("--state-file", default="state.sql")
 parser.add_argument("--tmp-dir", default="tmp")
 parser.add_argument("--seed", type=int, default=0)
 parser.add_argument("--num-solvers", type=int, default=1)
@@ -62,6 +62,9 @@ fp_sol = solution_file.SolutionFile(output_file, diff.names)
 if rank == 0:
     print("Rank 0 is writing names to {}".format(output_file))
     fp_sol.save_names()
+if comm:
+    print("Rank {} is waiting".format(rank))
+    comm.Barrier()
 
 # create an archive file for state data
 output_file = opts.state_file if opts.state_file.startswith("/") \
@@ -70,17 +73,17 @@ fp_state = state_file.StateFile(output_file)
 
 # run one of ensemble of solvers
 for i in range(opts.num_solvers):
-    local_tag = (rank, i, opts.tag)
+    local_tag = "_".join(map(str, [rank, i, opts.tag]))
 
     # check if there is a previous state for a local solver
     fp_sol.arch.load(local_tag)
-    if local_tag in fp_sol.arch.keys():
+    fp_state.arch.load(local_tag)
+    if local_tag in fp_sol.arch.keys() and local_tag in fp_state.arch.keys():
 
         # if the local solver has not terminated then start from there
         # we have to explicltly set the termination conditions because Mystic
         # parses ``__doc__`` for getting the conditions YIKES!
-        fp_state.arch.load(local_tag)
-        if fp_sol.arch[local_tag][4] == False and local_tag in fp_state.arch.keys():
+        if fp_sol.arch[local_tag][4] == 0:
             print("Loading a previous state for {}".format(local_tag))
             local_solver = fp_state.arch[local_tag]
             local_solver.local_solver.SetEvaluationLimits(
