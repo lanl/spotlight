@@ -19,7 +19,7 @@ if not os.path.exists(opts.input_file):
 
 # read solutions
 print("Reading file", opts.input_file)
-arch = archives.file_archive(opts.input_file)
+arch = archives.sql_archive("sqlite:///{}".format(opts.input_file))
 arch.load()
 
 # print information about each local solver

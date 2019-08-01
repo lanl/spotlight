@@ -45,7 +45,7 @@ opts = parser.parse_args()
 
 # wait a bit because the klepto file seems to drop some initial results
 # we hope later its not an issue
-time.sleep(rank)
+#time.sleep(rank)
 
 # set random seed
 seed = rank + opts.seed
@@ -64,9 +64,11 @@ cost = diff.get_refinement_plan()
 output_file = opts.output_file if opts.output_file.startswith("/") \
                   else run_dir + "/" + opts.output_file
 if rank == 0:
+    print("Rank 0 is writing names to {}".format(output_file))
     fp_sol = solution_file.SolutionFile(output_file, diff.names)
     fp_sol.save_names()
 if comm:
+    print("Rank {} is waiting".format(rank))
     comm.Barrier()
 if rank != 0:
     fp_sol = solution_file.SolutionFile(output_file, diff.names)
@@ -89,7 +91,7 @@ for i in range(opts.num_solvers):
         # parses ``__doc__`` for getting the conditions YIKES!
         fp_state.arch.load(local_tag)
         if fp_sol.arch[local_tag][4] == False and local_tag in fp_state.arch.keys():
-            print("Loading a previous state for {}".format(local_tag)
+            print("Loading a previous state for {}".format(local_tag))
             local_solver = fp_state.arch[local_tag]
             local_solver.local_solver.SetEvaluationLimits(
                 local_solver.max_iterations,
@@ -104,7 +106,7 @@ for i in range(opts.num_solvers):
 
     # if there is not a previous state initialize local solver
     else:
-        print("Initializing a state for".format(local_tag))
+        print("Initializing a state for {}".format(local_tag))
         local_solver = solver.Solver(diff.lower_bounds, diff.upper_bounds,
                                      diff.config_file, arch=fp_sol, iteration=i)
 

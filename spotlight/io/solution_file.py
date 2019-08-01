@@ -12,7 +12,7 @@ class SolutionFile(object):
 
     Attributes
     ----------
-    arch : file_archive
+    arch : sql_archive
         A Klepto file archive.
     names : list
         A list of names. This list is ordered how packages will return a list.
@@ -35,17 +35,27 @@ class SolutionFile(object):
     def __init__(self, path, names):
 
         # store information
-        self.path = path
-        self.arch = archives.file_archive(path)
+        self.path = "sqlite:///{}".format(path)
+        self.arch = archives.sql_archive(self.path)
         self.names = names
 
+    def save_names(self, names=None):
+        """ Writes names of parameters.
+ 
+        Parameters
+        ----------
+        names : None, list
+            The list of names. The index should match the order the parameter is
+            stored in the local solver.
+        """
+
         # load new data in archive file
-        self.arch.load(*self.restricted_keys)
+        names_key = "names"
+        self.arch.load(names_key)
 
         # add names of parameters
-        names_key = "names"
         if names_key not in self.arch.keys():
-            self.arch[names_key] = self.names
+            self.arch[names_key] = self.names if names == None else names
             self.arch.dump(names_key)
         else:
             assert(self.names == self.arch[names_key])
@@ -89,6 +99,7 @@ class SolutionFile(object):
             self.arch[key][4] = False
 
         # save new data to archive file
+        print("Writing key {}".format(key))
         self.arch.dump(key)
 
     @classmethod
@@ -137,7 +148,7 @@ class SolutionFile(object):
                                                                  input_file))
 
             # open input file
-            input_file = archives.file_archive(input_file)
+            input_file = archives.sql_archive(input_file)
             if keys:
                 input_file.load(*cls.restricted_keys + keys)
             else:
