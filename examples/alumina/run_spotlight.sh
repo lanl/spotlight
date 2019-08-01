@@ -37,7 +37,7 @@ mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` spotlight_minimize \
 # setup GSAS for global minima
 # do not plot though
 spotlight_plot_minima \
-    --input-files solution.pkl \
+    --input-files solution.db \
     --config-file tmp_alumina_0/config.ini \
     --data-file al2o3001.gsa \
     --refinement-plan-file plan_alumina.py \
