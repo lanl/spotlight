@@ -29,21 +29,18 @@ class Version(object):
     """
 
     # list of attributes
-    attrs = ["date", "githash", "branch", "tag", "author", "committer",
-             "status", "builder", "build_date", "version", "release",
+    attrs = ["status", "tag", "version", "githash", "branch", "author",
+             "committer", "date", "builder", "build_date", "release",
              "last_release"]
 
     def __init__(self):
         for attr in self.attrs:
             setattr(self, attr, None)
 
-#    def __getattr__(self, attr):
-#        return ""
-
     def __repr__(self):
-        data = self.as_dict()
         out = ""
-        for k, v in data.iteritems():
+        for k in self.attrs:
+            v = getattr(self, k)
             out += "{} = {}\n".format(k, v)
         return out[:-1]
 
