@@ -2,7 +2,7 @@
 """
 
 import argparse
-import distutils
+import distutils.version
 import os
 import re
 import subprocess
@@ -37,8 +37,8 @@ class Version(object):
         for attr in self.attrs:
             setattr(self, attr, None)
 
-    def __getattr__(self, attr):
-        return ""
+#    def __getattr__(self, attr):
+#        return ""
 
     def __repr__(self):
         data = self.as_dict()
@@ -56,10 +56,10 @@ class Version(object):
     def get_build_name(git_path="git"):
         """ Return the username and user email of the current builder.
         """
-        name, retcode = _external_call(["git", "config", "user.name"])
+        name, retcode = _external_call([git_path, "config", "user.name"])
         if retcode:
             name = "Unknown User"
-        email, retcode = _external_call(["git", "config", "user.email"])
+        email, retcode = _external_call([git_path, "config", "user.email"])
         if retcode:
             email = ""
         return "{} <{}>".format(name, email)
@@ -75,19 +75,21 @@ class Version(object):
         """ Returns the details of the last Git commit as a tuple with values
         ``(hash, date, author name, author e-mail, committer name, committer e-mail)``.
         """
-        hash_, udate, aname, amail, cname, cmail = (
-            _external_call([git_path, "log", "-1",
-                  "--pretty=format:%H,%ct,%an,%ae,%cn,%ce"])[0].split(","))
+        print git_path
+        result, _ = _external_call([git_path, "log", "-1",
+                                    "--pretty=format:%H,%ct,%an,%ae,%cn,%ce"])
+        githash, udate, aname, amail, cname, cmail = result.split(",")
         date = time.strftime("%Y-%m-%d %H:%M:%S +0000", time.gmtime(float(udate)))
-        author = "%s <%s>" % (aname, amail)
-        committer = "%s <%s>" % (cname, cmail)
-        return hash_, date, author, committer
+        author = "{} <{}>".format(aname, amail)
+        committer = "{} <{}>".format(cname, cmail)
+        return githash, date, author, committer
 
     @staticmethod
     def get_branch(git_path="git"):
         """ Returns the name of the current Git branch.
         """
-        branch_match, _ = _external_call([git_path, "rev-parse", "--symbolic-full-name", "HEAD"])
+        branch_match, _ = _external_call([git_path, "rev-parse",
+                                          "--symbolic-full-name", "HEAD"])
         if branch_match == "HEAD":
             return None
         else:
@@ -125,7 +127,7 @@ class Version(object):
         """
 
         # get all tags
-        tag_list = _external_call([git_path, "tag"]).split("\n")
+        tag_list = _external_call([git_path, "tag"])[0].split("\n")
     
         # reduce to only versions
         tag_list = [t[1:] for t in tag_list if t.startswith("v")]
@@ -150,17 +152,17 @@ class Version(object):
         """ Return an instance of the class after querying the Git repository.
         """
     
-        # create object
+        # create instance
         info = cls()
-        git_path = _external_call(["which", "git"])
-    
+        git_path, _ = _external_call(["which", "git"])
+
         # get build info
         info.builder = cls.get_build_name()
         info.build_date = cls.get_build_date()
 
-        # parse git ID
-        info.githash, info.date, info.author, info.committer = [
-            cls.get_last_commit(git_path)]
+        # parse Git ID
+        info.githash, info.date, info.author, info.committer = \
+            cls.get_last_commit(git_path)
     
         # determine branch
         info.branch = cls.get_branch(git_path)
@@ -173,10 +175,10 @@ class Version(object):
             info.version = info.tag.strip("v")
             info.release = not re.search("[a-z]", info.version.lower())
         else:
-            info.version = info.hash[:6]
+            info.version = info.githash[:6]
             info.release = False
     
-        # Determine *last* stable release
+        # Determine last stable release
         info.last_release = cls.get_latest_release_version(git_path)
     
         # refresh index
@@ -201,7 +203,7 @@ class VersionAction(argparse.Action):
         from spotlight import version
         info = Version()
         for attr in self.attrs:
-            setattr(self, attr, getattr(version, attr))
+            setattr(info, attr, getattr(version, attr))
         print(info)
         sys.exit(0)
 
@@ -210,14 +212,12 @@ def _external_call(cmd):
     """
 
     # start external command process
-    p = subprocess.Popen(command, stdout=subprocess.PIPE,
+    p = subprocess.Popen(map(str, cmd), stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
 
     # get outputs
     out, _ = p.communicate()
-
-    # throw exception if process failed
     if p.returncode != 0:
-        raise OSError("Failed to run {}".format(cmd))
+        print("Failed to run {}".format(cmd))
 
     return out.strip(), p.returncode
