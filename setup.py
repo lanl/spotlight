@@ -95,7 +95,7 @@ version = generate_version_module()
 
 # meta-data about the package
 project_name = "spotlight"
-project_version = version.last_release if version.release == "True" else version.last_release + ".dev"
+project_version = version.last_release if version.release == "True" else version.last_release + ".dev0"
 project_url = "https://gitlab.lanl.gov/cmbiwer/spotlight"
 project_description = "A package for Rietveld refinement."
 project_keywords = ["crystallography"]
