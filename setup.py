@@ -82,7 +82,6 @@ def generate_version_module():
 
     # load module
     from spotlight import version
-    version = version.version
 
     return version
 
@@ -91,10 +90,13 @@ def do_setup(*args):
     return True
 _install.install._called_from_setup = do_setup
 
+# create versioning
+version = generate_version_module()
+
 # meta-data about the package
 project_name = "spotlight"
-#project_version = "0.dev1"
-project_url = "https://gitlab.lanl.gov/cmbiwer/mystic-gsas"
+project_version = version.last_release if version.release == "True" else version.last_release + ".dev"
+project_url = "https://gitlab.lanl.gov/cmbiwer/spotlight"
 project_description = "A package for Rietveld refinement."
 project_keywords = ["crystallography"]
 
@@ -140,11 +142,9 @@ cmd_dict = {
 # test suite
 test_suite = None
 
-# create versioning
-generate_version_module()
-
 # run setup
 core.setup(name=project_name,
+           version=project_version,
            description=project_description,
            url=project_url,
            keywords=project_keywords,
