@@ -28,7 +28,7 @@ sys.path.insert(0, '../')
 
 project = 'Spotlight'
 author = 'Christopher M. Biwer'
-copyright = '2019, {}'.format(author)
+copyright = '2019, Los Alamos National Laboratory'
 
 # The short X.Y version
 version = ''
