@@ -27,8 +27,8 @@ mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` spotlight_minimize \
         phases:phase_1-number:1 \
     --data-file al2o3001.gsa \
     --refinement-plan-file plan_alumina.py \
-    --output-file solution.pkl \
-    --state-file state.pkl \
+    --output-file solution.db \
+    --state-file state.db \
     --tmp-dir tmp_alumina \
     --num-solvers 1 \
     --seed ${SEED} \
