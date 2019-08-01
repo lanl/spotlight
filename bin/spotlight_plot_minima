@@ -26,7 +26,7 @@ numpy.random.seed(opts.seed)
 
 # read data
 names, _, _, best_x, best_y = solution_file.SolutionFile.read_data(opts.input_files,
-                                                                 verbose=True)
+                                                                   verbose=True)
 
 # print best parameters
 print("Best parameters are...")
