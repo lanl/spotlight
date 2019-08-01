@@ -65,6 +65,7 @@ output_file = opts.output_file if opts.output_file.startswith("/") \
                   else run_dir + "/" + opts.output_file
 if rank == 0:
     fp_sol = solution_file.SolutionFile(output_file, diff.names)
+    fp_sol.save_names()
 if comm:
     comm.Barrier()
 if rank != 0:
@@ -88,7 +89,7 @@ for i in range(opts.num_solvers):
         # parses ``__doc__`` for getting the conditions YIKES!
         fp_state.arch.load(local_tag)
         if fp_sol.arch[local_tag][4] == False and local_tag in fp_state.arch.keys():
-            print "Loading a previous state for", local_tag
+            print("Loading a previous state for {}".format(local_tag)
             local_solver = fp_state.arch[local_tag]
             local_solver.local_solver.SetEvaluationLimits(
                 local_solver.max_iterations,
@@ -98,18 +99,18 @@ for i in range(opts.num_solvers):
 
         # otherwise initialize a local solver from configuration file
         else:
-            print "Optimization loop already terminated for", local_tag
+            print("Optimization loop already terminated for {}".format(local_tag))
             continue
 
     # if there is not a previous state initialize local solver
     else:
-        print "Initializing a state for", local_tag
+        print("Initializing a state for".format(local_tag))
         local_solver = solver.Solver(diff.lower_bounds, diff.upper_bounds,
                                      diff.config_file, arch=fp_sol, iteration=i)
 
     # print statement
-    print "Process", rank + 1, "of", size, \
-          "running walker", i + 1, "of", opts.num_solvers, "on", hostname
+    print("Process {} of {} running walker {} of {} on {}".format(
+              rank + 1, size, i + 1, opts.num_solvers, hostname))
 
     # main optimization loop with checkpointing
     if local_solver.checkpoint_stride:
@@ -139,9 +140,8 @@ for i in range(opts.num_solvers):
         fp_state.save_state(local_tag, local_solver)
 
     # print statement
-    print "Evaluation time for process", rank, "of", size, \
-          "running walker", i + 1, "of", opts.num_solvers, "on", hostname, \
-          "is", fp_sol.arch[local_tag][5], "s"
+    print("Evaluation time for process {} of {} running walker {} of {} on {} is {}s".format(
+              rank, size, i + 1, opts.num_solvers, hostname, fp_sol.arch[local_tag][5]))
 
 # finish
 if comm:
