@@ -148,7 +148,7 @@ class Version(object):
         return latest_version_string
 
     @classmethod
-    def generate_git_version_info(cls):
+    def generate(cls):
         """ Return an instance of the class after querying the Git repository.
         """
     

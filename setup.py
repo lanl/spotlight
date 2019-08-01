@@ -48,7 +48,7 @@ def generate_version_module():
 
     # try to get Git version information
     try:
-        info = _version.Version.generate_git_version_info()
+        info = _version.Version.generate()
     except:
         info = _version.Version()
         info.version = "development"
