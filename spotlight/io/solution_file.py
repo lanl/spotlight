@@ -82,8 +82,8 @@ class SolutionFile(object):
         if key in self.arch.keys():
             self.arch[key][0] += sol[0]
             self.arch[key][1] += sol[1]
-            self.arch[key][6] += sol[6]
-            self.arch[key][7] += sol[7]
+            self.arch[key][6] = sol[6]
+            self.arch[key][7] = sol[7]
             if sol[3] < self.arch[key][3]:
                 self.arch[key][2] = sol[2]
                 self.arch[key][3] = sol[3]
