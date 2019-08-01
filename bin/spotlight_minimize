@@ -11,6 +11,7 @@ from mystic import termination
 from mystic import tools
 from spotlight import diffraction
 from spotlight import solver
+from spotlight import version
 from spotlight.io import solution_file
 from spotlight.io import state_file
 
@@ -41,6 +42,7 @@ parser.add_argument("--seed", type=int, default=0)
 parser.add_argument("--num-solvers", type=int, default=1)
 parser.add_argument("--tag", default=None)
 parser.add_argument("--verbose", action="store_true")
+parser.add_argument("--version", action=version.VersionAction)
 opts = parser.parse_args()
 
 # set random seed

@@ -5,6 +5,7 @@ import itertools
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy
+from spotlight import version
 
 # parse command line
 parser = argparse.ArgumentParser()
@@ -14,6 +15,7 @@ parser.add_argument("--residual-file")
 parser.add_argument("--reflections-file")
 parser.add_argument("--phase-labels", nargs="+")
 parser.add_argument("--xlim", type=float, nargs=2, default=None)
+parser.add_argument("--version", action=version.VersionAction)
 opts = parser.parse_args()
 
 # load data
