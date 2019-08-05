@@ -1,7 +1,7 @@
 """ This module contains classes for running a local optimizer.
 """
 
-import ConfigParser
+import configparser
 import numpy
 from mystic import monitors
 from mystic import solvers
@@ -50,7 +50,7 @@ class Solver(object):
                  arch=None, iteration=None):
 
         # read configuration file
-        cp = ConfigParser.ConfigParser()
+        cp = configparser.ConfigParser()
         cp.readfp(open(config_file, "r"))
 
         # store all options from [solver]

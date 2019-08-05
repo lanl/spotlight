@@ -1,7 +1,7 @@
 """ This module contains classes for managing diffraction analyses.
 """
 
-import ConfigParser
+import configparser
 import numpy
 import os
 import pickle
@@ -74,7 +74,7 @@ class Diffraction(object):
 
         # concatenate configuration files
         # copy to temporary dir
-        cp = ConfigParser.ConfigParser()
+        cp = configparser.ConfigParser()
         cp.read(config_files)
         if config_overrides:
             for override in config_overrides:
@@ -95,7 +95,7 @@ class Diffraction(object):
 
         # read configuration
         self.bounds, self.det, self.phases = self.read_config(tmp_dir + "/" + self.config_file)
-        self.names = names if names is not None else self.bounds.keys()
+        self.names = list(names if names is not None else self.bounds.keys())
         self.idxs = {name : i for i, name in enumerate(self.names)}
 
         # copy more files
@@ -172,7 +172,7 @@ class Diffraction(object):
                           is not None else self.config_file
 
         # read configuration file
-        cp = ConfigParser.ConfigParser()
+        cp = configparser.ConfigParser()
         cp.readfp(open(config_file, "r"))
 
         # read parameter names from [parameters]
@@ -202,7 +202,7 @@ class Diffraction(object):
         section = "phases"
         phases = []
         options = cp.options(section)
-        num_phases = len(options) / 2
+        num_phases = len(options) // 2
         for i in range(num_phases):
             j = i + 1
             phase_file = cp.get(section, "phase_{}-file".format(j))
