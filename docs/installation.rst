@@ -27,3 +27,4 @@ Upon completion of the script below, the environment can be loaded with the comm
 Note that this script assumes you have Anaconda3 installed.
 
 .. literalinclude:: ../tools/install.sh
+    :language: bash
