@@ -72,7 +72,6 @@ class Version(object):
         """ Returns the details of the last Git commit as a tuple with values
         ``(hash, date, author name, author e-mail, committer name, committer e-mail)``.
         """
-        print git_path
         result, _ = _external_call([git_path, "log", "-1",
                                     "--pretty=format:%H,%ct,%an,%ae,%cn,%ce"])
         githash, udate, aname, amail, cname, cmail = result.split(",")
