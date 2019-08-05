@@ -10,7 +10,6 @@ PYTHON_VERSION=3.7.3
 
 # clean env
 module purge
-module load openmpi/2.1.3-gcc_6.4.0
 module load anaconda/Anaconda3.2019.03
 source deactivate
 conda env remove --yes --name spotlight
@@ -84,7 +83,6 @@ python setup.py install
 
 # append env activation script
 mkdir -p ${CONDA_PREFIX}/etc/conda/activate.d
-echo module load openmpi/2.1.3-gcc_6.4.0 > ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
 echo export PGPLOT_FONT=\$\{CONDA_PREFIX\}/pgl/grfont.dat >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
 echo export gsas=\$\{CONDA_PREFIX\}/gsas >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
 echo export PATH=\$\{PATH\}:\$\{gsas\}/exe:\$\{gsas\}/scripts >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
