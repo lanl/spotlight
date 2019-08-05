@@ -2,7 +2,7 @@
 
 import argparse
 import itertools
-import matplotlib as mpl
+import matplotlib as mpl; mpl.use("Agg")
 import matplotlib.pyplot as plt
 import numpy
 from spotlight import version
@@ -19,14 +19,7 @@ parser.add_argument("--version", action=version.VersionAction)
 opts = parser.parse_args()
 
 # load data
-data = []
-with open(opts.input_file, "r") as fp:
-    lines = fp.readlines()
-for line in lines:
-    if line.startswith("#"):
-        continue
-    data.append(map(float, line.rstrip("\n").split()))
-data = numpy.vstack(data)
+data = numpy.loadtxt(opts.input_file, comments="#")
 
 # style plots
 rcParams = {
