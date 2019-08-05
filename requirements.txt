@@ -6,4 +6,4 @@ numpy==1.13.1
 scipy==1.0.0
 sphinx==1.8.5
 sympy==1.1.1
-git+git://github.com/uqfoundation/mystic@5b73d70#egg=mystic
+https://github.com/uqfoundation/mystic/archive/5b73d70.tar.gz
