@@ -15,7 +15,8 @@ This includes
 * and `pkg-config <https://www.freedesktop.org/wiki/Software/pkg-config/>`_ (v0.29.2) is required by some Python depedencies such as Matplotlib.
 
 Furthermore, Spotlight has several Python dependencies which are listed in the ``requirements.txt`` file in the top-level of the repository.
-We list them below.
+This includes: Klepto for Parallel I/O, Matplotlib for visualization, MPI for Python, Numpy for numerical methods, Sphinx for documentation, and Mystic for optimization functions.
+We list them below with their versions.
 
 .. literalinclude:: ../requirements.txt
 
