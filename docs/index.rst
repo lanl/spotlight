@@ -5,11 +5,13 @@ Spotlight is a Python package for parallelized optimization of Rietveld refineme
 
 .. toctree::
     :caption: Installation:
+    :maxdepth: 1
 
     installation
 
 .. toctree::
     :caption: Examples:
+    :maxdepth: 1
 
     example_alumina
 
