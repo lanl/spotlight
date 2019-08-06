@@ -2,31 +2,6 @@
 
 This is a Python package for parallelized optimization of Rietveld refinement plans.
 
-## Installation
-
-Requirements for these instructions:
-  * Python 2.7
-  * Pip
-  * Virtualenv (eg. `pip install virtualenv --user`)
-  * X11 (GSAS requires the 32-bit version)
-
-There is a Python package ``spotlight`` included in Spotlight which installs
-like most Python packages.
-
-There is a script ``install.sh`` which shows an example of installing Spotlight
-into a virtual environment with its dependencies.
-To try on your system do:
-```
-PATH=${HOME}/.local/bin:${PATH}
-bash install.sh
-source ${HOME}/opt/spotlight-dev/bin/activate
-python setup.py install
-```
-
-To test your installation, you should be able to run scripts from the
-``examples`` directory.
-These examples have their own documentation on how to run them.
-
 ## Classes
 
 The top-level interface to GSAS and refinement plans in the ``spotlight``
