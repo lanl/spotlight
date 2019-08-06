@@ -54,7 +54,7 @@ spotlight_plot_profile \
     --residual-file residual.png \
     --reflections-file reflections.png \
     --phase-labels Alumina
-convert -append profile.png reflections.png residual.png alumina.pdf
+convert -coalesce profile.png reflections.png residual.png alumina.pdf
 
 ## make PDF
 #gsas_done
