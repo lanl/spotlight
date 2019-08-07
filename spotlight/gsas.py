@@ -184,6 +184,14 @@ def gsas_refine(n=0, plot=True, debug=False):
     cmd = ["gsas_refine", n, no_plot]
     _external_call(cmd, debug)
 
+def gsas_vary_absorption(phase_number, absorption_function,
+                         refinement_flag, damping_flag="", debug=False):
+    """ This function varies the absorption coefficients.
+    """
+    cmd = ["gsas_vary_absorption", phase_number,
+           absorption_function, damping_flag]
+    _external_call(cmd, debug)
+
 def gsas_vary_atom(phase_number, atoms, refinement_flag,
                    damping_flag="", debug=False):
     """ This function varies atom parameters.
