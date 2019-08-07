@@ -211,6 +211,12 @@ def gsas_vary_phase(phase_number, refinement_flag, damping_flag, debug=False):
     cmd = ["gsas_vary_phase", phase_number, refinement_flag, damping_flag]
     _external_call(cmd, debug)
 
+def gsas_vary_sigma1(bank_number, phase_number, refinement_flag, damping_flag, debug=False):
+    """ This function varies the peak width.
+    """
+    cmd = ["gsas_vary_sigma1", bank_number, phase_number, refinement_flag, damping_flag]
+    _external_call(cmd, debug)
+
 def gsas_write_csv(gsas_exp, output_file_base, debug=False):
     """ This function generates an ASCII file of a simulated diffraction
     pattern.
