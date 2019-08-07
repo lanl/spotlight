@@ -79,6 +79,8 @@ class Diffraction(object):
         if config_overrides:
             for override in config_overrides:
                 section, option, value = override.split(":")
+                if option.startswith("-"):
+                    cp.remove_option(section, option)
                 if not cp.has_section(section):
                     cp.add_section(section)
                 cp.set(section, option, value)
