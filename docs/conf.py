@@ -190,3 +190,6 @@ epub_exclude_files = ['search.html']
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+# do not show module names
+add_module_names = False
