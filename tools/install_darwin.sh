@@ -81,9 +81,20 @@ python -m pip install --requirement ${TOOLS_DIR}/../requirements.txt
 cd ${TOOLS_DIR}/..
 python setup.py install
 
+# install TeX Live
+YEAR=2019
+cd ${CONDA_PREFIX}/src
+wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+tar -zxvf install-tl-unx.tar.gz
+cd install-tl-${YEAR}*
+export TEXLIVE_INSTALL_TEXDIR=${CONDA_PREFIX}/texlive/${YEAR}
+export TEXLIVE_INSTALL_PREFIX=${CONDA_PREFIX}/texlive
+echo i > temp.txt
+./install-tl < temp.txt
+
 # append env activation script
 mkdir -p ${CONDA_PREFIX}/etc/conda/activate.d
 echo export PGPLOT_FONT=\$\{CONDA_PREFIX\}/pgl/grfont.dat >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
 echo export gsas=\$\{CONDA_PREFIX\}/gsas >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
-echo export PATH=\$\{PATH\}:\$\{gsas\}/exe:\$\{gsas\}/scripts >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
+echo export PATH=\$\{PATH\}:\$\{gsas\}/exe:\$\{gsas\}/scripts:$\{CONDA_PREFIX\}/rpms/usr/bin:$\{CONDA_PREFIX\}/texlive/2019/bin/x86_64-linux >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
 echo export LD_LIBRARY_PATH=\$\{CONDA_PREFIX\}/rpms/lib:\$\{CONDA_PREFIX\}/rpms/usr/lib:\$\{LD_LIBRARY_PATH\} >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
