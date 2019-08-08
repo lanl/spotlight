@@ -57,7 +57,9 @@ spotlight_plot_profile \
 convert -coalesce profile.png reflections.png residual.png alumina.pdf
 
 # plot profiling information
-gprof2dot -f pstats tmp_spotlight/tmp_alumina_0/alumina.pstat | dot -Tpdf -o alumina_0_performance.pdf
+for IDX in $(seq 0 $((`getconf _NPROCESSORS_ONLN` - 1))); do
+gprof2dot -f pstats tmp_spotlight/tmp_alumina_${IDX}/alumina.pstat | dot -Tpdf -o tmp_pstat_${IDX}.pdf
+done
 
 ## make PDF
 #gsas_done
