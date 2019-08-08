@@ -37,7 +37,7 @@ OS_NAME=`uname -a`
 if [[ ${OS_NAME} =~ "Darwin" ]]; then
     sed -i '' '42s/^/#/' ${CONDA_PREFIX}/gsas/scripts/gsas_vary_profile_parameters
 else
-    sed '42s/^/#/' ${CONDA_PREFIX}/gsas/scripts/gsas_vary_profile_parameters
+    sed -i '42s/^/#/' ${CONDA_PREFIX}/gsas/scripts/gsas_vary_profile_parameters
 fi
 
 # install required packages
