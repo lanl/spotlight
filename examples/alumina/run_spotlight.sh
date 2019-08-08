@@ -18,7 +18,7 @@ SEED=123
 export OMP_NUM_THREADS=1
 
 # run optimazation search
-mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` spotlight_minimize \
+mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` python -m cProfile -o alumina.pstat `which spotlight_minimize` \
     --config-files \
         config_base.ini \
         config_alumina.ini \
@@ -55,6 +55,9 @@ spotlight_plot_profile \
     --reflections-file reflections.png \
     --phase-labels Alumina
 convert -coalesce profile.png reflections.png residual.png alumina.pdf
+
+# plot profiling information
+gprof2dot -f pstats tmp_spotlight/tmp_alumina_0/alumina.pstat | dot -Tpdf -o alumina_0_performance.pdf
 
 ## make PDF
 #gsas_done

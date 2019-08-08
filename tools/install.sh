@@ -46,6 +46,7 @@ conda install --yes pkg-config==0.29.2
 
 # install optional packages
 conda install --yes --channel conda-forge imagemagick
+pip install gprof2dot==2017.9.19
 
 # install OpenMPI
 mkdir -p ${CONDA_PREFIX}/src && cd ${CONDA_PREFIX}/src
