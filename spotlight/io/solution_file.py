@@ -139,6 +139,7 @@ class SolutionFile(object):
         best_y = numpy.inf
  
         # loop over data files
+        input_files = [input_files] if isinstance(input_files, str) else input_files
         num_files = len(input_files)
         for i, input_file in enumerate(input_files):
             if verbose:
