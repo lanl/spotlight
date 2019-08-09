@@ -30,7 +30,7 @@ Once the example has completed, then you can view the results with the command b
 
 .. code:: bash
 
-    display tmp_spotlight/tmp_minima/alumina.pdf
+    display tmp_spotlight/tmp_minima/alumina_1.pdf
 
 gsaslanguage instructions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
