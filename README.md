@@ -118,18 +118,6 @@ print(fp["names"])
 See the ``spotlight.archive.Archive`` class for the function that
 writes the output files, and a convenience function for reading the data.
 
-## Executables
-
-Executables available are:
-  * The executable ``spotlight_minimize`` optimizes a Rietveld refinement plan
-with Mystic.
-  * The executable ``spotlight_plot_minima`` produces a PDF of the refinement.
-  * The executable ``spotlight_plot_chisq`` produces a scatter plot matrix of
-chi-square value versus parameter value.
-
-See the ``examples`` directory for examples using these scripts, and use the
-``--help`` option for command line options.
-
 ## Local solvers
 
 There are a couple choices of local solvers:
