@@ -2,8 +2,8 @@
 
 To auto-generate the Spotlight modules documentation and build HTML pages, do:
 ```
-rm spotlight.*.rst
-sphinx-apidoc -F -o . ../spotlight
+rm spotlight*.rst
+sphinx-apidoc --module-first --full -o . ../spotlight
 make html
 ```
 
