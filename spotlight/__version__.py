@@ -153,7 +153,7 @@ class Version(object):
         git_path, _ = _external_call(["which", "git"])
 
         # get build info
-        info.builder = cls.get_build_name()
+        info.builder = cls.get_build_name(git_path)
         info.build_date = cls.get_build_date()
 
         # parse Git ID
@@ -162,10 +162,10 @@ class Version(object):
     
         # determine branch
         info.branch = cls.get_branch(git_path)
-    
+
         # determine tag
         info.tag = cls.get_tag(info.githash, git_path)
-    
+
         # determine version
         if info.tag:
             info.version = info.tag.strip("v")
@@ -173,10 +173,10 @@ class Version(object):
         else:
             info.version = info.githash[:6]
             info.release = False
-    
+
         # Determine last stable release
         info.last_release = cls.get_latest_release_version(git_path)
-    
+
         # refresh index
         _external_call([git_path, "update-index", "-q", "--refresh"])
     
@@ -215,5 +215,9 @@ def _external_call(cmd):
     out, _ = p.communicate()
     if p.returncode != 0:
         print("Failed to run {}".format(cmd))
+
+    # typecast to string
+    if type(out) == bytes:
+        out = out.decode("utf-8")
 
     return out.strip(), p.returncode

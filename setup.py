@@ -51,7 +51,7 @@ def generate_version_module():
         info = __version__.Version.generate()
     except:
         info = __version__.Version()
-        info.version = "development"
+        info.version = "static"
         info.release = "False"
 
     # contents of version module
