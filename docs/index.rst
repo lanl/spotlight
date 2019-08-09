@@ -24,3 +24,7 @@ Spotlight is a Python package for parallelized optimization of Rietveld refineme
     py-modindex
     genindex
     search
+
+The Spotlight version used to generate this documentation is shown below.
+
+.. program-output:: spotlight_inspect --version
