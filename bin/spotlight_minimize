@@ -23,6 +23,7 @@ try:
     comm = MPI.COMM_WORLD
     size = comm.Get_size()
     rank = comm.Get_rank()
+    comm = None if size == 1 else comm
 except ImportError:
     print("The mpi4py packages was not found!")
     comm = None

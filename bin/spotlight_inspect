@@ -10,7 +10,7 @@ from klepto import archives
 from spotlight import version
 
 # parse command line
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--input-file", default="tmp_spotlight/solution.pkl")
 parser.add_argument("--version", action=version.VersionAction)
 opts = parser.parse_args()

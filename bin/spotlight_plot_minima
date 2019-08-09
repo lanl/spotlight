@@ -1,5 +1,6 @@
 #! /usr/bin/env python
-""" Creates a PDF for best match.
+""" Setup a GSAS experiment for the best match from an optimization search. Optionally,
+creates a PDF for best match.
 """
 
 import argparse
