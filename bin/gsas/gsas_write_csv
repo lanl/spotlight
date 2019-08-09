@@ -16,3 +16,5 @@ echo "${OUT_FILE}" >> temp_write_csv.txt
 echo "x" >> temp_write_csv.txt
 
 powplot ${NAME} < temp_write_csv.txt
+
+mv ${OUT_FILE%.*}.TXT ${OUT_FILE}

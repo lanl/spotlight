@@ -17,8 +17,10 @@ SEED=123
 # set the number of threads to use for parallel regions
 export OMP_NUM_THREADS=1
 
-# run optimazation search
-mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` python -m cProfile -o alumina.pstat `which spotlight_minimize` \
+# run optimization search in parallel
+# profile the execution
+mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` \
+    python -m cProfile -o alumina.pstat `which spotlight_minimize` \
     --config-files \
         config_base.ini \
         config_alumina.ini \
@@ -34,7 +36,7 @@ mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` python -m cProfile -o alum
     --seed ${SEED} \
     --tag alumina_${SEED}
 
-# setup GSAS for global minima
+# setup GSAS for global minima from optimization search
 # do not plot though
 spotlight_plot_minima \
     --input-files solution.db \
@@ -43,18 +45,18 @@ spotlight_plot_minima \
     --refinement-plan-file plan_alumina.py \
     --tmp-dir tmp_minima
 
-# make CSV
+# make CSV and plot results for each histogram
 cd tmp_minima
-gsas_write_csv 1 TRIAL hist1.txt
-
-# plot
+for IDX in 1; do
+gsas_write_csv ${IDX} TRIAL hist_${IDX}.txt
 spotlight_plot_profile \
-    --input-file hist1.TXT \
-    --profile-file profile.png \
-    --residual-file residual.png \
-    --reflections-file reflections.png \
+    --input-file hist_${IDX}.txt \
+    --profile-file profile_${IDX}.png \
+    --residual-file residual_${IDX}.png \
+    --reflections-file reflections_${IDX}.png \
     --phase-labels Alumina
-convert -coalesce profile.png reflections.png residual.png alumina.pdf
+convert -coalesce profile_${IDX}.png reflections_${IDX}.png residual_${IDX}.png alumina_${IDX}.pdf
+done
 
 # plot profiling information
 for IDX in $(seq 0 $((`getconf _NPROCESSORS_ONLN` - 1))); do
