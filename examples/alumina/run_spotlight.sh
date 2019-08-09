@@ -59,6 +59,7 @@ convert -coalesce profile_${IDX}.png reflections_${IDX}.png residual_${IDX}.png 
 done
 
 # plot profiling information
+# requires gprof2dot which is not an explicit dependency of Spotlight
 for IDX in $(seq 0 $((`getconf _NPROCESSORS_ONLN` - 1))); do
 gprof2dot -f pstats tmp_spotlight/tmp_alumina_${IDX}/alumina.pstat | dot -Tpdf -o tmp_pstat_${IDX}.pdf
 done
