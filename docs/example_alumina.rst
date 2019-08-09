@@ -24,7 +24,7 @@ You can inspect results as they run, to run execute the command below.
 
 .. code:: bash
 
-    spotlight_inspect --input-file tmp_spotlight/solution.pkl
+    spotlight_inspect --input-file tmp_spotlight/solution.db
 
 Once the example has completed, then you can view the results with the command below.
 
