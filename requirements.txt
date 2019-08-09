@@ -2,5 +2,5 @@ klepto==0.1.7
 matplotlib==3.0.0
 mpi4py==3.0.0
 numpy==1.16.0
-sphinx==1.8.5
+sphinx==2.1.2
 https://github.com/uqfoundation/mystic/archive/5b73d70.tar.gz
