@@ -32,14 +32,8 @@ conda install --yes python==${PYTHON_VERSION}
 cd ${CONDA_PREFIX}/gsas
 git clone https://github.com/Svennito/gsaslanguage.git scripts
 cd scripts
-git reset --hard 8f09750
+git reset --hard fe73549
 chmod +x ${CONDA_PREFIX}/gsas/scripts/gsas_get_current_wtfrac_esd
-OS_NAME=`uname -a`
-if [[ ${OS_NAME} =~ "Darwin" ]]; then
-    sed -i '' '42s/^/#/' ${CONDA_PREFIX}/gsas/scripts/gsas_vary_profile_parameters
-else
-    sed -i '42s/^/#/' ${CONDA_PREFIX}/gsas/scripts/gsas_vary_profile_parameters
-fi
 
 # install required packages
 conda install --yes pkg-config==0.29.2
