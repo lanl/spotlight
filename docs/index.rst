@@ -2,6 +2,7 @@ Spotlight
 =========
 
 Spotlight is a Python package for parallelized optimization of Rietveld refinement plans.
+This documentation has several sections for: guidance in installation, examples optimizing Rietveld refinement plans, documentation on the file formats for ``spotlight_minimize`` (the executable for optimization), and code documentation for Spotlight.
 
 .. toctree::
     :caption: Installation:
@@ -16,7 +17,15 @@ Spotlight is a Python package for parallelized optimization of Rietveld refineme
     example_alumina
 
 .. toctree::
-    :caption: Documentation:
+    :caption: spotlight_minimize:
+    :maxdepth: 1
+
+    file_format_configuration
+    file_format_refinement_plan
+    file_format_solution
+
+.. toctree::
+    :caption: Code Documentation:
     :maxdepth: 1
 
     executables
