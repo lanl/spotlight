@@ -1,5 +1,5 @@
-Alumina example
-===============
+Quick Start
+===========
 
 This is a quick start example on analyzing an alumina (Al\ :subscript:`2`\ O\ :subscript:`3`) dataset.
 The example is contained within the ``examples/alumina`` directory of this repository.
