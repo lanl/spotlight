@@ -22,7 +22,7 @@ conda activate spotlight
 # install GSAS which requires Python 2.7 for installation scripts
 conda install --yes python==2.7.16
 mkdir -p ${CONDA_PREFIX}/gsas && cd ${CONDA_PREFIX}/gsas
-cp ${TOOLS_DIR}/bootstrap.py .
+curl https://subversion.xray.aps.anl.gov/trac/EXPGUI/browser/gsas/linux/dist/bootstrap.py?format=txt > bootstrap.py
 echo $'proxyout.lanl.gov\n8080' >> proxy.txt
 python bootstrap.py < proxy.txt
 rm proxy.txt
