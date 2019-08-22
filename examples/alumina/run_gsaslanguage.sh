@@ -47,11 +47,11 @@ gsas_vary_atom 1 1:99 u 9
 gsas_refine 20
 
 # create CSV
-gsas_write_csv 1 `cat GSAS_EXP` hist1
+gsas_write_csv 1 `cat GSAS_EXP` hist1.txt
 
 # plot
 spotlight_plot_profile \
-    --input-file hist1.TXT \
+    --input-file hist1.txt \
     --profile-file profile.png \
     --residual-file residual.png \
     --reflections-file reflections.png \
