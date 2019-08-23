@@ -60,9 +60,12 @@ done
 
 # plot profiling information
 # requires gprof2dot which is not an explicit dependency of Spotlight
+# so check if it is installed first
+if [ -x "$(command -v gprof2dot)" ]; then
 for IDX in $(seq 0 $((`getconf _NPROCESSORS_ONLN` - 1))); do
 gprof2dot -f pstats tmp_spotlight/tmp_alumina_${IDX}/alumina.pstat | dot -Tpdf -o tmp_pstat_${IDX}.pdf
 done
+fi
 
 ## make PDF
 #gsas_done
