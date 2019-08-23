@@ -32,3 +32,9 @@ This documentation has several sections for: guidance in installation, an exampl
 The Spotlight version used to generate this documentation is shown below.
 
 .. program-output:: spotlight_inspect --version
+
+Acknowledgements
+~~~~~~~~~~~~~~~~
+
+This work was initially funded at Los Alamos National Laboratory (LANL) by the LANL Laboratory Directed Research and Development project 20170029DR.
+LANL is operated by Triad National Security, LLC, for the National Nuclear Security Administration of the U.S. DOE under Contract No. 89233218CNA000001.
