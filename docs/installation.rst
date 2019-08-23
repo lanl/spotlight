@@ -20,6 +20,17 @@ We list them below with their versions.
 
 .. literalinclude:: ../requirements.txt
 
+Optional Packages
+~~~~~~~~~~~~~~~~~
+
+There are certain software packages that users may find valuable, but they are not required to run Spotlight's core funtionality.
+In the examples, you will see references to these packages (e.g. the commands ``convert`` and ``gprof2dot``), but we strive to make not make them a requirement in order to run the examples.
+Though in our installation examples below, we show how they can be installed.
+This includes
+
+* `ImageMagick <https://imagemagick.org/index.php>`_ (7.0.8) for image processing,
+* and `gprof2dot <https://github.com/jrfonseca/gprof2dot>`_ (2017.9.19) for rendering DOT graphs for performance evaluation.
+
 Installation with Anaconda3
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
