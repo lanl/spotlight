@@ -2,8 +2,8 @@
 using the klepto archive file.
 """
 
-import dill
 import numpy
+import os
 from klepto import archives
 
 class SolutionFile(object):
@@ -148,6 +148,9 @@ class SolutionFile(object):
                                                                  input_file))
 
             # open input file
+            if not os.path.exists(input_file):
+                print("The solution file {} does not exist! Skipping...".format(input_file))
+                continue
             input_file = archives.dir_archive(input_file)
             if keys:
                 input_file.load(*cls.restricted_keys + keys)
