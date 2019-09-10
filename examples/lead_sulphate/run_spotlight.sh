@@ -5,11 +5,8 @@ set -e
 # make a temporary directory for analysis
 mkdir -p tmp_spotlight
 cd tmp_spotlight
-cp ../al2o3001.gsa ../alumina.cif ../bt1demo.ins .
-cp ../config_base.ini ../config_alumina.ini ../plan_alumina.py .
-
-# convert from CIF to EXP
-gsas_convert_cif alumina.cif alumina.exp
+cp ../INST_XRY.prm ../inst_d1a.prm ../PBSO4.cwn ../PBSO4.xra ../PbSO4-Wyckoff.cif .
+cp ../config_base.ini ../config_pbso4.ini ../plan_pbso4.py .
 
 # random seed
 SEED=123
@@ -20,18 +17,18 @@ export OMP_NUM_THREADS=1
 # run optimization search in parallel
 # profile the execution
 mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` \
-    python -m cProfile -o alumina.pstat `which spotlight_minimize` \
+    python -m cProfile -o pbso4.pstat `which spotlight_minimize` \
     --config-files \
         config_base.ini \
-        config_alumina.ini \
+        config_pbso4.ini \
     --config-overrides \
         diffraction:seed:${SEED} \
         diffraction:tag:${SEED} \
-        phase-0:phase_file:alumina.exp \
-        phase-0:phase_number:1 \
+        phase-0:phase_file:PbSO4-Wyckoff.cif \
+        phase-0:phase_label:"PBSO4" \
     --tmp-dir tmp
 
-# setup GSAS for global minima from optimization search
+# setup GSAS-II for global minima from optimization search
 spotlight_setup_gsas \
     --input-files solution.db \
     --config-file tmp_0/config.ini \
@@ -43,13 +40,16 @@ spotlight_setup_gsas \
 # so check if it is installed first
 cd tmp_minima
 for IDX in 1; do
-gsas_write_csv ${IDX} TRIAL hist_${IDX}.txt
+gsasii_write_csv \
+    --input-file step_1.gpx \
+    --output-file hist_${IDX}.txt \
+    --histogram ${IDX}
 spotlight_plot_profile \
     --input-file hist_${IDX}.txt \
     --profile-file profile_${IDX}.png \
     --residual-file residual_${IDX}.png \
     --reflections-file reflections_${IDX}.png \
-    --phase-labels Alumina
+    --phase-labels PBSO4
 if [ -x "$(command -v convert)" ]; then
 convert -coalesce profile_${IDX}.png reflections_${IDX}.png residual_${IDX}.png alumina_${IDX}.pdf
 fi
@@ -62,9 +62,6 @@ cd ..
 # so check if it is installed first
 if [ -x "$(command -v gprof2dot)" ]; then
 for IDX in $(seq 0 $((`getconf _NPROCESSORS_ONLN` - 1))); do
-gprof2dot -f pstats tmp_${IDX}/alumina.pstat | dot -Tpdf -o pstat_${IDX}.pdf
+gprof2dot -f pstats tmp_${IDX}/pbso4.pstat | dot -Tpdf -o pstat_${IDX}.pdf
 done
 fi
-
-## make PDF
-#gsas_done

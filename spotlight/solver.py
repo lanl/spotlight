@@ -27,8 +27,6 @@ class Solver(object):
         A Mystic termination instance.
     stepmon : monitor
         A Mystic monitor instance.
-    checkpoint_stride : int
-        Number of optimization steps to take before checkpoint.
     sampling_method : str
         Name of sampling method that was used.
 
@@ -73,7 +71,7 @@ class Solver(object):
         special_options = ["local_solver", "sampling_method",
                            "sampling_iteration_switch",
                            "max_iterations", "max_evaluations", "stop_change",
-                           "stop_generations", "checkpoint_stride"]
+                           "stop_generations"]
         for option in special_options:
             if option == "local_solver":
                 _local_solver = options[option]

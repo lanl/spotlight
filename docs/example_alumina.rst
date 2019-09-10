@@ -1,7 +1,7 @@
-Quick Start
-===========
+Quick Start Using GSAS
+======================
 
-This is a quick start example on analyzing an alumina (Al\ :subscript:`2`\ O\ :subscript:`3`) dataset.
+This is a quick start example on analyzing an alumina (Al\ :subscript:`2`\ O\ :subscript:`3`) dataset that is originally part of a GSAS tutorial.
 The example is contained within the ``examples/alumina`` directory of this repository.
 This page provides example commands to execute the example, and subsequent pages describe the file formats.
 
@@ -16,7 +16,7 @@ To run, change into the ``examples/alumina`` directory and then execute the comm
     bash run_spotlight.sh
 
 This script contains the necessary command lines to execute an optimization search with a refinement plan for the alumina dataset.
-The script calls ``spotlight_minimize`` to execute the optimization search, ``spotlight_plot_minima`` to extract the best results from the optimization search as a GSAS experiment, and several plotting scripts for the results and code performance.
+The script calls ``spotlight_minimize`` to execute the optimization search, ``spotlight_setup_gsas`` to extract the best results from the optimization search as a GSAS experiment, and several plotting scripts for the results and code performance.
 The script is shown below.
 
 .. literalinclude:: ../examples/alumina/run_spotlight.sh

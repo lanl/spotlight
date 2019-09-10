@@ -34,33 +34,26 @@ except ImportError:
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--config-files", nargs="+", required=True)
 parser.add_argument("--config-overrides", nargs="+")
-parser.add_argument("--data-file", required=True)
-parser.add_argument("--refinement-plan-file", required=True)
-parser.add_argument("--output-file", default="solution.sql")
-parser.add_argument("--state-file", default="state.sql")
 parser.add_argument("--tmp-dir", default="tmp")
-parser.add_argument("--seed", type=int, default=0)
-parser.add_argument("--num-solvers", type=int, default=1)
-parser.add_argument("--tag", default=None)
 parser.add_argument("--verbose", action="store_true")
 parser.add_argument("--version", action=version.VersionAction)
 opts = parser.parse_args()
 
-# set random seed
-seed = rank + opts.seed
-numpy.random.seed(seed)
-tools.random_seed(seed)
-
 # move to temporary dir, read configuration file, and get refinement plan
 tmp_dir = "{}_{}".format(opts.tmp_dir, rank)
-diff = diffraction.Diffraction(opts.config_files, opts.refinement_plan_file,
-                               opts.data_file, tmp_dir, change=True,
+diff = diffraction.Diffraction(opts.config_files, tmp_dir, change=True,
                                config_overrides=opts.config_overrides)
 cost = diff.get_refinement_plan()
 
-# create a SQL archive file for output data
-output_file = opts.output_file if opts.output_file.startswith("/") \
-                  else run_dir + "/" + opts.output_file
+# set random seed
+seed = diff.seed if hasattr(diff, "seed") else 0
+seed += rank
+numpy.random.seed(seed)
+tools.random_seed(seed)
+
+# create an archive file for output data
+output_file = diff.solution_file if diff.solution_file.startswith("/") \
+                  else run_dir + "/" + diff.solution_file
 fp_sol = solution_file.SolutionFile(output_file, diff.names)
 if rank == 0:
     print("Rank 0 is writing names to {}".format(output_file))
@@ -70,13 +63,13 @@ if comm:
     comm.Barrier()
 
 # create an archive file for state data
-output_file = opts.state_file if opts.state_file.startswith("/") \
-                  else run_dir + "/" + opts.state_file
+output_file = diff.state_file if diff.state_file.startswith("/") \
+                  else run_dir + "/" + diff.state_file
 fp_state = state_file.StateFile(output_file)
 
 # run one of ensemble of solvers
-for i in range(opts.num_solvers):
-    local_tag = "_".join(map(str, [rank, i, opts.tag]))
+for i in range(diff.num_solvers):
+    local_tag = "_".join(map(str, [rank, i, diff.tag]))
 
     # check if there is a previous state for a local solver
     fp_sol.arch.load(local_tag)
@@ -108,10 +101,10 @@ for i in range(opts.num_solvers):
 
     # print statement
     print("Process {} of {} running walker {} of {} on {}".format(
-              rank + 1, size, i + 1, opts.num_solvers, hostname))
+              rank + 1, size, i + 1, diff.num_solvers, hostname))
 
     # main optimization loop with checkpointing
-    if local_solver.checkpoint_stride:
+    if hasattr(diff, "checkpoint_stride"):
         stop = False
         while not stop:
 
@@ -119,7 +112,7 @@ for i in range(opts.num_solvers):
             t_start = time.time()
     
             # take steps in optimization
-            for _ in range(local_solver.checkpoint_stride):
+            for _ in range(diff.checkpoint_stride):
                 stop = local_solver.step(cost)
 
             # end timer
@@ -139,7 +132,7 @@ for i in range(opts.num_solvers):
 
     # print statement
     print("Evaluation time for process {} of {} running walker {} of {} on {} is {}s".format(
-              rank, size, i + 1, opts.num_solvers, hostname, fp_sol.arch[local_tag][5]))
+              rank, size, i + 1, diff.num_solvers, hostname, fp_sol.arch[local_tag][5]))
 
 # finish
 if comm:
