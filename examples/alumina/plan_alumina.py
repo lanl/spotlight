@@ -1,4 +1,4 @@
-""" A refinement plan for Alumina.
+""" A refinement plan for alumina.
 """
 
 from spotlight import gsas
@@ -19,12 +19,13 @@ class Plan(plan.BasePlan):
             gsas.gsas_read_phase(phase_file, phase_number)
 
         # add histograms
-        for bank_num in range(self.detector.bank_number):
-            gsas.gsas_add_histogram(self.data_file,
-                                    self.detector.detector_file,
-                                    bank_num + 1,
-                                    self.detector.min_d_spacing,
-                                    self.detector.max_d_spacing)
+        for det in self.detectors:
+            for bank_num in range(det.bank_number):
+                gsas.gsas_add_histogram(det.data_file,
+                                        det.detector_file,
+                                        bank_num + 1,
+                                        det.min_d_spacing,
+                                        det.max_d_spacing)
 
     def compute(self):
 
@@ -50,7 +51,8 @@ class Plan(plan.BasePlan):
                 gsas.gsas_change_atom(i + 1, 2, "UISO", self.get("UISO2_ALUMINA"))
 
                 # loop over detector banks
-                for j in range(self.detector.bank_number):
+                # only one detector section
+                for j in range(self.detectors[0].bank_number):
 
                     # set phase scales
                     gsas.gsas_change_phase_fraction(
@@ -70,7 +72,8 @@ class Plan(plan.BasePlan):
                 raise NotImplementedError("Refinement plan cannot handle phase {}".format(phase))
 
         # loop over detector banks
-        for j in range(self.detector.bank_number):
+        # only one detector section
+        for j in range(self.detectors[0].bank_number):
 
             # set background coefficients
             gsas.gsas_change_background_coeff(j + 1, 1, 6,

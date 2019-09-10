@@ -35,6 +35,20 @@ cd scripts
 git reset --hard fe73549
 chmod +x ${CONDA_PREFIX}/gsas/scripts/gsas_get_current_wtfrac_esd
 
+# install Python packages for Spotlight
+python -m pip install --upgrade pip
+python -m pip install --requirement ${TOOLS_DIR}/../requirements.txt
+
+# install GSAS-II
+# note proxy input is broken in GSAS-II bootstrap script
+conda install --yes pyopengl==3.1.1a1 r-maps==3.1.0 wxpython==4.0.4
+python -m pip install scipy==1.3.1
+mkdir -p ${CONDA_PREFIX}/gsasii && cd ${CONDA_PREFIX}/gsasii
+curl https://subversion.xray.aps.anl.gov/pyGSAS/install/bootstrap.py > bootstrap.py
+echo $'proxyout.lanl.gov\n8080' >> proxy.txt
+python bootstrap.py < proxy.txt
+rm proxy.txt
+
 # install required packages
 conda install --yes pkg-config==0.29.2
 
@@ -52,10 +66,6 @@ CXXFLAGS=-O3 \
 ./configure --prefix=${CONDA_PREFIX}
 make -j $(getconf _NPROCESSORS_ONLN) install
 
-# install Python packages
-python -m pip install --upgrade pip
-python -m pip install --requirement ${TOOLS_DIR}/../requirements.txt
-
 # install Spotlight
 cd ${TOOLS_DIR}/..
 python setup.py install
@@ -64,4 +74,5 @@ python setup.py install
 mkdir -p ${CONDA_PREFIX}/etc/conda/activate.d
 echo export PGPLOT_FONT=\$\{CONDA_PREFIX\}/pgl/grfont.dat >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
 echo export gsas=\$\{CONDA_PREFIX\}/gsas >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
+echo export PYTHONPATH=\$\{PYTHONPATH\}:\$\{CONDA_PREFIX\}/gsasii >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
 echo export PATH=\$\{PATH\}:\$\{gsas\}/exe:\$\{gsas\}/scripts >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh

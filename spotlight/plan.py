@@ -5,23 +5,17 @@ from mystic import models
 
 class BasePlan(models.AbstractFunction):
     """ This class describes a refinement plan to optimize. Users should implement
-    their own version of this class.
-
-    name = "default"
+    their own subclass of this class.
 
     Attributes
     ----------
-    name : str
-        Name for refinement plan.
     idxs : dict
         A ``dict`` with key parameter and value index of parameter.
     bounds : dict
         A ``dict`` with key parameter name and value a tuple of lower and upper
         bounds.
-    data_file : str
-        Path to experimental data file.
-    detector : Detector
-        A ``Dectector`` instance.
+    detectors : list
+        A list of ``Dectector`` instances.
     phases : list
         A list of ``Phase`` instances.
     _p : list
@@ -43,7 +37,7 @@ class BasePlan(models.AbstractFunction):
         A list of ``Phase`` instances.
     """
 
-    def __init__(self, idxs, bounds, data_file, detector, phases, **kwargs):
+    def __init__(self, idxs, bounds, detectors, phases, **kwargs):
         super(BasePlan, self).__init__(**kwargs)
 
         # store map to parameters
@@ -52,8 +46,7 @@ class BasePlan(models.AbstractFunction):
         self._p = None
 
         # store input files
-        self.data_file = data_file
-        self.detector = detector
+        self.detectors = detectors
         self.phases = phases
 
         # setup initial porition of refinement plan

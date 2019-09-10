@@ -5,6 +5,7 @@ docs/spotlight*.rst
 examples/*/slurm*
 examples/*/tmp*
 spotlight/version.py
+.nfs*
 *.DS_Store
 *.egg-info
 *.pkl

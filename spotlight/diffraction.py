@@ -29,6 +29,10 @@ class Diffraction(object):
         Path to concatenated configuration file.
     data_file : str
         Path to experimental data file.
+    refinement_plan_file : str
+        Path to refinement plan file.
+    refinement_plan : Plan
+        The loaded refinement plan module.
     bounds : dict
         A ``dict`` with key parameter name and value a tuple of lower and upper
         bounds.
@@ -36,8 +40,8 @@ class Diffraction(object):
         A list of names. This list is ordered how packages will return a list.
     idxs : dict
         A ``dict`` with key parameter and value index of parameter.
-    det : Detector
-        A ``Dectector`` instance.
+    dets : list
+        A list of ``Dectector`` instances.
     phases : list
         A list of ``Phase`` instances.
     lower_bounds : list
@@ -51,8 +55,6 @@ class Diffraction(object):
     ----------
     config_files : list
         Paths to configuration files.
-    refinement_plan_file : str
-        Path to refinement plan file.
     data_file : str
         Path to experimental data file.
     tmp_dir : str
@@ -66,11 +68,14 @@ class Diffraction(object):
         file. The format is "section:option:value".
     """
 
-    def __init__(self, config_files, refinement_plan_file=None, data_file=None,
-                 tmp_dir=None, names=None, change=True, config_overrides=None):
+    def __init__(self, config_files, tmp_dir=None, names=None, change=True,
+                 config_overrides=None):
 
         # create temporary dir
-        filesystem.mkdir(tmp_dir)
+        if tmp_dir:
+            filesystem.mkdir(tmp_dir)
+        else:
+            tmp_dir = "."
 
         # concatenate configuration files
         # copy to temporary dir
@@ -88,28 +93,35 @@ class Diffraction(object):
         with open(tmp_dir + "/" + self.config_file, "w") as fp:
             cp.write(fp)
 
-        # copy files to temporary dir
-        self.data_file = filesystem.cp(data_file, tmp_dir) \
-                             if tmp_dir else data_file
-        self.refinement_plan_file = \
-                             filesystem.cp(refinement_plan_file, tmp_dir) \
-                             if tmp_dir else data_file
-
         # read configuration
-        self.bounds, self.det, self.phases = self.read_config(tmp_dir + "/" + self.config_file)
+        self.bounds, self.dets, self.phases = self.read_config(tmp_dir + "/" + self.config_file)
         self.names = list(names if names is not None else self.bounds.keys())
         self.idxs = {name : i for i, name in enumerate(self.names)}
 
-        # copy more files
-        detector_file = filesystem.cp(self.det.detector_file, tmp_dir) \
-                            if tmp_dir else self.det.detector_file
-        self.det.detector_file = detector_file
-        phase_files = filesystem.cp([p.phase_file for p in self.phases],
-                                          tmp_dir) \
-                               if tmp_dir else [p.phase_file
-                                                for p in self.phases]
+        # copy data files to temporary dir
+        for det in self.dets:
+            data_file = filesystem.cp(det.data_file, tmp_dir) \
+                               if tmp_dir else det.data_file
+            det.data_file = data_file
+
+        # copy detector files to temporary dir
+        for det in self.dets:
+            detector_file = filesystem.cp(det.detector_file, tmp_dir) \
+                               if tmp_dir else det.detector_file
+            det.detector_file = detector_file
+
+        # copy phase files to temporary dir
+        phase_files = filesystem.cp([p.phase_file for p in self.phases], tmp_dir) \
+                               if tmp_dir else [p.phase_file for p in self.phases]
         for p, new_file in zip(self.phases, phase_files):
             p.phase_file = new_file
+
+        # copy refinement plan file to temporary dir
+        section = "diffraction"
+        refinement_plan_file = cp.get(section, "refinement_plan_file")
+        self.refinement_plan_file = \
+                             filesystem.cp(refinement_plan_file, tmp_dir) \
+                             if tmp_dir else refinement_plan_file
 
         # move to temporary dir
         if tmp_dir is not None:
@@ -142,8 +154,7 @@ class Diffraction(object):
         """
         ndim = len(self.names)
         cost = self.refinement_plan.Plan(self.idxs, self.bounds,
-                                         self.data_file,
-                                         self.det, self.phases, ndim=ndim)
+                                         self.dets, self.phases, ndim=ndim)
         return cost
 
     def read_config(self, config_file=None):
@@ -161,9 +172,9 @@ class Diffraction(object):
            A ``dict`` with parameters from the ``[parameters]`` section of the
            configuration file. The keys are the parameter names and the values
            are tuples of the bounds to search ``(lower_bound, upper_bound)``.
-        det : Detector
-           A ``Detector`` instance. Contains all options from the
-           ``[detector]`` section.
+        dets : list
+           A ``list`` of ``Detector`` instances. Contains all options from the
+           ``[detector-%n]`` section.
         phases : list
            A ``list`` of ``Phase`` instances. Reads options from the
            ``[phases]`` section.
@@ -192,24 +203,50 @@ class Diffraction(object):
             ub = cp.getfloat(section, name + "-max")
             params[name] = (lb, ub)
     
-        # get all detector information from [detector]
+        # get all detector information from [detector-%n]
         section = "detector"
-        restricted_opts = ["detector_file"]
-        kwargs = {opt : cp.get(section, opt)
-                  for opt in cp.options(section) if opt not in restricted_opts}
-        detector_file = cp.get(section, "detector_file")
-        det = detector.Detector(detector_file, **kwargs)
+        restricted_opts = ["data_file", "detector_file"]
+        ndets = 0
+        dets = []
+        for sec in cp.sections():
+            if sec.startswith("{}-".format(section)):
+                ndets += 1
+        for i in range(ndets):
+            section_i = "{}-{}".format(section, i)
+            kwargs = {opt : cp.get(section_i, opt)
+                      for opt in cp.options(section_i) if opt not in restricted_opts}
+            data_file = cp.get(section_i, "data_file")
+            detector_file = cp.get(section_i, "detector_file")
+            det = detector.Detector(data_file, detector_file, **kwargs)
+            dets.append(det)
 
-        # get phase file and number in file from [phases]
-        section = "phases"
+        # get all phase information from [phase-%n]
+        section = "phase"
+        restricted_opts = ["phase_file"]
+        nphases = 0
         phases = []
-        options = cp.options(section)
-        num_phases = len(options) // 2
-        for i in range(num_phases):
-            j = i + 1
-            phase_file = cp.get(section, "phase_{}-file".format(j))
-            phase_number = cp.getint(section, "phase_{}-number".format(j))
-            phases.append(phase.Phase(phase_file, phase_number))
+        for sec in cp.sections():
+            if sec.startswith("{}-".format(section)):
+                nphases += 1
+        for i in range(nphases):
+            section_i = "{}-{}".format(section, i)
+            kwargs = {opt : cp.get(section_i, opt)
+                      for opt in cp.options(section_i) if opt not in restricted_opts}
+            phase_file = cp.get(section_i, "phase_file")
+            phases.append(phase.Phase(phase_file, **kwargs))
 
-        return params, det, phases
+        # set attributes from [diffraction]
+        section = "diffraction"
+        for option in cp.options(section):
+            val = cp.get(section, option)
+            if val.isdigit():
+                setattr(self, option, int(val))
+            else:
+                try:
+                    val = float(val)
+                    setattr(self, option, val)
+                except ValueError:
+                    setattr(self, option, val)
+
+        return params, dets, phases
 

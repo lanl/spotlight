@@ -3,22 +3,27 @@ information.
 """
 
 class Detector(object):
-    """ This class contains information about the detector or instrument. The
-    only required parameter is ``detector_file``, otherwise any keywords given
-    while initializing an instance will be added as attributes.
+    """ This class contains information about the detector or instrument.
+    Any non-required keywords given while initializing an instance will be
+    added as attributes.
 
     Attributes
     ----------
+    data_file : str
+        Path to data file.
     detector_file : str
         Path to detector or instrument file.
 
     Parameters
     ----------
+    data_file : str
+        Path to data file.
     detector_file : str
         Path to detector or instrument file.
     """
 
-    def __init__(self, detector_file, **kwargs):
+    def __init__(self, data_file, detector_file, **kwargs):
+        self.data_file = data_file
         self.detector_file = detector_file
         for key, val in kwargs.items():
             if val.isdigit():

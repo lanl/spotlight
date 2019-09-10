@@ -117,11 +117,11 @@ scripts_list = [
     "bin/gsas/gsas_change_spherical_harmonic_order",
     "bin/gsas/gsas_change_spherical_harmonic_coeff",
     "bin/gsas/gsas_write_csv",
+    "bin/gsasii/gsasii_write_csv",
     "bin/spotlight_inspect",
     "bin/spotlight_minimize",
-    "bin/spotlight_plot_chisq",
-    "bin/spotlight_plot_minima",
     "bin/spotlight_plot_profile",
+    "bin/spotlight_setup_gsas",
 ]
 
 # a list of all python packages to be installed
