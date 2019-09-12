@@ -45,12 +45,10 @@ numpy.random.seed(diff.seed)
 # run refinement plan
 cost.function(best_x)
 
-# refine once for plot
-gsas.gsas_refine(1)
-
-# create PDF of refinement
+# create PDF file
 if opts.gsas_done:
     print("Creating PDF...")
+    gsas.gsas_refine(1)
     gsas.gsas_done()
 
 # print statement
