@@ -39,6 +39,14 @@ The Spotlight version used to generate this documentation is shown below.
 
 .. program-output:: spotlight_inspect --version
 
+Citation
+~~~~~~~~
+
+If you use Spotlight, we ask that you please use the citation below.
+
+.. literalinclude:: spotlight.bib
+   :language: latex
+
 Acknowledgements
 ~~~~~~~~~~~~~~~~
 
