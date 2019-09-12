@@ -39,7 +39,7 @@ spotlight_setup_gsas \
 # requires convert which is not an explicit dependency of Spotlight
 # so check if it is installed first
 cd tmp_minima
-for IDX in 1; do
+for IDX in 0 1; do
 gsasii_write_csv \
     --input-file step_2.gpx \
     --output-file hist_${IDX}.txt \
