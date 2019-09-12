@@ -3,6 +3,7 @@
 
 import io
 import sys
+import GSASIIlattice as lattice
 import GSASIIscriptable as gsasii
 from spotlight import plan
 
@@ -80,15 +81,11 @@ class Plan(plan.BasePlan):
             elif phase == "PBSO4":
                 cell = self.gpx["Phases"][phase]["General"]["Cell"]
                 a, b, c = self.get("PBSO4_A"), self.get("PBSO4_B"), self.get("PBSO4_C")
-                t11 = cell[1] / a
-                t22 = cell[2] / b
-                t33 = cell[3] / c
-#                self.gpx["Phases"][phase]["General"]["Cell"] = lattice.TransformCell(
-#                    cell[:-1], [[t11, 0.0, 0.0],
-#                                [0.0, t22, 0.0],
-#                                [0.0, 0.0, t33]])
-                self.gpx["Phases"][phase]["General"]["Cell"][1:4] = [a, b, c]
-                self.gpx["Phases"][phase]["General"]["Cell"][-1] *= (t11 + t22 + t33)
+                t11, t22, t33 = cell[1] / a, cell[2] / b, cell[3] / c
+                self.gpx["Phases"][phase]["General"]["Cell"][1:] = lattice.TransformCell(
+                    cell[1:7], [[t11, 0.0, 0.0],
+                                [0.0, t22, 0.0],
+                                [0.0, 0.0, t33]])
 
             # otherwise raise error because refinement plan does not support this phase
             else:
