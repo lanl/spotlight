@@ -41,7 +41,7 @@ spotlight_setup_gsas \
 cd tmp_minima
 for IDX in 1; do
 gsasii_write_csv \
-    --input-file step_1.gpx \
+    --input-file step_2.gpx \
     --output-file hist_${IDX}.txt \
     --histogram ${IDX}
 spotlight_plot_profile \

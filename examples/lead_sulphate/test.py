@@ -3,6 +3,7 @@
 https://subversion.xray.aps.anl.gov/pyGSAS/Tutorials/PythonScript/Scripting.htm
 """
 
+import matplotlib.pyplot as plt
 import os
 import sys
 import GSASIIscriptable as gsasii
@@ -28,10 +29,10 @@ gpx = gsasii.G2Project(newgpx=os.path.join(work_dir, "PbSO4.gpx"))
 
 # add histograms
 hist1 = gpx.add_powder_histogram(
-                          os.path.join(data_dir,"PBSO4.xra"),
-                          os.path.join(data_dir,"INST_XRY.prm"))
+                          os.path.join(data_dir,"PBSO4.XRA"),
+                          os.path.join(data_dir,"INST_XRY.PRM"))
 hist2 = gpx.add_powder_histogram(
-                          os.path.join(data_dir,"PBSO4.cwn"),
+                          os.path.join(data_dir,"PBSO4.CWN"),
                           os.path.join(data_dir,"inst_d1a.prm"))
 
 # add phase
@@ -113,12 +114,12 @@ args8b = {
         },
         "Sample Parameters" : ["DisplaceX", "DisplaceY"],
     },
-    "histograms":[hist2],
+    "histograms":[hist2],      # histogram 2 only 
     "output" : os.path.join(work_dir, "step8.gpx"),
     "call" : print_stats,
 }
 
-# change data limits and instrument parmeter refinements (Hist)
+# change data limits & instrument parmeter refinements (Hist) 
 args9a = {
     "set": {
         "Limits" : [16.0, 158.4],
@@ -149,5 +150,12 @@ hist2.data["Sample Parameters"]["Gonio. radius"] = 650.0
 args_list = [args6, args7, args8a, args8b, args9a, args9b, args9c]
 gpx.do_refinements(args_list)
 
-# save
-gpx.save(os.path.join(work_dir, "final.gpx"))
+# plot
+x = gpx.histogram(0).getdata("x")
+y_obs = gpx.histogram(0).getdata("yobs")
+y_calc = gpx.histogram(0).getdata("ycalc")
+plt.plot(x, y_obs, c="red")
+plt.plot(x, y_calc, c="blue")
+
+# display
+plt.show()

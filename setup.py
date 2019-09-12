@@ -118,6 +118,7 @@ scripts_list = [
     "bin/gsas/gsas_change_spherical_harmonic_coeff",
     "bin/gsas/gsas_write_csv",
     "bin/gsasii/gsasii_write_csv",
+    "bin/gsasii/gsasii_print_lattice",
     "bin/spotlight_inspect",
     "bin/spotlight_minimize",
     "bin/spotlight_plot_profile",

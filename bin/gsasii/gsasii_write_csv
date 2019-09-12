@@ -6,6 +6,7 @@ reflections. Meant to mimic the output from ``gsas_write_csv``.
 import argparse
 import numpy
 import GSASIIscriptable as gsasii
+from spotlight import version
 
 def find_nearest(array, value):
     """ Returns the index of the nearest value in the array.
