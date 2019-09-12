@@ -48,6 +48,8 @@ curl https://subversion.xray.aps.anl.gov/pyGSAS/install/bootstrap.py > bootstrap
 echo $'proxyout.lanl.gov\n8080' >> proxy.txt
 python bootstrap.py < proxy.txt
 rm proxy.txt
+cd fsource
+scons
 
 # install required packages
 conda install --yes pkg-config==0.29.2
@@ -74,5 +76,5 @@ python setup.py install
 mkdir -p ${CONDA_PREFIX}/etc/conda/activate.d
 echo export PGPLOT_FONT=\$\{CONDA_PREFIX\}/pgl/grfont.dat >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
 echo export gsas=\$\{CONDA_PREFIX\}/gsas >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
-echo export PYTHONPATH=\$\{PYTHONPATH\}:\$\{CONDA_PREFIX\}/gsasii >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
+echo export PYTHONPATH=\$\{PYTHONPATH\}:\$\{CONDA_PREFIX\}/gsasii:\$\{CONDA_PREFIX\}/gsasii/fsource >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
 echo export PATH=\$\{PATH\}:\$\{gsas\}/exe:\$\{gsas\}/scripts >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
