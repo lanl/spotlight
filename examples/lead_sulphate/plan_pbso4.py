@@ -62,10 +62,6 @@ class Plan(plan.BasePlan):
     @silent_stdout
     def compute(self):
 
-        # create a text trap and redirect stdout
-        silent_stdout = io.StringIO()
-        sys.stdout = silent_stdout
-
         # create a GSAS-II project
         self.gpx = gsasii.G2Project("step_1.gpx")
         self.gpx.save("step_2.gpx")
@@ -177,9 +173,6 @@ class Plan(plan.BasePlan):
         # refine
         args_list = [args6, args7, args8a, args8b, args9a, args9b, args9c]
         self.gpx.do_refinements(args_list)
-
-        # now restore stdout function
-        sys.stdout = sys.__stdout__
 
         # get minimization statistic
         stat = self.gpx["Covariance"]["data"]["Rvals"]["Rwp"]
