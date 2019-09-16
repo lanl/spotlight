@@ -37,8 +37,8 @@ class BasePlan(models.AbstractFunction):
         A list of ``Phase`` instances.
     """
 
-    def __init__(self, idxs, bounds, detectors, phases, **kwargs):
-        super(BasePlan, self).__init__(**kwargs)
+    def __init__(self, idxs, bounds, ndim, **kwargs):
+        super(BasePlan, self).__init__(ndim=ndim)
 
         # store map to parameters
         self.idxs = idxs
@@ -46,8 +46,8 @@ class BasePlan(models.AbstractFunction):
         self._p = None
 
         # store input files
-        self.detectors = detectors
-        self.phases = phases
+        for key, val in kwargs.items():
+            setattr(self, key, val)
 
         # setup initial porition of refinement plan
         self.initialize()

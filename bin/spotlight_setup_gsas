@@ -7,9 +7,9 @@ import argparse
 import matplotlib as mpl; mpl.use("Agg")
 import numpy
 from matplotlib import pyplot as plt
-from spotlight import diffraction
 from spotlight import gsas
 from spotlight import version
+from spotlight.io import configuration_file
 from spotlight.io import solution_file
 
 # parse command line
@@ -34,13 +34,13 @@ for name, val in zip(names, best_x):
 
 # move to temporary dir, read configuration file, and get refinement plan
 print("Run refinement plan to get output...")
-diff = diffraction.Diffraction(opts.config_files, names=names,
-                               tmp_dir=opts.tmp_dir, change=True,
-                               config_overrides=opts.config_overrides)
-cost = diff.get_refinement_plan()
+config = configuration_file.ConfigurationFile(opts.config_files, names=names,
+                                              tmp_dir=opts.tmp_dir, change=True,
+                                              config_overrides=opts.config_overrides)
+cost = config.get_refinement_plan()
 
 # set random seed
-numpy.random.seed(diff.seed)
+numpy.random.seed(config.seed)
 
 # run refinement plan
 cost.function(best_x)

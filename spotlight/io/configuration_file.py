@@ -6,11 +6,40 @@ import numpy
 import os
 import pickle
 import sys
-from spotlight import detector
 from spotlight import filesystem
-from spotlight import phase
 
-class Diffraction(object):
+class Item(object):
+    """ This class contains information about the detector or instrument.
+    Any non-required keywords given while initializing an instance will be
+    added as attributes.
+
+    Attributes
+    ----------
+    data_file : str
+        Path to data file.
+    detector_file : str
+        Path to detector or instrument file.
+
+    Parameters
+    ----------
+    data_file : str
+        Path to data file.
+    detector_file : str
+        Path to detector or instrument file.
+    """
+
+    def __init__(self, **kwargs):
+        for key, val in kwargs.items():
+            if val.isdigit():
+                setattr(self, key, int(val))
+            else:
+                try:
+                    val = float(val)
+                    setattr(self, key, val)
+                except ValueError:
+                    setattr(self, key, val)
+
+class ConfigurationFile(object):
     """ This class manages a refinement plan. This is the top-level interface
     for interacting with a refinement.
 
@@ -27,8 +56,6 @@ class Diffraction(object):
     ----------
     config_file : str
         Path to concatenated configuration file.
-    data_file : str
-        Path to experimental data file.
     refinement_plan_file : str
         Path to refinement plan file.
     refinement_plan : Plan
@@ -40,10 +67,6 @@ class Diffraction(object):
         A list of names. This list is ordered how packages will return a list.
     idxs : dict
         A ``dict`` with key parameter and value index of parameter.
-    dets : list
-        A list of ``Dectector`` instances.
-    phases : list
-        A list of ``Phase`` instances.
     lower_bounds : list
         A list of lower bound values. This list is ordered how packages will
         return a list.
@@ -55,8 +78,6 @@ class Diffraction(object):
     ----------
     config_files : list
         Paths to configuration files.
-    data_file : str
-        Path to experimental data file.
     tmp_dir : str
         Temporary directory to do refinement.
     names : {None, list}
@@ -94,30 +115,23 @@ class Diffraction(object):
             cp.write(fp)
 
         # read configuration
-        self.bounds, self.dets, self.phases = self.read_config(tmp_dir + "/" + self.config_file)
+        self.read_config(tmp_dir + "/" + self.config_file)
         self.names = list(names if names is not None else self.bounds.keys())
         self.idxs = {name : i for i, name in enumerate(self.names)}
 
-        # copy data files to temporary dir
-        for det in self.dets:
-            data_file = filesystem.cp(det.data_file, tmp_dir) \
-                               if tmp_dir else det.data_file
-            det.data_file = data_file
-
-        # copy detector files to temporary dir
-        for det in self.dets:
-            detector_file = filesystem.cp(det.detector_file, tmp_dir) \
-                               if tmp_dir else det.detector_file
-            det.detector_file = detector_file
-
-        # copy phase files to temporary dir
-        phase_files = filesystem.cp([p.phase_file for p in self.phases], tmp_dir) \
-                               if tmp_dir else [p.phase_file for p in self.phases]
-        for p, new_file in zip(self.phases, phase_files):
-            p.phase_file = new_file
+        # copy files to temporary dir
+        for key in self.items.keys():
+            items = self.items[key] if isinstance(self.items[key], list) \
+                        else [self.items[key]]
+            for item in items:
+                for attr in dir(item):
+                    if attr.endswith("_file"):
+                        new_file = filesystem.cp(getattr(item, attr), tmp_dir) \
+                               if tmp_dir else getattr(item, attr)
+                        setattr(item, attr, new_file)
 
         # copy refinement plan file to temporary dir
-        section = "diffraction"
+        section = "configuration"
         refinement_plan_file = cp.get(section, "refinement_plan_file")
         self.refinement_plan_file = \
                              filesystem.cp(refinement_plan_file, tmp_dir) \
@@ -153,8 +167,7 @@ class Diffraction(object):
             A refinement plan instance.
         """
         ndim = len(self.names)
-        cost = self.refinement_plan.Plan(self.idxs, self.bounds,
-                                         self.dets, self.phases, ndim=ndim)
+        cost = self.refinement_plan.Plan(self.idxs, self.bounds, ndim=ndim, **self.items)
         return cost
 
     def read_config(self, config_file=None):
@@ -165,19 +178,6 @@ class Diffraction(object):
         config_file : {None, str}
            Path of configuration file to read. Default is ``None`` which reads
            attribute ``config_file``.
-    
-        Returns
-        -------
-        params : dict
-           A ``dict`` with parameters from the ``[parameters]`` section of the
-           configuration file. The keys are the parameter names and the values
-           are tuples of the bounds to search ``(lower_bound, upper_bound)``.
-        dets : list
-           A ``list`` of ``Detector`` instances. Contains all options from the
-           ``[detector-%n]`` section.
-        phases : list
-           A ``list`` of ``Phase`` instances. Reads options from the
-           ``[phases]`` section.
         """
 
         # get path
@@ -202,41 +202,43 @@ class Diffraction(object):
             lb = cp.getfloat(section, name + "-min")
             ub = cp.getfloat(section, name + "-max")
             params[name] = (lb, ub)
-    
-        # get all detector information from [detector-%n]
-        section = "detector"
-        restricted_opts = ["data_file", "detector_file"]
-        ndets = 0
-        dets = []
-        for sec in cp.sections():
-            if sec.startswith("{}-".format(section)):
-                ndets += 1
-        for i in range(ndets):
-            section_i = "{}-{}".format(section, i)
-            kwargs = {opt : cp.get(section_i, opt)
-                      for opt in cp.options(section_i) if opt not in restricted_opts}
-            data_file = cp.get(section_i, "data_file")
-            detector_file = cp.get(section_i, "detector_file")
-            det = detector.Detector(data_file, detector_file, **kwargs)
-            dets.append(det)
+        self.bounds = params   
+ 
+        # get all sections that will become attributes
+        restricted_sections = ["configuration", "solver", "parameters"]
+        counts = {}
+        items = {}
+        secs = cp.sections()
+        secs.sort()
+        for sec in secs:
 
-        # get all phase information from [phase-%n]
-        section = "phase"
-        restricted_opts = ["phase_file"]
-        nphases = 0
-        phases = []
-        for sec in cp.sections():
-            if sec.startswith("{}-".format(section)):
-                nphases += 1
-        for i in range(nphases):
-            section_i = "{}-{}".format(section, i)
-            kwargs = {opt : cp.get(section_i, opt)
-                      for opt in cp.options(section_i) if opt not in restricted_opts}
-            phase_file = cp.get(section_i, "phase_file")
-            phases.append(phase.Phase(phase_file, **kwargs))
+            # skip restricted keys
+            if sec in restricted_sections:
+                continue
+
+            # count number in each section group
+            elif "-" in sec:
+                sec, _ = sec.split("-")
+                if sec not in counts.keys():
+                    counts[sec] = 0
+                counts[sec] += 1
+
+            # handle single sections
+            else:
+                kwargs = {opt : cp.get(sec, opt) for opt in cp.options(sec)}
+                items[sec] = Item(**kwargs)
+
+        # handle each section group
+        for sec, num in counts.items():
+            items[sec] = num * [None]
+            for i in range(num):
+                section_i = "{}-{}".format(sec, i)
+                kwargs = {opt : cp.get(section_i, opt) for opt in cp.options(section_i)}
+                items[sec][i] = Item(**kwargs)
+        self.items = items
 
         # set attributes from [diffraction]
-        section = "diffraction"
+        section = "configuration"
         for option in cp.options(section):
             val = cp.get(section, option)
             if val.isdigit():
@@ -247,6 +249,4 @@ class Diffraction(object):
                     setattr(self, option, val)
                 except ValueError:
                     setattr(self, option, val)
-
-        return params, dets, phases
 

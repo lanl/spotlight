@@ -9,9 +9,9 @@ import socket
 import time
 from mystic import termination
 from mystic import tools
-from spotlight import diffraction
 from spotlight import solver
 from spotlight import version
+from spotlight.io import configuration_file
 from spotlight.io import solution_file
 from spotlight.io import state_file
 
@@ -41,20 +41,20 @@ opts = parser.parse_args()
 
 # move to temporary dir, read configuration file, and get refinement plan
 tmp_dir = "{}_{}".format(opts.tmp_dir, rank)
-diff = diffraction.Diffraction(opts.config_files, tmp_dir, change=True,
-                               config_overrides=opts.config_overrides)
-cost = diff.get_refinement_plan()
+config = configuration_file.ConfigurationFile(opts.config_files, tmp_dir, change=True,
+                                              config_overrides=opts.config_overrides)
+cost = config.get_refinement_plan()
 
 # set random seed
-seed = diff.seed if hasattr(diff, "seed") else 0
+seed = config.seed if hasattr(config, "seed") else 0
 seed += rank
 numpy.random.seed(seed)
 tools.random_seed(seed)
 
 # create an archive file for output data
-output_file = diff.solution_file if diff.solution_file.startswith("/") \
-                  else run_dir + "/" + diff.solution_file
-fp_sol = solution_file.SolutionFile(output_file, diff.names)
+output_file = config.solution_file if config.solution_file.startswith("/") \
+                  else run_dir + "/" + config.solution_file
+fp_sol = solution_file.SolutionFile(output_file, config.names)
 if rank == 0:
     print("Rank 0 is writing names to {}".format(output_file))
     fp_sol.save_names()
@@ -63,13 +63,13 @@ if comm:
     comm.Barrier()
 
 # create an archive file for state data
-output_file = diff.state_file if diff.state_file.startswith("/") \
-                  else run_dir + "/" + diff.state_file
+output_file = config.state_file if config.state_file.startswith("/") \
+                  else run_dir + "/" + config.state_file
 fp_state = state_file.StateFile(output_file)
 
 # run one of ensemble of solvers
-for i in range(diff.num_solvers):
-    local_tag = "_".join(map(str, [rank, i, diff.tag]))
+for i in range(config.num_solvers):
+    local_tag = "_".join(map(str, [rank, i, config.tag]))
 
     # check if there is a previous state for a local solver
     fp_sol.arch.load(local_tag)
@@ -96,15 +96,15 @@ for i in range(diff.num_solvers):
     # if there is not a previous state initialize local solver
     else:
         print("Initializing a state for {}".format(local_tag))
-        local_solver = solver.Solver(diff.lower_bounds, diff.upper_bounds,
-                                     diff.config_file, arch=fp_sol, iteration=i)
+        local_solver = solver.Solver(config.lower_bounds, config.upper_bounds,
+                                     config.config_file, arch=fp_sol, iteration=i)
 
     # print statement
     print("Process {} of {} running walker {} of {} on {}".format(
-              rank + 1, size, i + 1, diff.num_solvers, hostname))
+              rank + 1, size, i + 1, config.num_solvers, hostname))
 
     # main optimization loop with checkpointing
-    if hasattr(diff, "checkpoint_stride"):
+    if hasattr(config, "checkpoint_stride"):
         stop = False
         while not stop:
 
@@ -112,7 +112,7 @@ for i in range(diff.num_solvers):
             t_start = time.time()
     
             # take steps in optimization
-            for _ in range(diff.checkpoint_stride):
+            for _ in range(config.checkpoint_stride):
                 stop = local_solver.step(cost)
 
             # end timer
@@ -132,7 +132,7 @@ for i in range(diff.num_solvers):
 
     # print statement
     print("Evaluation time for process {} of {} running walker {} of {} on {} is {}s".format(
-              rank, size, i + 1, diff.num_solvers, hostname, fp_sol.arch[local_tag][5]))
+              rank, size, i + 1, config.num_solvers, hostname, fp_sol.arch[local_tag][5]))
 
 # finish
 if comm:
