@@ -22,10 +22,10 @@ mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` \
         config_base.ini \
         config_pbso4.ini \
     --config-overrides \
-        diffraction:seed:${SEED} \
-        diffraction:tag:${SEED} \
-        phase-0:phase_file:PbSO4-Wyckoff.cif \
-        phase-0:phase_label:"PBSO4" \
+        configuration:seed:${SEED} \
+        configuration:tag:${SEED} \
+        phases-0:phase_file:PbSO4-Wyckoff.cif \
+        phases-0:phase_label:"PBSO4" \
     --tmp-dir tmp
 
 # setup GSAS-II for global minima from optimization search

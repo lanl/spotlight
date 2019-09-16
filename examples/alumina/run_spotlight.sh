@@ -25,10 +25,10 @@ mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` \
         config_base.ini \
         config_alumina.ini \
     --config-overrides \
-        diffraction:seed:${SEED} \
-        diffraction:tag:${SEED} \
-        phase-0:phase_file:alumina.exp \
-        phase-0:phase_number:1 \
+        configuration:seed:${SEED} \
+        configuration:tag:${SEED} \
+        phases-0:phase_file:alumina.exp \
+        phases-0:phase_number:1 \
     --tmp-dir tmp
 
 # setup GSAS for global minima from optimization search

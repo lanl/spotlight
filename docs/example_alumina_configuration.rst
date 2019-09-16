@@ -3,7 +3,7 @@ Configuration File
 
 The configuration file sets information about the refinement plan.
 The configuration file should be written to work with the built-in ``configparser`` Python module.
-The sections are: ``[solver]``, ``[detector]``, ``[phases]``, and ``[parmeters]``.
+The required sections are: ``[configuration]``, ``[solver]``, and ``[parmeters]``.
 
 The ``[solver]`` section is required to have a ``local_solver`` and ``sampling_method`` option.
 Any other options are added as attributes to a ``spotlight.solver.Solver`` instance and passed as a keyword argument to ``Solver.solve`` function.
