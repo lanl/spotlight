@@ -44,26 +44,7 @@ class Solver(object):
         Number of solvers already run. Only required for some sampling methods.
     """
 
-    def __init__(self, lower_bounds, upper_bounds, config_file,
-                 arch=None, iteration=None):
-
-        # read configuration file
-        cp = configparser.ConfigParser()
-        cp.readfp(open(config_file, "r"))
-
-        # store all options from [solver]
-        section = "solver"
-        options = {}
-        for option in cp.options(section):
-            val = cp.get(section, option)
-            if val.isdigit():
-                options[option] = int(val)
-            else:
-                try:
-                    val = float(val)
-                    options[option] = val
-                except ValueError:
-                    options[option] = val
+    def __init__(self, lower_bounds, upper_bounds, arch=None, iteration=None, **kwargs):
 
         # set required options
         self.lower_bounds = lower_bounds
@@ -74,16 +55,16 @@ class Solver(object):
                            "stop_generations"]
         for option in special_options:
             if option == "local_solver":
-                _local_solver = options[option]
-                del options[option]
-            elif option in options.keys():
-                setattr(self, option, options[option])
-                del options[option]
+                _local_solver = kwargs[option]
+                del kwargs[option]
+            elif option in kwargs.keys():
+                setattr(self, option, kwargs[option])
+                del kwargs[option]
             else:
                 setattr(self, option, None)
 
         # save extra options to be passed to solve function
-        self.extra_options = options
+        self.extra_options = kwargs
 
         # initialize local solver
         ndim = len(lower_bounds)

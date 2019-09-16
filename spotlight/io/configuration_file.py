@@ -7,6 +7,7 @@ import os
 import pickle
 import sys
 from spotlight import filesystem
+from spotlight import solver
 
 class Item(object):
     """ This class contains information about the detector or instrument.
@@ -169,6 +170,39 @@ class ConfigurationFile(object):
         ndim = len(self.names)
         cost = self.refinement_plan.Plan(self.idxs, self.bounds, ndim=ndim, **self.items)
         return cost
+
+    def get_solver(self, arch=None, iteration=None):
+        """ Returns instance of requested solver.
+
+        Returns
+        -------
+        local_solver : Solver
+            A ``Solver`` instance.
+        """
+
+        # read configuration file
+        cp = configparser.ConfigParser()
+        cp.readfp(open(self.config_file, "r"))
+
+        # store all options from [solver]
+        section = "solver"
+        options = {}
+        for option in cp.options(section):
+            val = cp.get(section, option)
+            if val.isdigit():
+                options[option] = int(val)
+            else:
+                try:
+                    val = float(val)
+                    options[option] = val
+                except ValueError:
+                    options[option] = val
+
+        # initialize solver
+        local_solver = solver.Solver(self.lower_bounds, self.upper_bounds,
+                                     arch=arch, iteration=iteration, **options)
+
+        return local_solver
 
     def read_config(self, config_file=None):
         """ Reads information from configuration file.
