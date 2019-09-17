@@ -31,6 +31,7 @@ for name, val in zip(config.names, best_x):
 
 # move to temporary dir, read configuration file, and get refinement plan
 print("Run refinement plan to get output...")
+condig.setup_dir(tmp_dir)
 cost = config.get_refinement_plan()
 
 # set random seed
