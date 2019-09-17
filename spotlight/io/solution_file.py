@@ -30,16 +30,16 @@ class SolutionFile(object):
     """
 
     # special keys
-    restricted_keys = ["names"]
+    restricted_keys = ["config"]
 
-    def __init__(self, path, names):
+    def __init__(self, path, config):
 
         # store information
         self.path = path
         self.arch = archives.dir_archive(self.path)
-        self.names = names
+        self.config = config
 
-    def save_names(self, names=None):
+    def save_config(self, key="config", config=None):
         """ Writes names of parameters.
  
         Parameters
@@ -50,15 +50,16 @@ class SolutionFile(object):
         """
 
         # load new data in archive file
-        names_key = "names"
-        self.arch.load(names_key)
+        self.arch.load(key)
 
-        # add names of parameters
-        if names_key not in self.arch.keys():
-            self.arch[names_key] = self.names if names == None else names
-            self.arch.dump(names_key)
+        # write configuration to file
+        # otherwise assert names of parameters are the same
+        if key not in self.arch.keys():
+            self.arch[key] = getattr(self, key) if config == None else config
+            self.arch[key].refinement_plan = None
+            self.arch.dump(key)
         else:
-            assert(self.names == self.arch[names_key])
+            assert(getattr(self, key).names == self.arch[key].names)
 
     def save_data(self, key, local_solver, time=None):
         """ Writes output data from a local solver. Adds the given solution to
@@ -132,7 +133,6 @@ class SolutionFile(object):
         """
 
         # initialize some values
-        names = None
         all_x = []
         all_y = []
         best_x = None
@@ -158,13 +158,13 @@ class SolutionFile(object):
                 input_file.load()
 
             # read parameter names
-            if "names" not in input_file.keys():
-                print("Could not read parameters names from file!")
+            if "config" not in input_file.keys():
+                print("Could not read configuration from file!")
                 continue
             elif i == 0:
-                names = input_file["names"]
+                config = input_file["config"]
             else:
-                assert(names == input_file["names"])
+                assert(config.names == input_file["config"].names)
 
             # loop over solvers in file
             for key in input_file.keys():
@@ -191,4 +191,4 @@ class SolutionFile(object):
                 all_x.append(numpy.array(x))
                 all_y.append(numpy.array(y))
     
-        return names, all_x, all_y, best_x, best_y
+        return config, all_x, all_y, best_x, best_y

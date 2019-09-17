@@ -23,18 +23,18 @@ parser.add_argument("--version", action=version.VersionAction)
 opts = parser.parse_args()
 
 # read data
-names, _, _, best_x, best_y = solution_file.SolutionFile.read_data(opts.input_files,
-                                                                   verbose=True)
+config, _, _, best_x, best_y = solution_file.SolutionFile.read_data(opts.input_files,
+                                                                    verbose=True)
 
 # print best parameters
 print("Best parameters are...")
 print("CHISQ {}".format(best_y))
-for name, val in zip(names, best_x):
+for name, val in zip(config.names, best_x):
     print("{} {}".format(name, val))
 
 # move to temporary dir, read configuration file, and get refinement plan
 print("Run refinement plan to get output...")
-config = configuration_file.ConfigurationFile(opts.config_files, names=names,
+config = configuration_file.ConfigurationFile(opts.config_files, names=config.names,
                                               tmp_dir=opts.tmp_dir, change=True,
                                               config_overrides=opts.config_overrides)
 cost = config.get_refinement_plan()

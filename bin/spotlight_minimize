@@ -53,10 +53,10 @@ tools.random_seed(seed)
 # create an archive file for output data
 output_file = config.solution_file if config.solution_file.startswith("/") \
                   else run_dir + "/" + config.solution_file
-fp_sol = solution_file.SolutionFile(output_file, config.names)
+fp_sol = solution_file.SolutionFile(output_file, config)
 if rank == 0:
-    print("Rank 0 is writing names to {}".format(output_file))
-    fp_sol.save_names()
+    print("Rank 0 is writing configuration to {}".format(output_file))
+    fp_sol.save_config()
 if comm:
     print("Rank {} is waiting".format(rank))
     comm.Barrier()

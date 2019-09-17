@@ -29,8 +29,9 @@ keys = arch.keys()
 print(keys)
 nsolvers = 0
 nsolvers_terminated = 0
+restricted_keys = ["config"]
 for key in keys:
-    if key == "names":
+    if key in restricted_keys:
         continue
     sol = arch[key]
     print("The key is", key)
@@ -38,7 +39,7 @@ for key in keys:
     print("The shape of the solution array is", numpy.array(sol[1]).shape, sol[1])
     print("The best parameters are:")
     for i, x in enumerate(sol[2]):
-        print(arch["names"][i], x)
+        print(arch["config"].names[i], x)
     print("The best cost function value is", sol[3])
     print("The local optimization completion is", sol[4])
     print("The duration in seconds is", sol[5])
