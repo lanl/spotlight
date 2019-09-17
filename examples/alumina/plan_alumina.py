@@ -1,6 +1,7 @@
 """ A refinement plan for alumina.
 """
 
+import os
 from spotlight import gsas
 from spotlight import plan
 
@@ -16,13 +17,13 @@ class Plan(plan.BasePlan):
         phase_files = [p.phase_file for p in self.phases]
         phase_numbers = [p.phase_number for p in self.phases]
         for phase_file, phase_number in zip(phase_files, phase_numbers):
-            gsas.gsas_read_phase(phase_file, phase_number)
+            gsas.gsas_read_phase(os.path.basename(phase_file), phase_number)
 
         # add histograms
         for det in self.detectors:
             for bank_num in range(det.bank_number):
-                gsas.gsas_add_histogram(det.data_file,
-                                        det.detector_file,
+                gsas.gsas_add_histogram(os.path.basename(det.data_file),
+                                        os.path.basename(det.detector_file),
                                         bank_num + 1,
                                         det.min_d_spacing,
                                         det.max_d_spacing)
@@ -36,7 +37,7 @@ class Plan(plan.BasePlan):
         for i, phase in enumerate(self.phases):
 
             # handle alumina phase
-            if phase.phase_file == "alumina.exp":
+            if os.path.basename(phase.phase_file) == "alumina.exp":
 
                 # set lattice parameters
                 gsas.gsas_change_lattice(i + 1, [self.get("A_ALUMINA"),
