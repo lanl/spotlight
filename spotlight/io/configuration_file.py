@@ -93,32 +93,54 @@ class ConfigurationFile(object):
     def __init__(self, config_files, tmp_dir=None, names=None, change=True,
                  config_overrides=None):
 
+        # concatenate configuration files
+        self.cp = configparser.ConfigParser()
+        self.cp.read(config_files)
+        if config_overrides:
+            for override in config_overrides:
+                section, option, value = override.split(":")
+                if option.startswith("-"):
+                    self.cp.remove_option(section, option)
+                if not self.cp.has_section(section):
+                    self.cp.add_section(section)
+                self.cp.set(section, option, value)
+
+        # set attributes from configuration file
+        self.read_config()
+
+        # refinement plan is not loaded until get_refinement_plan is called
+        self.refinement_plan = None
+
+        # set atrributes for names and indices of parameters
+        self.names = list(names if names is not None else self.bounds.keys())
+        self.idxs = {name : i for i, name in enumerate(self.names)}
+
+        # copy files to temporary dir
+        # move to temporary dir
+        self.setup_dir(tmp_dir, change=change)
+
+    @property
+    def lower_bounds(self):
+        return [self.bounds[name][0] for name in self.names]
+
+    @property
+    def upper_bounds(self):
+        return [self.bounds[name][1] for name in self.names]
+
+    def setup_dir(self, tmp_dir=None, change=True):
+        """ Copy files to temporary directory.
+        """
+
         # create temporary dir
         if tmp_dir:
             filesystem.mkdir(tmp_dir)
         else:
             tmp_dir = "."
 
-        # concatenate configuration files
-        # copy to temporary dir
-        cp = configparser.ConfigParser()
-        cp.read(config_files)
-        if config_overrides:
-            for override in config_overrides:
-                section, option, value = override.split(":")
-                if option.startswith("-"):
-                    cp.remove_option(section, option)
-                if not cp.has_section(section):
-                    cp.add_section(section)
-                cp.set(section, option, value)
+        # write configuration file to temporary dir
         self.config_file = "config.ini"
         with open(tmp_dir + "/" + self.config_file, "w") as fp:
-            cp.write(fp)
-
-        # read configuration
-        self.read_config(tmp_dir + "/" + self.config_file)
-        self.names = list(names if names is not None else self.bounds.keys())
-        self.idxs = {name : i for i, name in enumerate(self.names)}
+            self.cp.write(fp)
 
         # copy files to temporary dir
         for key in self.items.keys():
@@ -132,32 +154,13 @@ class ConfigurationFile(object):
                         setattr(item, attr, new_file)
 
         # copy refinement plan file to temporary dir
-        section = "configuration"
-        refinement_plan_file = cp.get(section, "refinement_plan_file")
         self.refinement_plan_file = \
-                             filesystem.cp(refinement_plan_file, tmp_dir) \
-                             if tmp_dir else refinement_plan_file
+                             filesystem.cp(self.refinement_plan_file, tmp_dir) \
+                             if tmp_dir else self.refinement_plan_file
 
         # move to temporary dir
         if tmp_dir is not None:
             filesystem.mkdir(tmp_dir, change=change)
-
-        # import refinement plan
-        sys.dont_write_bytecode = True
-        if self.refinement_plan_file != None:
-            self.refinement_plan = __import__(
-                    os.path.basename(self.refinement_plan_file).rstrip(".py"))
-        else:
-            self.refinement_plan = None
-        sys.dont_write_bytecode = False
-
-    @property
-    def lower_bounds(self):
-        return [self.bounds[name][0] for name in self.names]
-
-    @property
-    def upper_bounds(self):
-        return [self.bounds[name][1] for name in self.names]
 
     def get_refinement_plan(self):
         """ Returns instance of requested refinement plan.
@@ -226,13 +229,12 @@ class ConfigurationFile(object):
            attribute ``config_file``.
         """
 
-        # get path
-        config_file = config_file if config_file \
-                          is not None else self.config_file
-
         # read configuration file
-        cp = configparser.ConfigParser()
-        cp.readfp(open(config_file, "r"))
+        if config_file:
+            cp = configparser.ConfigParser()
+            cp.readfp(open(config_file, "r"))
+        else:
+            cp = self.cp
 
         # read parameter names from [parameters]
         section = "parameters"
@@ -283,7 +285,7 @@ class ConfigurationFile(object):
                 items[sec][i] = Item(**kwargs)
         self.items = items
 
-        # set attributes from [diffraction]
+        # set attributes from [configuration]
         section = "configuration"
         for option in cp.options(section):
             val = cp.get(section, option)
@@ -295,4 +297,3 @@ class ConfigurationFile(object):
                     setattr(self, option, val)
                 except ValueError:
                     setattr(self, option, val)
-
