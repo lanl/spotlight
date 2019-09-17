@@ -31,7 +31,6 @@ mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` \
 # setup GSAS-II for global minima from optimization search
 spotlight_setup_gsas \
     --input-files solution.db \
-    --config-file tmp_0/config.ini \
     --tmp-dir tmp_minima
 
 # make CSV file and plot results for each histogram

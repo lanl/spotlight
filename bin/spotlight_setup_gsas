@@ -9,14 +9,11 @@ import numpy
 from matplotlib import pyplot as plt
 from spotlight import gsas
 from spotlight import version
-from spotlight.io import configuration_file
 from spotlight.io import solution_file
 
 # parse command line
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--input-files", nargs="+", required=True)
-parser.add_argument("--config-files", nargs="+", required=True)
-parser.add_argument("--config-overrides", nargs="+")
 parser.add_argument("--tmp-dir", default="tmp")
 parser.add_argument("--gsas-done", action="store_true")
 parser.add_argument("--version", action=version.VersionAction)
@@ -34,9 +31,6 @@ for name, val in zip(config.names, best_x):
 
 # move to temporary dir, read configuration file, and get refinement plan
 print("Run refinement plan to get output...")
-config = configuration_file.ConfigurationFile(opts.config_files, names=config.names,
-                                              tmp_dir=opts.tmp_dir, change=True,
-                                              config_overrides=opts.config_overrides)
 cost = config.get_refinement_plan()
 
 # set random seed
