@@ -167,8 +167,20 @@ class ConfigurationFile(object):
         cost : Plan
             A refinement plan instance.
         """
+
+        # import refinement plan
+        sys.dont_write_bytecode = True
+        if self.refinement_plan_file == None and self.refinement_plan == None:
+            raise ValueError("There is no refinement plan to load!")
+        elif self.refinement_plan == None:
+            self.refinement_plan = __import__(
+                    os.path.basename(self.refinement_plan_file).rstrip(".py"))
+        sys.dont_write_bytecode = False
+
+        # initialize refinement plan
         ndim = len(self.names)
         cost = self.refinement_plan.Plan(self.idxs, self.bounds, ndim=ndim, **self.items)
+
         return cost
 
     def get_solver(self, arch=None, iteration=None):
