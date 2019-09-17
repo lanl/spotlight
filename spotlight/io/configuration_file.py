@@ -137,11 +137,6 @@ class ConfigurationFile(object):
         else:
             tmp_dir = "."
 
-        # write configuration file to temporary dir
-        self.config_file = "config.ini"
-        with open(tmp_dir + "/" + self.config_file, "w") as fp:
-            self.cp.write(fp)
-
         # copy files to temporary dir
         for key in self.items.keys():
             items = self.items[key] if isinstance(self.items[key], list) \
@@ -154,9 +149,15 @@ class ConfigurationFile(object):
                         setattr(item, attr, new_file)
 
         # copy refinement plan file to temporary dir
-        self.refinement_plan_file = \
-                             filesystem.cp(self.refinement_plan_file, tmp_dir) \
+        self.refinement_plan_file = filesystem.cp(self.refinement_plan_file, tmp_dir) \
                              if tmp_dir else self.refinement_plan_file
+
+        # write configuration file to temporary dir
+        self.config_file = os.path.join(tmp_dir, "config.ini") \
+                               if tmp_dir else "config.ini"
+        with open(self.config_file, "w") as fp:
+            self.cp.write(fp)
+        self.config_file = os.path.basename(self.config_file) if change else self.config_file
 
         # move to temporary dir
         if tmp_dir is not None:
