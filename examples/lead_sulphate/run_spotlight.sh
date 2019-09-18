@@ -16,7 +16,7 @@ export OMP_NUM_THREADS=1
 
 # run optimization search in parallel
 # profile the execution
-mpirun --oversubscribe -n 1 \
+mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` \
     python -m cProfile -o pbso4.pstat `which spotlight_minimize` \
     --config-files \
         config_base.ini \
