@@ -19,6 +19,16 @@ conda env remove --yes --name spotlight
 conda create --yes --name spotlight python=${PYTHON_VERSION}
 conda activate spotlight
 
+# install OpenMPI
+mkdir -p ${CONDA_PREFIX}/src && cd ${CONDA_PREFIX}/src
+wget https://www.open-mpi.org/software/ompi/v2.1/downloads/openmpi-2.1.3.tar.gz
+tar -xvf openmpi-2.1.3.tar.gz
+cd openmpi-2.1.3
+CFLAGS=-O3 \
+CXXFLAGS=-O3 \
+./configure --prefix=${CONDA_PREFIX}
+make -j $(getconf _NPROCESSORS_ONLN) install
+
 # install GSAS which requires Python 2.7 for installation scripts
 conda install --yes python==2.7.16
 mkdir -p ${CONDA_PREFIX}/gsas && cd ${CONDA_PREFIX}/gsas
@@ -58,16 +68,6 @@ conda install --yes pkg-config==0.29.2
 # install optional packages
 conda install --yes --channel conda-forge imagemagick
 pip install gprof2dot==2017.9.19
-
-# install OpenMPI
-mkdir -p ${CONDA_PREFIX}/src && cd ${CONDA_PREFIX}/src
-wget https://www.open-mpi.org/software/ompi/v2.1/downloads/openmpi-2.1.3.tar.gz
-tar -xvf openmpi-2.1.3.tar.gz
-cd openmpi-2.1.3
-CFLAGS=-O3 \
-CXXFLAGS=-O3 \
-./configure --prefix=${CONDA_PREFIX}
-make -j $(getconf _NPROCESSORS_ONLN) install
 
 # install Spotlight
 cd ${TOOLS_DIR}/..
