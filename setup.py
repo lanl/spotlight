@@ -119,10 +119,11 @@ scripts_list = [
     "bin/gsas/gsas_write_csv",
     "bin/gsasii/gsasii_write_csv",
     "bin/gsasii/gsasii_print_lattice",
+    "bin/spotlight_gsas_setup",
+    "bin/spotlight_gsas_summary",
     "bin/spotlight_inspect",
     "bin/spotlight_minimize",
     "bin/spotlight_plot_profile",
-    "bin/spotlight_setup_gsas",
 ]
 
 # a list of all python packages to be installed

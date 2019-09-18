@@ -19,7 +19,7 @@ export OMP_NUM_THREADS=1
 
 # run optimization search in parallel
 # profile the execution
-mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` \
+mpirun --oversubscribe -n 1 \
     python -m cProfile -o alumina.pstat `which spotlight_minimize` \
     --config-files \
         config_base.ini \
@@ -32,7 +32,7 @@ mpirun --oversubscribe -n `getconf _NPROCESSORS_ONLN` \
     --tmp-dir tmp
 
 # setup GSAS for global minima from optimization search
-spotlight_setup_gsas \
+spotlight_gsas_setup \
     --input-files solution.db \
     --tmp-dir tmp_minima
 
