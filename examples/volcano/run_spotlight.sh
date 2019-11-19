@@ -6,7 +6,6 @@ set -e
 for N in 2 8 32; do
 
 # make a temporary directory for analysis
-cd ..
 mkdir -p tmp_map_${N}
 cd tmp_map_${N}
 cp ../config_base.ini ../plan_analytical.py .
@@ -56,5 +55,8 @@ python ../spotlight_interpolate.py \
     --input-file solution.db \
     --output-file ../map_${N}.png \
     --abs
+
+# back to original directory
+cd ..
 
 done
