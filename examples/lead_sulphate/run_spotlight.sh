@@ -8,6 +8,9 @@ cd tmp_spotlight
 cp ../INST_XRY.prm ../inst_d1a.prm ../PBSO4.cwn ../PBSO4.xra ../PbSO4-Wyckoff.cif .
 cp ../config_base.ini ../config_pbso4.ini ../plan_pbso4.py .
 
+# store hostname
+echo `hostname` > host.txt
+
 # random seed
 SEED=123
 

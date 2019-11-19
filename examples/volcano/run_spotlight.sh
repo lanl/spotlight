@@ -11,6 +11,9 @@ mkdir -p tmp_map_${N}
 cd tmp_map_${N}
 cp ../config_base.ini ../plan_analytical.py .
 
+# store hostname
+echo `hostname` > host.txt
+
 # random seed
 SEED=321
 
