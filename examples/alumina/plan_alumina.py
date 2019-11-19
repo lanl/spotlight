@@ -25,8 +25,12 @@ class Plan(plan.BasePlan):
                 gsas.gsas_add_histogram(os.path.basename(det.data_file),
                                         os.path.basename(det.detector_file),
                                         bank_num + 1,
-                                        det.min_d_spacing,
-                                        det.max_d_spacing)
+                                        det.min_d_spacing)
+
+        # change profile function
+        for i, _ in enumerate(self.phases):
+            for j, _ in enumerate(self.detectors):
+                gsas.gsas_change_profile(j + 1, i + 1, 3)
 
     def compute(self):
 
@@ -44,29 +48,32 @@ class Plan(plan.BasePlan):
                                                  self.get("C_ALUMINA")])
 
                 # set atom positions
-                gsas.gsas_change_atom(i + 1, 1, "X", self.get("X_ALUMINA"))
-                gsas.gsas_change_atom(i + 1, 2, "Z", self.get("Z_ALUMINA"))
+                gsas.gsas_change_atom(i + 1, 1, "Z", self.get("Z_AL_ALUMINA"))
+                gsas.gsas_change_atom(i + 1, 2, "X", self.get("X_O_ALUMINA"))
 
                 # set isotropic thermal
-                gsas.gsas_change_atom(i + 1, 1, "UISO", self.get("UISO1_ALUMINA"))
-                gsas.gsas_change_atom(i + 1, 2, "UISO", self.get("UISO2_ALUMINA"))
+                gsas.gsas_change_atom(i + 1, 1, "UISO", self.get("UISO_AL_ALUMINA"))
+                gsas.gsas_change_atom(i + 1, 2, "UISO", self.get("UISO_O_ALUMINA"))
 
                 # loop over detector banks
                 # only one detector section
                 for j in range(self.detectors[0].bank_number):
 
-                    # set phase scales
-                    gsas.gsas_change_phase_fraction(
-                                        j + 1, i + 1,
-                                        self.get("PHFR_ALUMINA"))
+                    ## set phase scales
+                    #gsas.gsas_change_phase_fraction(
+                    #                    j + 1, i + 1,
+                    #                    self.get("PHFR_ALUMINA"))
 
                     # set profile parameters
                     gsas.gsas_change_profile_parameter(j + 1, i + 1, 1,
-                                                       self.get("PF1_ALUMINA"))
+                                                       self.get("GU_ALUMINA"))
                     gsas.gsas_change_profile_parameter(j + 1, i + 1, 2,
-                                                       self.get("PF2_ALUMINA"))
+                                                       self.get("GV_ALUMINA"))
                     gsas.gsas_change_profile_parameter(j + 1, i + 1, 3,
-                                                       self.get("PF3_ALUMINA"))
+                                                       self.get("GW_ALUMINA"))
+
+                    # set profile cutoff
+                    gsas.gsas_change_profile_cutoff(j + 1, i + 1, self.get("CUTOFF"))
 
             # otherwise raise error because refinement plan does not support this phase
             else:
@@ -76,11 +83,17 @@ class Plan(plan.BasePlan):
         # only one detector section
         for j in range(self.detectors[0].bank_number):
 
+            # set diffractometer zero correction
+            gsas.gsas_change_difc(j + 1, "Z", self.get("DIFC_Z"))
+
             # set background coefficients
-            gsas.gsas_change_background_coeff(j + 1, 1, 6,
+            gsas.gsas_change_background_coeff(j + 1, 1, 12,
                 [self.get("BK1"), self.get("BK2"),
                  self.get("BK3"), self.get("BK4"),
-                 self.get("BK5"), self.get("BK6")])
+                 self.get("BK5"), self.get("BK6"),
+                 self.get("BK7"), self.get("BK8"),
+                 self.get("BK9"), self.get("BK10"),
+                 self.get("BK11"), self.get("BK12")])
 
             # set histogram scale
             gsas.gsas_change_hscale(j + 1, self.get("HSCL"))

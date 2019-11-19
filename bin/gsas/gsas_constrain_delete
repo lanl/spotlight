@@ -1,0 +1,11 @@
+#! /bin/bash
+
+N=${1}
+
+echo "k l a k" > temp.txt
+echo "d ${N}" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+expedt `cat GSAS_EXP` < temp.txt

@@ -12,7 +12,8 @@ cp ../config_base.ini ../config_alumina.ini ../plan_alumina.py .
 gsas_convert_cif alumina.cif alumina.exp
 
 # random seed
-SEED=123
+SEED=${1}
+SEED=${SEED:=123}
 
 # set the number of threads to use for parallel regions
 export OMP_NUM_THREADS=1

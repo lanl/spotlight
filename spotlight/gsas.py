@@ -19,11 +19,13 @@ def _external_call(cmd, debug=False, system=False):
         p.communicate()
 
 def gsas_add_histogram(obs_file, instrument_file, bank_number,
-                       min_d_spacing, max_d_spacing, debug=False):
+                       min_d_spacing, max_d_spacing=None, debug=False):
     """ This function adds a histogram.
     """
     cmd = ["gsas_add_histogram", obs_file, instrument_file, bank_number,
-           min_d_spacing, max_d_spacing]
+           min_d_spacing]
+    if max_d_spacing is not None:
+        cmd += [max_d_spacing]
     _external_call(cmd, debug)
 
 def gsas_change_absorption(bank_number, function_number, val, debug=False):
@@ -54,10 +56,10 @@ def gsas_change_background_coeff(bank_number, function_number, num_coeffs,
     cmd += vals
     _external_call(cmd, debug)
 
-def gsas_change_difc(bank_number, val, debug=False):
+def gsas_change_difc(bank_number, dcode, val, debug=False):
     """ Change the diffractometer constant for a histogram.
     """
-    cmd = ["gsas_change_difc", bank_number, val]
+    cmd = ["gsas_change_DIFC", bank_number, dcode, val]
     _external_call(cmd, debug)
 
 def gsas_change_hscale(bank_number, val, debug=False):
@@ -86,6 +88,18 @@ def gsas_change_phase_fraction(bank_number, phase_number, val, debug=False):
     """ This function changes the phase scale for a phase.
     """
     cmd = ["gsas_change_phase_fraction", bank_number, phase_number, val]
+    _external_call(cmd, debug)
+
+def gsas_change_profile(bank_number, phase_number, val, debug=False):
+    """ This function changes the profile function for a phase.
+    """
+    cmd = ["gsas_change_profile", bank_number, phase_number, val]
+    _external_call(cmd, debug)
+
+def gsas_change_profile_cutoff(bank_number, phase_number, val, debug=False):
+    """ This function changes the profile cutoff for a phase.
+    """
+    cmd = ["gsas_change_profile_cutoff", bank_number, phase_number, val]
     _external_call(cmd, debug)
 
 def gsas_change_profile_parameter(bank_number, phase_number, param_number,
