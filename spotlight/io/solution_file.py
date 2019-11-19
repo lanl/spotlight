@@ -121,10 +121,10 @@ class SolutionFile(object):
             A list of names. This list is ordered how packages will return
             a list.
         all_x : numpy.array
-            A multi-dimensional array with shape ``(npoints, nparams)`` for all
+            A multi-dimensional array with shape ``(nsubprocs, npoints, nparams)`` for all
             points. This contains parameter values evaluated.
         all_y : numpy.array
-            A one-dimensional array with shape ``(npoints,)`` for all points.
+            A one-dimensional array with shape ``(nsubprocs, npoints)`` for all points.
             This contains the minimized cost function value for all points.
         best_x : list
             Best set of parameter values.
