@@ -1,0 +1,14 @@
+#! /bin/bash
+
+HIST=${1}
+MAX=${2}
+
+echo "k p h e ${HIST}" > temp.txt
+echo "t" >> temp.txt
+echo "${MAX}" >> temp.txt
+echo "/" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+expedt `cat GSAS_EXP` < temp.txt

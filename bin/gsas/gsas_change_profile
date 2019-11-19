@@ -1,0 +1,14 @@
+#! /bin/bash
+
+HIST=${1}
+PHASE=${2}
+PROFILE_FUNCTION=${3}
+
+echo "k l o p h ${HIST} p ${PHASE}" > temp.txt
+echo "r ${PROFILE_FUNCTION}" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+echo "x" >> temp.txt
+expedt `cat GSAS_EXP` < temp.txt
