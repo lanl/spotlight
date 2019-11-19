@@ -8,6 +8,9 @@ cd tmp_spotlight
 cp ../al2o3001.gsa ../alumina.cif ../bt1demo.ins .
 cp ../config_base.ini ../config_alumina.ini ../plan_alumina.py .
 
+# store hostname
+echo `hostname` > host.txt
+
 # convert from CIF to EXP
 gsas_convert_cif alumina.cif alumina.exp
 
