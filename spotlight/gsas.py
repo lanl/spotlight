@@ -78,6 +78,12 @@ def gsas_change_lattice(phase_number, value, debug=False):
         cmd += [phase_number, value]
     _external_call(cmd, debug)
 
+def gsas_change_max_tof(bank_number, val, debug=False):
+    """ This function changes the max time-of-flight for a histogram in 2-theta.
+    """
+    cmd = ["gsas_change_max_tof", bank_number, val]
+    _external_call(cmd, debug)
+
 def gsas_change_microstrain(phase_number, val, debug=False):
     """ This function changes the microstrain for a phase.
     """

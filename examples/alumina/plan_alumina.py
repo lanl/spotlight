@@ -26,6 +26,7 @@ class Plan(plan.BasePlan):
                                         os.path.basename(det.detector_file),
                                         bank_num + 1,
                                         det.min_d_spacing)
+                gsas.gsas_change_max_tof(bank_num + 1, det.max_tof)
 
         # change profile function
         for i, _ in enumerate(self.phases):
