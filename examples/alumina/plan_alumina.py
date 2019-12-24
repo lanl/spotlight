@@ -74,7 +74,7 @@ class Plan(plan.BasePlan):
                                                        self.get("GW_ALUMINA"))
 
                     # set profile cutoff
-                    gsas.gsas_change_profile_cutoff(j + 1, i + 1, self.get("CUTOFF"))
+                    gsas.gsas_change_profile_cutoff(j + 1, i + 1, 0.00500)
 
             # otherwise raise error because refinement plan does not support this phase
             else:

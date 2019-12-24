@@ -6,17 +6,18 @@
 
 set -e
 
+# random seed
+SEED=${1}
+SEED=${SEED:=123}
+
 # make a temporary directory for analysis
-mkdir -p tmp_spotlight
-cd tmp_spotlight
+mkdir -p tmp_spotlight_${SEED}
+cd tmp_spotlight_${SEED}
 cp ../INST_XRY.prm ../inst_d1a.prm ../PBSO4.cwn ../PBSO4.xra ../PbSO4-Wyckoff.cif .
 cp ../config_base.ini ../config_pbso4.ini ../plan_pbso4.py .
 
 # store hostname
 echo `hostname` > host.txt
-
-# random seed
-SEED=123
 
 # set the number of threads to use for parallel regions
 export OMP_NUM_THREADS=1

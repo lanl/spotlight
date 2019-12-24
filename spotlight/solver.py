@@ -73,8 +73,12 @@ class Solver(object):
         # termination conditions
         self.local_solver.SetEvaluationLimits(self.max_iterations,
                                               self.max_evaluations)
-        self.stop = termination.NormalizedChangeOverGeneration(
-                        self.stop_change, self.stop_generations)
+        if self.stop_change is not None or \
+           self.stop_generations is not None:
+            self.stop = termination.NormalizedChangeOverGeneration(
+                            self.stop_change, self.stop_generations)
+        else:
+            self.stop = None
 
         # add monitors
         self.stepmon = monitors.VerboseMonitor(1)

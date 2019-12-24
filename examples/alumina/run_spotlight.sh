@@ -6,9 +6,13 @@
 
 set -e
 
+# random seed
+SEED=${1}
+SEED=${SEED:=123}
+
 # make a temporary directory for analysis
-mkdir -p tmp_spotlight
-cd tmp_spotlight
+mkdir -p tmp_spotlight_${SEED}
+cd tmp_spotlight_${SEED}
 cp ../al2o3001.gsa ../alumina.cif ../bt1demo.ins .
 cp ../config_base.ini ../config_alumina.ini ../plan_alumina.py .
 
@@ -17,10 +21,6 @@ echo `hostname` > host.txt
 
 # convert from CIF to EXP
 gsas_convert_cif alumina.cif alumina.exp
-
-# random seed
-SEED=${1}
-SEED=${SEED:=123}
 
 # set the number of threads to use for parallel regions
 export OMP_NUM_THREADS=1
