@@ -12,7 +12,7 @@ spotlight_inspect
 spotlight_minimize
 ~~~~~~~~~~~~~~~~~~
 
-.. program-output:: mpirun -n 1 spotlight_minimize --help
+.. program-output:: spotlight_minimize --help
    :shell:
 
 spotlight_plot_profile
@@ -21,8 +21,8 @@ spotlight_plot_profile
 .. program-output:: spotlight_plot_profile --help
    :shell:
 
-spotlight_setup_gsas
+spotlight_gsas_setup
 ~~~~~~~~~~~~~~~~~~~~
 
-.. program-output:: spotlight_setup_gsas --help
+.. program-output:: spotlight_gsas_setup --help
       :shell:
