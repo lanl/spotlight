@@ -3,6 +3,10 @@
 This is a Python package for parallelized optimization on distributed-computing resources.
 Spotlight was initially designed for the optimization of Rietveld refinements.
 
+# Documentation
+
+The latest documentation for Spotlight is available at: https://spotlight.readthedocs.io/en/latest/
+
 # Copyright Notice
 
 © (or copyright) 2019. Triad National Security, LLC. All rights reserved.
