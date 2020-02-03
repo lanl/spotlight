@@ -3,6 +3,15 @@ Installation
 
 This page describes the requirements and instructions for installing Spotlight.
 
+Minimal Installation
+~~~~~~~~~~~~~~~~~~~~
+
+*If you already have Anaconda3 and GSAS or GSAS-II installed, then you can follow the instructions in this subsection.*
+If you do not have GSAS or GSAS-II, then we provide an example of an advanced installation script below that also installs these packages in the virtual environment.
+You can create and load a virtual environment that contains Spotlight using the commands below.
+
+.. literalinclude:: ../tools/install_minimal.sh
+
 Dependencies
 ~~~~~~~~~~~~
 
@@ -32,8 +41,8 @@ This includes
 * `ImageMagick <https://imagemagick.org/index.php>`_ (7.0.8) for image processing,
 * and `gprof2dot <https://github.com/jrfonseca/gprof2dot>`_ (2017.9.19) for rendering DOT graphs for performance evaluation.
 
-Installation with Anaconda3
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Advanced Installation with Anaconda3
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We include a script in the ``tools/`` directory to demonstrate how Spotlight can be installed inside an Anaconda3 environment; this script has been tested using Anaconda3 v4.7.10.
 Upon completion of the script below, the environment can be loaded with the command ``conda activate spotlight``.
