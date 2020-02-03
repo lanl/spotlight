@@ -6,7 +6,7 @@ This page describes the requirements and instructions for installing Spotlight.
 Minimal Installation
 ~~~~~~~~~~~~~~~~~~~~
 
-*If you already have Anaconda3 and GSAS or GSAS-II installed, then you can follow the instructions in this subsection.*
+**If you already have Anaconda3 and GSAS or GSAS-II installed, then you can follow the instructions in this subsection.**
 If you do not have GSAS or GSAS-II, then we provide an example of an advanced installation script below that also installs these packages in the virtual environment.
 You can create and load a virtual environment that contains Spotlight using the commands below.
 
