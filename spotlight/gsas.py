@@ -245,10 +245,16 @@ def gsas_vary_sigma1(bank_number, phase_number, refinement_flag, damping_flag, d
     cmd = ["gsas_vary_sigma1", bank_number, phase_number, refinement_flag, damping_flag]
     _external_call(cmd, debug)
 
-def gsas_write_csv(gsas_exp, output_file_base, debug=False):
+def gsas_write_csv(hist, gsas_exp, output_file_base, debug=False):
     """ This function generates an ASCII file of a simulated diffraction
     pattern.
     """
-    cmd = ["gsas_write_csv", gsas_exp, output_file_base]
+    cmd = ["gsas_write_csv", hist, gsas_exp, output_file_base]
     _external_call(cmd, debug)
     return output_file_base + ".TXT"
+
+def gsas_simulate_histogram(hist_file, bank, min_d, max_d, debug=False):
+    """ This function simulates a diffraction pattern for a histogram.
+    """
+    cmd = ["gsas_simulate_histogram", hist_file, bank, min_d, max_d]
+    _external_call(cmd, debug)
