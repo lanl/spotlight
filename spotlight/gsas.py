@@ -8,13 +8,13 @@ import subprocess
 def _external_call(cmd, debug=False, system=False):
     """ This function makes external calls.
     """
-    cmd = map(str, cmd)
+    cmd = list(map(str, cmd))
     if debug:
         print(" ".join(cmd))
     if system and debug:
         os.system(" ".join(cmd))
     elif system:
-        os.system(" ".join(cmd) + [">", "/dev/null", "2>&1"]))
+        os.system(" ".join(cmd) + [">", "/dev/null", "2>&1"])
     else:
         p = subprocess.Popen(cmd, stdin=subprocess.PIPE,
                              stdout=subprocess.PIPE,
