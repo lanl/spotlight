@@ -11,12 +11,20 @@ def _external_call(cmd, debug=False, system=False):
     cmd = map(str, cmd)
     if debug:
         print(" ".join(cmd))
-    if system:
-        os.system(" ".join(cmd + [">", "/dev/null", "2>&1"]))
+    if system and debug:
+        os.system(" ".join(cmd))
+    elif system:
+        os.system(" ".join(cmd) + [">", "/dev/null", "2>&1"]))
     else:
-        with open(os.devnull, "wb") as fp:
-            p = subprocess.Popen(cmd, stdin=fp, stdout=fp, stderr=fp)
-        p.communicate()
+        p = subprocess.Popen(cmd, stdin=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+        while True:
+            output = p.stdout.readline().decode("utf-8")
+            if output == "" and p.poll() == 0:
+                break
+            if output and debug:
+                print(output.strip())
 
 def gsas_add_histogram(obs_file, instrument_file, bank_number,
                        min_d_spacing, max_d_spacing=None, debug=False):
