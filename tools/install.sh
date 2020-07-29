@@ -12,20 +12,20 @@ TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 # store Python version
 PYTHON_VERSION=3.7.3
 
-# import Anaconda functions into bash script
-source ${CONDA_PREFIX}/etc/profile.d/conda.sh
+## import Anaconda functions into bash script
+#source ${CONDA_PREFIX}/etc/profile.d/conda.sh
 
 # clean env
-conda activate
+source deactivate
 conda env remove --yes --name ${ENV_NAME}
 
 # create Anaconda env
 conda create --yes --name ${ENV_NAME} python=${PYTHON_VERSION}
-conda activate ${ENV_NAME}
+source activate ${ENV_NAME}
 
 # install OpenMPI
 mkdir -p ${CONDA_PREFIX}/src && cd ${CONDA_PREFIX}/src
-wget https://www.open-mpi.org/software/ompi/v2.1/downloads/openmpi-3.0.6.tar.gz
+wget https://www.open-mpi.org/software/ompi/v3.0/downloads/openmpi-3.0.6.tar.gz
 tar -xvf openmpi-3.0.6.tar.gz
 cd openmpi-3.0.6
 CFLAGS=-O3 \
