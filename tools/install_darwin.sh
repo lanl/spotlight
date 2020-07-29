@@ -20,9 +20,9 @@ source activate spotlight
 
 # install OpenMPI
 mkdir -p ${CONDA_PREFIX}/src && cd ${CONDA_PREFIX}/src
-wget https://www.open-mpi.org/software/ompi/v2.1/downloads/openmpi-2.1.3.tar.gz
-tar -xvf openmpi-2.1.3.tar.gz
-cd openmpi-2.1.3
+wget https://www.open-mpi.org/software/ompi/v2.1/downloads/openmpi-3.0.6.tar.gz
+tar -xvf openmpi-3.0.6.tar.gz
+cd openmpi-3.0.6
 CFLAGS=-O3 \
 CXXFLAGS=-O3 \
 ./configure --prefix=${CONDA_PREFIX}

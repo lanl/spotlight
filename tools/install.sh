@@ -19,6 +19,16 @@ conda env remove --yes --name spotlight
 conda create --yes --name spotlight python=${PYTHON_VERSION}
 conda activate spotlight
 
+# install OpenMPI
+mkdir -p ${CONDA_PREFIX}/src && cd ${CONDA_PREFIX}/src
+wget https://www.open-mpi.org/software/ompi/v2.1/downloads/openmpi-3.0.6.tar.gz
+tar -xvf openmpi-3.0.6.tar.gz
+cd openmpi-3.0.6
+CFLAGS=-O3 \
+CXXFLAGS=-O3 \
+./configure --prefix=${CONDA_PREFIX}
+make -j $(getconf _NPROCESSORS_ONLN) install
+
 # install MPI and Python bindings
 conda install --yes mpi4py==3.0.3
 
