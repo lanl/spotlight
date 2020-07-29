@@ -2,6 +2,10 @@
 
 set -e
 
+# set env name
+ENV_NAME=${1}
+ENV_NAME=${ENV_NAME:="spotlight"}
+
 # store location of this script
 TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
@@ -13,11 +17,11 @@ source ${CONDA_PREFIX}/etc/profile.d/conda.sh
 
 # clean env
 conda activate
-conda env remove --yes --name spotlight
+conda env remove --yes --name ${ENV_NAME}
 
 # create Anaconda env
-conda create --yes --name spotlight python=${PYTHON_VERSION}
-conda activate spotlight
+conda create --yes --name ${ENV_NAME} python=${PYTHON_VERSION}
+conda activate ${ENV_NAME}
 
 # install OpenMPI
 mkdir -p ${CONDA_PREFIX}/src && cd ${CONDA_PREFIX}/src
