@@ -52,7 +52,7 @@ python -m pip install --requirement ${TOOLS_DIR}/../requirements.txt
 # install GSAS-II
 # note proxy input is broken in GSAS-II bootstrap script
 #conda install --yes pyopengl==3.1.1a1 r-maps==3.1.0 wxpython==4.0.4
-conda install --yes pyopengl wxpython
+conda install --yes pyopengl r-maps wxpython
 conda install --yes scons==3.1.0
 python -m pip install scipy==1.3.1
 mkdir -p ${CONDA_PREFIX}/gsasii && cd ${CONDA_PREFIX}/gsasii
