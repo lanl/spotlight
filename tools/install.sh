@@ -66,6 +66,17 @@ pip install gprof2dot==2017.9.19
 cd ${TOOLS_DIR}/..
 python setup.py install
 
+# install TeX Live
+YEAR=2020
+cd ${CONDA_PREFIX}/src
+wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+tar -zxvf install-tl-unx.tar.gz
+cd install-tl-${YEAR}*
+export TEXLIVE_INSTALL_TEXDIR=${CONDA_PREFIX}/texlive/${YEAR}
+export TEXLIVE_INSTALL_PREFIX=${CONDA_PREFIX}/texlive
+echo i > temp.txt
+./install-tl < temp.txt
+
 # append env activation script
 mkdir -p ${CONDA_PREFIX}/etc/conda/activate.d
 echo export PGPLOT_FONT=\$\{CONDA_PREFIX\}/pgl/grfont.dat >> ${CONDA_PREFIX}/etc/conda/activate.d/post.sh
