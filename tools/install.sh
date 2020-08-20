@@ -19,8 +19,15 @@ conda env remove --yes --name spotlight
 conda create --yes --name spotlight python=${PYTHON_VERSION}
 conda activate spotlight
 
-# install MPI and Python bindings
-conda install --yes mpi4py==3.0.3
+# install OpenMPI
+mkdir -p ${CONDA_PREFIX}/src && cd ${CONDA_PREFIX}/src
+wget https://www.open-mpi.org/software/ompi/v2.1/downloads/openmpi-2.1.3.tar.gz
+tar -xvf openmpi-2.1.3.tar.gz
+cd openmpi-2.1.3
+CFLAGS=-O3 \
+CXXFLAGS=-O3 \
+./configure --prefix=${CONDA_PREFIX}
+make -j $(getconf _NPROCESSORS_ONLN) install
 
 # install GSAS which requires Python 2.7 for installation scripts
 conda install --yes python==2.7.16
@@ -40,11 +47,12 @@ chmod +x ${CONDA_PREFIX}/gsas/scripts/gsas_get_current_wtfrac_esd
 
 # install Python packages for Spotlight
 python -m pip install --upgrade pip
-python -m pip install --requirement ${TOOLS_DIR}/../requirements_rtd.txt
+python -m pip install --requirement ${TOOLS_DIR}/../requirements.txt
 
 # install GSAS-II
 # note proxy input is broken in GSAS-II bootstrap script
-conda install --yes pyopengl==3.1.1a1 r-maps==3.1.0 wxpython==4.0.4
+#conda install --yes pyopengl==3.1.1a1 r-maps==3.1.0 wxpython==4.0.4
+conda install --yes pyopengl wxpython
 conda install --yes scons==3.1.0
 python -m pip install scipy==1.3.1
 mkdir -p ${CONDA_PREFIX}/gsasii && cd ${CONDA_PREFIX}/gsasii
