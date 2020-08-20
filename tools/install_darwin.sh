@@ -5,16 +5,13 @@ set -e
 # store location of this script
 TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# store Python version
-PYTHON_VERSION=3.7.3
-
-# clean env
+# load Anaconda
 module purge
 module load anaconda/Anaconda3.2019.03
 
 # run install script
 cd ${TOOLS_DIR}
-bash install.sh
+source install.sh
 
 # install glibc and X11 libraries
 cd ${CONDA_PREFIX}
