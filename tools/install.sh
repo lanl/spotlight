@@ -29,6 +29,9 @@ CXXFLAGS=-O3 \
 ./configure --prefix=${CONDA_PREFIX}
 make -j $(getconf _NPROCESSORS_ONLN) install
 
+# install Subversion
+conda install --yes --channel anaconda svn==1.9.7
+
 # install GSAS which requires Python 2.7 for installation scripts
 conda install --yes python==2.7.16
 mkdir -p ${CONDA_PREFIX}/gsas && cd ${CONDA_PREFIX}/gsas
