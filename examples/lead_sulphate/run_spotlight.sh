@@ -24,8 +24,7 @@ export OMP_NUM_THREADS=1
 
 # run optimization search in parallel
 # profile the execution
-mpirun \
-    python -m cProfile -o pbso4.pstat `which spotlight_minimize` \
+mpirun python -m cProfile -o pbso4.pstat `which spotlight_minimize` \
     --config-files \
         config_base.ini \
         config_pbso4.ini \
