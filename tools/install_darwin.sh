@@ -19,6 +19,6 @@ git clone git@gitlab.lanl.gov:cmbiwer/spotlight-rpm.git rpms
 cd rpms
 for RPM in `ls *.rpm`; do rpm2cpio ${RPM} | cpio -id; done
 for EXE in `ls ${CONDA_PREFIX}/gsas/exe/*`; do
-patchelf --set-interpreter ${PWD}/lib/ld-linux.so.2 ${EXE}
+    patchelf --set-interpreter ${PWD}/lib/ld-linux.so.2 ${EXE}
 done
 
