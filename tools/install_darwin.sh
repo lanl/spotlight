@@ -5,9 +5,9 @@ set -e
 # store location of this script
 TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# load Anaconda
+# load Anaconda and GCC
 module purge
-module load anaconda/Anaconda3.2019.03
+module load anaconda/Anaconda3.2019.03 gcc/6.4.0
 
 # run install script
 cd ${TOOLS_DIR}
