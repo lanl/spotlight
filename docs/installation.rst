@@ -44,9 +44,10 @@ This includes
 Advanced Installation with Anaconda3
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We include a script in the ``tools/`` directory to demonstrate how Spotlight can be installed inside an Anaconda3 environment; this script has been tested using Anaconda3 v4.7.10.
+We include an example script in the ``tools/`` directory to demonstrate how Spotlight can be installed inside an Anaconda3 environment; this script has been tested using Anaconda3 v4.7.10.
 Upon completion of the script below, the environment can be loaded with the command ``conda activate spotlight``.
 Note that this script assumes you have Anaconda3 installed.
 
 .. literalinclude:: ../tools/install.sh
     :language: bash
+
