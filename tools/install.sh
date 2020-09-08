@@ -2,6 +2,18 @@
 
 set -e
 
+# parse command line
+PROXY=""
+while [ "${1}" != "" ]; do
+    case ${1} in
+        --proxy )
+            shift
+            PROXY=${1}
+            ;;
+    esac
+    shift
+done
+
 # store location of this script
 TOOLS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
@@ -29,9 +41,13 @@ conda activate spotlight
 conda install --yes --channel anaconda svn==1.9.7
 mkdir -p ${CONDA_PREFIX}/gsas && cd ${CONDA_PREFIX}/gsas
 curl https://subversion.xray.aps.anl.gov/trac/EXPGUI/browser/gsas/linux/dist/bootstrap.py?format=txt > bootstrap.py
-echo $'proxyout.lanl.gov\n8080' >> proxy.txt
-python2 bootstrap.py < proxy.txt
-rm proxy.txt
+if [ ${PROXY} ]; then
+    echo ${PROXY} >> proxy.txt
+    python2 bootstrap.py < proxy.txt
+    rm proxy.txt
+else
+    python2 bootstrapy.py noproxy
+fi
 
 # install gsaslanguage scripts and fix some issues
 cd ${CONDA_PREFIX}/gsas
