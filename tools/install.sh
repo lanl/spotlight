@@ -42,7 +42,7 @@ conda install --yes --channel anaconda svn==1.9.7
 mkdir -p ${CONDA_PREFIX}/gsas && cd ${CONDA_PREFIX}/gsas
 curl https://subversion.xray.aps.anl.gov/trac/EXPGUI/browser/gsas/linux/dist/bootstrap.py?format=txt > bootstrap.py
 if [ ${PROXY} ]; then
-    echo $"${PROXY}" >> proxy.txt
+    printf $"${PROXY}" >> proxy.txt
     python2 bootstrap.py < proxy.txt
     rm proxy.txt
 else
