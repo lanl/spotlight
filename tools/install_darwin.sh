@@ -11,7 +11,7 @@ module load anaconda/Anaconda3.2019.03 gcc/6.4.0
 
 # run install script
 cd ${TOOLS_DIR}
-source install.sh --proxy 'proxyout.lanl.gov\n8080\n'
+source install.sh --proxy 'proxyout.lanl.gov\n8080'
 
 # install glibc and X11 libraries
 cd ${CONDA_PREFIX}
