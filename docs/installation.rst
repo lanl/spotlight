@@ -16,12 +16,13 @@ Dependencies
 ~~~~~~~~~~~~
 
 Spotlight has several external dependencies for diffraction model generation and parallelization, as well as external dependencies from the Python packages Spotlight uses.
+The versions given in parentheses have been tested.
 This includes
 
 * `GSAS <https://subversion.xray.aps.anl.gov/trac/EXPGUI>`_ (rev1253) for diffraction model generation,
 * `gsaslanguage <https://github.com/Svennito/gsaslanguage>`_ (@fe73549) for scripting with GSAS,
-* `GSAS-II <https://subversion.xray.aps.anl.gov/trac/pyGSAS>`_ (rev4123) for diffraction model generation (an alternative to GSAS),
-* `OpenMPI <https://www.open-mpi.org/>`_ (v2.3.1) for parallelization,
+* `GSAS-II <https://subversion.xray.aps.anl.gov/trac/pyGSAS>`_ (v1.1) for diffraction model generation (an alternative to GSAS),
+* `OpenMPI <https://www.open-mpi.org/>`_ (v3.0.6) for parallelization,
 * and `pkg-config <https://www.freedesktop.org/wiki/Software/pkg-config/>`_ (v0.29.2) is required by some Python depedencies such as Matplotlib.
 
 Furthermore, Spotlight has several Python dependencies which are listed in the ``requirements.txt`` file in the top-level of the repository.
