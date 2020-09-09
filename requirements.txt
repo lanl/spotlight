@@ -1,6 +1,6 @@
 klepto==0.1.7
 matplotlib==3.0.1
-mpi4py==3.0.0
+mpi4py==3.0.3
 numpy==1.19.1
 sphinx==2.1.2
 sphinxcontrib-programoutput==0.15
