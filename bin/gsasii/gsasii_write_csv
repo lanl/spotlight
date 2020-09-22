@@ -40,10 +40,10 @@ header = """
 gpx = gsasii.G2Project(opts.input_file)
 
 # read histograms
-x = gpx.histogram(0).getdata("x")
+x = gpx.histogram(opts.histogram).getdata("x")
 c = numpy.arange(x.size, dtype=int) + 1
-y_obs = gpx.histogram(0).getdata("yobs")
-y_calc = gpx.histogram(0).getdata("ycalc")
+y_obs = gpx.histogram(opts.histogram).getdata("yobs")
+y_calc = gpx.histogram(opts.histogram).getdata("ycalc")
 y_diff = y_obs - y_calc
 
 # read reflections
@@ -62,3 +62,4 @@ data = numpy.vstack([c, x, y_obs, y_calc, y_diff, icode])
 data = numpy.transpose(data)
 fmt = ["%d", "%.8e", "%.8e", "%.8e", "%.8e", "%d"]
 numpy.savetxt(opts.output_file, data, header=header, delimiter=delimiter, fmt=fmt)
+
