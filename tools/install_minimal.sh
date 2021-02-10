@@ -6,7 +6,6 @@ set -e
 conda create --yes --name spotlight python=3.7.3
 conda activate spotlight
 
-# install MPI with Python bindings, Mystic, and Spotlight
-conda install --yes mpi4py==3.0.3
+# install klepto, Mystic, and Spotlight
 python -m pip install klepto==0.1.7 https://github.com/uqfoundation/mystic/archive/5b73d70.tar.gz
 python -m pip install https://github.com/lanl/spotlight/archive/master.tar.gz
