@@ -1,6 +1,7 @@
 # build files
 build/
 dist/
+*.egg-info
 *.pyc
 
 # documentation files
@@ -18,4 +19,4 @@ spotlight/version.py
 # filesystem files
 .nfs*
 *.DS_Store
-*.egg-info
+
