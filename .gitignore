@@ -1,12 +1,21 @@
+# build files
 build/
 dist/
+*.pyc
+
+# documentation files
 docs/_build/
 docs/spotlight*.rst
+
+# examples files
 examples/*/slurm*
 examples/*/tmp*
+*.pkl
+
+# version files
 spotlight/version.py
+
+# filesystem files
 .nfs*
 *.DS_Store
 *.egg-info
-*.pkl
-*.pyc
