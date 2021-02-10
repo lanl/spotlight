@@ -96,8 +96,8 @@ version = generate_version_module()
 # meta-data about the package
 project_name = "spotlight"
 project_version = version.last_release if version.release == "True" else version.last_release + ".dev0"
-project_url = "https://gitlab.lanl.gov/cmbiwer/spotlight"
-project_description = "A package for Rietveld refinement."
+project_url = "https://github.lanl.gov/lanl/spotlight"
+project_description = "A package for parallel optimization and Rietveld refinement."
 project_keywords = ["crystallography"]
 
 # a list of required packages to run project
@@ -160,3 +160,4 @@ core.setup(name=project_name,
            test_suite=test_suite,
            cmdclass=cmd_dict,
            zip_safe=False)
+

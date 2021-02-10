@@ -35,7 +35,7 @@ Optional Packages
 ~~~~~~~~~~~~~~~~~
 
 There are certain software packages that users may find valuable, but they are not required to run Spotlight's core funtionality.
-In the examples, you will see references to these packages (e.g. the commands ``convert`` and ``gprof2dot``), but we strive to make not make them a requirement in order to run the examples.
+In the examples, you will see references to these packages (e.g. the commands ``convert`` and ``gprof2dot``), but we strive to not make them a requirement in order to run the examples.
 Though in our installation examples below, we show how they can be installed.
 This includes
 

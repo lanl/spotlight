@@ -30,12 +30,23 @@ conda env remove --yes --name spotlight
 # create Anaconda env
 conda create --yes --name spotlight python=${PYTHON_VERSION}
 
-# install GSAS-II
-# must be installed from base environment
-conda install --yes --channel briantoby --name spotlight gsas2pkg=1.1
-
 # enter Anaconda env
 conda activate spotlight
+
+# install GSAS-II
+OSNAME=`uname`
+case ${OSNAME} in
+    "Darwin")
+        GSASII_SCRIPT_URL="https://subversion.xray.aps.anl.gov/admin_pyGSAS/downloads/gsas2full-Latest-MacOSX-x86_64.sh"
+        ;;
+    "Linux")
+        GSASII_SCRIPT_URL="https://subversion.xray.aps.anl.gov/admin_pyGSAS/downloads/gsas2full-Latest-Linux-x86_64.sh"
+        ;;
+esac
+curl ${GSASII_SCRIPT_URL} > ${CONDA_PREFIX}/gsas2full-Latest-x86_64.sh
+printf $"${PROXY}" >> proxy.txt
+bash ${CONDA_PREFIX}/gsas2full-Latest-x86_64.sh -b -p ${CONDA_PREFIX}/gsasii < proxy.txt
+rm proxy.txt
 
 # install GSAS which requires Python 2.7 for installation scripts
 conda install --yes --channel anaconda svn==1.9.7
@@ -46,7 +57,7 @@ if [ ${PROXY} ]; then
     python2 bootstrap.py < proxy.txt
     rm proxy.txt
 else
-    python2 bootstrapy.py noproxy
+    python2 bootstrap.py noproxy
 fi
 
 # install gsaslanguage scripts and fix some issues
@@ -57,7 +68,11 @@ git reset --hard fe73549
 chmod +x ${CONDA_PREFIX}/gsas/scripts/gsas_get_current_wtfrac_esd
 
 # install OpenMPI
-conda install --yes gxx_linux-64
+case ${OSNAME} in
+    "Linux")
+        conda install --yes gxx_linux-64
+        ;;
+esac
 mkdir -p ${CONDA_PREFIX}/src && cd ${CONDA_PREFIX}/src
 wget https://www.open-mpi.org/software/ompi/v3.0/downloads/openmpi-3.0.6.tar.gz
 tar -xvf openmpi-3.0.6.tar.gz
@@ -73,7 +88,7 @@ python -m pip install --requirement ${TOOLS_DIR}/../requirements.txt
 
 # construct GSAS-II
 conda install --yes scons==3.1.0
-cd ${CONDA_PREFIX}/GSASII/fsource
+cd ${CONDA_PREFIX}/gsasii/GSASII/fsource
 scons
 
 # install required packages
@@ -88,7 +103,7 @@ cd ${TOOLS_DIR}/..
 python setup.py install
 
 # install TeX Live
-YEAR=2020
+YEAR=`date +%Y`
 cd ${CONDA_PREFIX}/src
 wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
 tar -zxvf install-tl-unx.tar.gz
