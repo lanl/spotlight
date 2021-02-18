@@ -187,7 +187,7 @@ class ConfigurationFile(object):
 
         return cost
 
-    def get_solver(self, arch=None, iteration=None):
+    def get_solver(self, **kwargs):
         """ Returns instance of requested solver.
 
         Returns
@@ -202,21 +202,20 @@ class ConfigurationFile(object):
 
         # store all options from [solver]
         section = "solver"
-        options = {}
         for option in cp.options(section):
             val = cp.get(section, option)
             if val.isdigit():
-                options[option] = int(val)
+                kwargs[option] = int(val)
             else:
                 try:
                     val = float(val)
-                    options[option] = val
+                    kwargs[option] = val
                 except ValueError:
-                    options[option] = val
+                    kwargs[option] = val
 
         # initialize solver
         local_solver = solver.Solver(self.lower_bounds, self.upper_bounds,
-                                     arch=arch, iteration=iteration, **options)
+                                     **kwargs)
 
         return local_solver
 

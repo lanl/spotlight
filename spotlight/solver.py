@@ -44,7 +44,8 @@ class Solver(object):
         Number of solvers already run. Only required for some sampling methods.
     """
 
-    def __init__(self, lower_bounds, upper_bounds, arch=None, iteration=None, **kwargs):
+    def __init__(self, lower_bounds, upper_bounds, arch=None,
+                 iteration=None, sampling_data=None, **kwargs):
 
         # set required options
         self.lower_bounds = lower_bounds
@@ -86,16 +87,17 @@ class Solver(object):
 
         # set bounds
         args = [self.lower_bounds, self.upper_bounds]
-        if (self.sampling_method == "tolerance" and
-                iteration > self.sampling_iteration_switch):
-            sampling_data = solution_file.SolutionFile.read_data([arch.path])[1]
-            if len(sampling_data):
-                sampling_data = tuple(map(tuple, numpy.vstack(sampling_data)))
-                args += [sampling_data]
-        elif self.sampling_method == "tolerance" and iteration != None:
-            args += [[]]
-        elif self.sampling_method == "tolerance":
-            raise ValueError("Must give iteration with tolerance sampling.")
+        if self.sampling_method == "tolerance":
+            if iteration > self.sampling_iteration_switch:
+                if sampling_data is None:
+                    sampling_data = solution_file.SolutionFile.read_data([arch.path])[1]
+                if len(sampling_data):
+                    sampling_data = tuple(map(tuple, numpy.vstack(sampling_data)))
+                    args += [sampling_data]
+            elif self.sampling_method == "tolerance" and iteration != None:
+                args += [[]]
+            elif self.sampling_method == "tolerance":
+                raise ValueError("Must give iteration with tolerance sampling.")
         p0 = sampling.sampling_methods[self.sampling_method](*args)
         self.local_solver.SetInitialPoints(p0)
         self.local_solver.SetStrictRanges(self.lower_bounds, self.upper_bounds)
