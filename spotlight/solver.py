@@ -126,7 +126,7 @@ class Solver(object):
         """
         return self.local_solver.generations, self.local_solver.evaluations
 
-    def solve(self, cost):
+    def solve(self, cost, verbose=1):
         """ Minimize a cost function with given termination conditions.
 
         Parameters
@@ -134,11 +134,11 @@ class Solver(object):
         cost : Plan
             A refinement plan class.
         """
-        self.local_solver.Solve(cost, termination=self.stop, disp=1,
+        self.local_solver.Solve(cost, termination=self.stop, disp=verbose,
                                 ExtraArgs=(), callback=None,
                                 **self.extra_options)
 
-    def step(self, cost):
+    def step(self, cost, verbose=1):
         """ Take a single optimization step using the given cost function.
 
         Parameters
@@ -151,7 +151,7 @@ class Solver(object):
         stop : bool
             A ``bool`` that indicates if termination condition has been met.
         """
-        stop = self.local_solver.Step(cost, termination=self.stop, disp=1,
+        stop = self.local_solver.Step(cost, termination=self.stop, disp=verbose,
                                       ExtraArgs=(), callback=None,
                                       **self.extra_options)
         return stop
