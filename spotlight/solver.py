@@ -92,7 +92,7 @@ class Solver(object):
         if verbose:
             self.stepmon = monitors.VerboseMonitor(1)
         else:
-            self.stepmon = monitors.VerboseMonitor(0)
+            self.stepmon = monitors.Monitor()
         self.local_solver.SetGenerationMonitor(self.stepmon)
 
         # set bounds
