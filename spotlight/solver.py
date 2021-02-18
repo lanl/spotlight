@@ -99,7 +99,6 @@ class Solver(object):
             elif self.sampling_method == "tolerance":
                 raise ValueError("Must give iteration with tolerance sampling.")
         p0 = sampling.sampling_methods[self.sampling_method](*args)
-        print("INIITAL POINTS ARE", p0)
         self.local_solver.SetInitialPoints(p0)
         self.local_solver.SetStrictRanges(self.lower_bounds, self.upper_bounds)
 
