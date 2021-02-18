@@ -91,7 +91,7 @@ class ConfigurationFile(object):
     """
 
     def __init__(self, config_files, tmp_dir=None, names=None, change=True,
-                 config_overrides=None):
+                 copy=True, config_overrides=None):
 
         # concatenate configuration files
         self.cp = configparser.ConfigParser()
@@ -112,7 +112,10 @@ class ConfigurationFile(object):
 
         # copy files to temporary dir
         # move to temporary dir
-        self.setup_dir(tmp_dir, change=change)
+        if copy:
+            self.setup_dir(tmp_dir, change=change)
+        else:
+            self.config_file = config_files
 
     @property
     def lower_bounds(self):
@@ -218,26 +221,13 @@ class ConfigurationFile(object):
             A ``Solver`` instance.
         """
 
-        # read configuration file
-        cp = configparser.ConfigParser()
-        cp.readfp(open(self.config_file, "r"))
-
-        # store all options from [solver]
-        section = "solver"
-        for option in cp.options(section):
-            val = cp.get(section, option)
-            if val.isdigit():
-                kwargs[option] = int(val)
-            else:
-                try:
-                    val = float(val)
-                    kwargs[option] = val
-                except ValueError:
-                    kwargs[option] = val
+        # include [solver] configuration file
+        tmp = self.solver_kwargs
+        tmp.update(kwargs)
 
         # initialize solver
         local_solver = solver.Solver(self.lower_bounds, self.upper_bounds,
-                                     **kwargs)
+                                     **tmp)
 
         return local_solver
 
@@ -319,3 +309,17 @@ class ConfigurationFile(object):
                     setattr(self, option, val)
                 except ValueError:
                     setattr(self, option, val)
+
+        # store all options from [solver]
+        self.solver_kwargs = {}
+        section = "solver"
+        for option in cp.options(section):
+            val = cp.get(section, option)
+            if val.isdigit():
+                self.solver_kwargs[option] = int(val)
+            else:
+                try:
+                    val = float(val)
+                    self.solver_kwargs[option] = val
+                except ValueError:
+                    self.solver_kwargs[option] = val
