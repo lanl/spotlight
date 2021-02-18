@@ -55,7 +55,10 @@ def cp(paths, dest=None):
     for path in paths_list:
         final_path = dest + "/" + os.path.basename(path) if dest \
                          else os.path.basename(path)
-        shutil.copyfile(path, final_path)
+        try:
+            shutil.copyfile(path, final_path)
+        except shutil.SameFileError:
+            print("File {} already exists!".format(path))
 
     # typecast paths to str
     paths_out = [os.path.basename(path) for path in paths_list]
