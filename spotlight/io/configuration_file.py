@@ -91,19 +91,14 @@ class ConfigurationFile(object):
     """
 
     def __init__(self, config_files, tmp_dir=None, names=None, change=True,
-                 config_overrides=None):
+                 copy=True, config_overrides=None):
 
         # concatenate configuration files
         self.cp = configparser.ConfigParser()
         self.cp.read(config_files)
         if config_overrides:
             for override in config_overrides:
-                section, option, value = override.split(":")
-                if option.startswith("-"):
-                    self.cp.remove_option(section, option)
-                if not self.cp.has_section(section):
-                    self.cp.add_section(section)
-                self.cp.set(section, option, value)
+                self.apply_override(override)
 
         # set attributes from configuration file
         self.read_config()
@@ -117,7 +112,10 @@ class ConfigurationFile(object):
 
         # copy files to temporary dir
         # move to temporary dir
-        self.setup_dir(tmp_dir, change=change)
+        if copy:
+            self.setup_dir(tmp_dir, change=change)
+        else:
+            self.config_file = config_files
 
     @property
     def lower_bounds(self):
@@ -126,6 +124,32 @@ class ConfigurationFile(object):
     @property
     def upper_bounds(self):
         return [self.bounds[name][1] for name in self.names]
+
+    def apply_override(self, override):
+        """ Applies an override to the configuration.
+        """
+        section, option, value = override.split(":")
+        if hasattr(self, "items") and section == "parameters":
+            name = option.split("-")[0].upper()
+            if option.endswith("-min"):
+                self.bounds[name][0] = float(value)
+            elif option.endswith("-max"):
+                self.bounds[name][1] = float(value)
+            else:
+                raise KeyError("Do not recognize override {}!".format(override))
+        elif hasattr(self, "items"):
+            if "-" in section:
+                sec, i = section.split("-")
+                i = int(i)
+                setattr(self.items[sec][i], option, value)
+            else:
+                setattr(self.items[section], option, value)
+        else:
+            if option.startswith("-"):
+                self.cp.remove_option(section, option)
+            if not self.cp.has_section(section):
+                self.cp.add_section(section)
+            self.cp.set(section, option, value)
 
     def setup_dir(self, tmp_dir=None, change=True):
         """ Copy files to temporary directory.
@@ -163,7 +187,7 @@ class ConfigurationFile(object):
         if tmp_dir is not None:
             filesystem.mkdir(tmp_dir, change=change)
 
-    def get_refinement_plan(self):
+    def get_refinement_plan(self, reimport=True):
         """ Returns instance of requested refinement plan.
 
         Returns
@@ -173,13 +197,14 @@ class ConfigurationFile(object):
         """
 
         # import refinement plan
-        sys.dont_write_bytecode = True
-        if self.refinement_plan_file == None and self.refinement_plan == None:
-            raise ValueError("There is no refinement plan to load!")
-        elif self.refinement_plan == None:
-            self.refinement_plan = __import__(
-                    os.path.basename(self.refinement_plan_file).rstrip(".py"))
-        sys.dont_write_bytecode = False
+        if self.refinement_plan is None or reimport:
+            sys.dont_write_bytecode = True
+            if self.refinement_plan_file == None and self.refinement_plan == None:
+                raise ValueError("There is no refinement plan to load!")
+            elif self.refinement_plan == None:
+                self.refinement_plan = __import__(
+                        os.path.basename(self.refinement_plan_file).rstrip(".py"))
+            sys.dont_write_bytecode = False
 
         # initialize refinement plan
         ndim = len(self.names)
@@ -196,26 +221,13 @@ class ConfigurationFile(object):
             A ``Solver`` instance.
         """
 
-        # read configuration file
-        cp = configparser.ConfigParser()
-        cp.readfp(open(self.config_file, "r"))
-
-        # store all options from [solver]
-        section = "solver"
-        for option in cp.options(section):
-            val = cp.get(section, option)
-            if val.isdigit():
-                kwargs[option] = int(val)
-            else:
-                try:
-                    val = float(val)
-                    kwargs[option] = val
-                except ValueError:
-                    kwargs[option] = val
+        # include [solver] configuration file
+        tmp = self.solver_kwargs
+        tmp.update(kwargs)
 
         # initialize solver
         local_solver = solver.Solver(self.lower_bounds, self.upper_bounds,
-                                     **kwargs)
+                                     **tmp)
 
         return local_solver
 
@@ -249,7 +261,7 @@ class ConfigurationFile(object):
         for name in names:
             lb = cp.getfloat(section, name + "-min")
             ub = cp.getfloat(section, name + "-max")
-            params[name] = (lb, ub)
+            params[name] = [lb, ub]
         self.bounds = params   
  
         # get all sections that will become attributes
@@ -297,3 +309,17 @@ class ConfigurationFile(object):
                     setattr(self, option, val)
                 except ValueError:
                     setattr(self, option, val)
+
+        # store all options from [solver]
+        self.solver_kwargs = {}
+        section = "solver"
+        for option in cp.options(section):
+            val = cp.get(section, option)
+            if val.isdigit():
+                self.solver_kwargs[option] = int(val)
+            else:
+                try:
+                    val = float(val)
+                    self.solver_kwargs[option] = val
+                except ValueError:
+                    self.solver_kwargs[option] = val

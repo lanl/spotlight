@@ -57,6 +57,33 @@ def tolerance(lower_bounds, upper_bounds, data=None):
     pts = math.fillpts(lower_bounds, upper_bounds, n_new_pts, data, rtol, dist)
     return pts[0]
 
+def linspace(lower_bounds, upper_bounds, step=0, nsteps=1):
+    """ Returns a new, single point linearlly-spaced ``i`` from the lower
+    boundary.
+
+    Parameters
+    ----------
+    lower_bounds : list
+        List of ``float`` that are lower bounds. List is indexed by parameter.
+    upper_bounds : list
+        List of ``float`` that are upper bounds. List is indexed by parameter.
+    step : int
+        Index to select.
+    nsteps : int
+        Total number of steps.
+
+    Returns
+    -------
+    pts : numpy.array
+        An array with new point.
+    """
+    ndim = len(lower_bounds)
+    pts = numpy.zeros(ndim)
+    for j in range(ndim):
+        step_size = (upper_bounds[j] - lower_bounds[j]) / (nsteps)
+        pts[j] = step * step_size + lower_bounds[j] + 0.5 * step_size
+    return pts
+
 def midpoint(lower_bounds, upper_bounds):
     """ Returns a new, single point at the center.
 
@@ -82,6 +109,7 @@ def midpoint(lower_bounds, upper_bounds):
 
 # dict of sampling methods
 sampling_methods = {
-    "uniform" : uniform,
+    "linspace" : linspace,
     "tolerance" : tolerance,
+    "uniform" : uniform,
 }

@@ -44,10 +44,15 @@ class Solver(object):
         An ``ArchiveFile`` instance. Only required for some sampling methods.
     iteration : int
         Number of solvers already run. Only required for some sampling methods.
+    step : int
+        Select step in sampling. Only required for some sampling methods.
+    nsteps : int
+        Number of steps in sampling. Only required for some sampling methods.
     """
 
     def __init__(self, lower_bounds, upper_bounds, arch=None,
-                 iteration=None, sampling_data=None, verbose=False, **kwargs):
+                 iteration=None, sampling_data=None, step=None, nsteps=None,
+                 verbose=False, **kwargs):
 
         # set required options
         self.lower_bounds = lower_bounds
@@ -87,7 +92,7 @@ class Solver(object):
         if verbose:
             self.stepmon = monitors.VerboseMonitor(1)
         else:
-            self.stepmon = monitors.VerboseMonitor(0)
+            self.stepmon = monitors.Monitor()
         self.local_solver.SetGenerationMonitor(self.stepmon)
 
         # set bounds
@@ -103,6 +108,8 @@ class Solver(object):
                 args += [[]]
             elif self.sampling_method == "tolerance":
                 raise ValueError("Must give iteration with tolerance sampling.")
+        if self.sampling_method == "linspace":
+            args += [step, nsteps]
         p0 = sampling.sampling_methods[self.sampling_method](*args)
         self.local_solver.SetInitialPoints(p0)
         self.local_solver.SetStrictRanges(self.lower_bounds, self.upper_bounds)
@@ -126,7 +133,7 @@ class Solver(object):
         """
         return self.local_solver.generations, self.local_solver.evaluations
 
-    def solve(self, cost):
+    def solve(self, cost, verbose=1):
         """ Minimize a cost function with given termination conditions.
 
         Parameters
@@ -134,11 +141,11 @@ class Solver(object):
         cost : Plan
             A refinement plan class.
         """
-        self.local_solver.Solve(cost, termination=self.stop, disp=1,
+        self.local_solver.Solve(cost, termination=self.stop, disp=verbose,
                                 ExtraArgs=(), callback=None,
                                 **self.extra_options)
 
-    def step(self, cost):
+    def step(self, cost, verbose=1):
         """ Take a single optimization step using the given cost function.
 
         Parameters
@@ -151,7 +158,7 @@ class Solver(object):
         stop : bool
             A ``bool`` that indicates if termination condition has been met.
         """
-        stop = self.local_solver.Step(cost, termination=self.stop, disp=1,
+        stop = self.local_solver.Step(cost, termination=self.stop, disp=verbose,
                                       ExtraArgs=(), callback=None,
                                       **self.extra_options)
         return stop
