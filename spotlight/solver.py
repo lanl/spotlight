@@ -29,6 +29,8 @@ class Solver(object):
         A Mystic monitor instance.
     sampling_method : str
         Name of sampling method that was used.
+    verbose : bool
+        Print updates to ``stdout``.
 
     Parameters
     ----------
@@ -45,7 +47,7 @@ class Solver(object):
     """
 
     def __init__(self, lower_bounds, upper_bounds, arch=None,
-                 iteration=None, sampling_data=None, **kwargs):
+                 iteration=None, sampling_data=None, verbose=False, **kwargs):
 
         # set required options
         self.lower_bounds = lower_bounds
@@ -82,7 +84,10 @@ class Solver(object):
             self.stop = None
 
         # add monitors
-        self.stepmon = monitors.VerboseMonitor(1)
+        if verbose:
+            self.stepmon = monitors.VerboseMonitor(1)
+        else:
+            self.stepmon = monitors.VerboseMonitor(0)
         self.local_solver.SetGenerationMonitor(self.stepmon)
 
         # set bounds
