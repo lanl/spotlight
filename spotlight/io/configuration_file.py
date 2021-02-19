@@ -187,7 +187,7 @@ class ConfigurationFile(object):
         if tmp_dir is not None:
             filesystem.mkdir(tmp_dir, change=change)
 
-    def get_refinement_plan(self, reimport=True):
+    def get_refinement_plan(self, initialize=True, reimport=True):
         """ Returns instance of requested refinement plan.
 
         Returns
@@ -208,7 +208,8 @@ class ConfigurationFile(object):
 
         # initialize refinement plan
         ndim = len(self.names)
-        cost = self.refinement_plan.Plan(self.idxs, self.bounds, ndim=ndim, **self.items)
+        cost = self.refinement_plan.Plan(self.idxs, self.bounds, ndim=ndim,
+                                         initialize=initialize, **self.items)
 
         return cost
 

@@ -37,7 +37,7 @@ class BasePlan(models.AbstractFunction):
         A list of ``Phase`` instances.
     """
 
-    def __init__(self, idxs, bounds, ndim, **kwargs):
+    def __init__(self, idxs, bounds, ndim, initialize=True, **kwargs):
         super(BasePlan, self).__init__(ndim=ndim)
 
         # store map to parameters
@@ -50,7 +50,8 @@ class BasePlan(models.AbstractFunction):
             setattr(self, key, val)
 
         # setup initial porition of refinement plan
-        self.initialize()
+        if initialize:
+            self.initialize()
 
     def initialize(self):
         """ Function called once before optimization.
