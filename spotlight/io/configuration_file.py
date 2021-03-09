@@ -93,15 +93,28 @@ class ConfigurationFile(object):
     def __init__(self, config_files, tmp_dir=None, names=None, change=True,
                  copy=True, config_overrides=None):
 
-        # concatenate configuration files
-        self.cp = configparser.ConfigParser()
-        self.cp.read(config_files)
-        if config_overrides:
-            for override in config_overrides:
-                self.apply_override(override)
+        # if configuration file is in ConfigParser format
+        if all([config_file.endswith(".ini") for config_file in config_files]):
 
-        # set attributes from configuration file
-        self.read_config()
+            # concatenate configuration files
+            self.cp = configparser.ConfigParser()
+            self.cp.read(config_files)
+            if config_overrides:
+                for override in config_overrides:
+                    self.apply_override(override)
+
+            # set attributes from configuration file
+            self.read_config()
+
+        # else if configuration file is a single Python file
+        elif len(config_files) == 1 and config_files[0].endswith(".py"):
+
+            # set attributes from configuration file
+            self.read_py_config(config_files[0])
+
+        # else do not recognize configuration file format
+        else:
+            raise ValueError("Do not recognize configuration file format!")
 
         # refinement plan is not loaded until get_refinement_plan is called
         self.refinement_plan = None
@@ -179,8 +192,9 @@ class ConfigurationFile(object):
         # write configuration file to temporary dir
         self.config_file = os.path.join(tmp_dir, "config.ini") \
                                if tmp_dir else "config.ini"
-        with open(self.config_file, "w") as fp:
-            self.cp.write(fp)
+        if hasattr(self, "cp"):
+            with open(self.config_file, "w") as fp:
+                self.cp.write(fp)
         self.config_file = os.path.basename(self.config_file) if change else self.config_file
 
         # move to temporary dir
@@ -202,6 +216,7 @@ class ConfigurationFile(object):
             if self.refinement_plan_file == None and self.refinement_plan == None:
                 raise ValueError("There is no refinement plan to load!")
             elif self.refinement_plan == None:
+                sys.path.append(os.path.dirname(self.refinement_plan_file))
                 self.refinement_plan = __import__(
                         os.path.basename(self.refinement_plan_file).rstrip(".py"))
             sys.dont_write_bytecode = False
@@ -324,3 +339,38 @@ class ConfigurationFile(object):
                     self.solver_kwargs[option] = val
                 except ValueError:
                     self.solver_kwargs[option] = val
+
+    def read_py_config(self, config_file=None):
+        """ Reads information from configuration file.
+    
+        Parameters
+        ----------
+        config_file : {None, str}
+           Path of configuration file to read. Default is ``None`` which reads
+           attribute ``config_file``.
+        """
+
+        # import configuration file
+        sys.path.append(os.path.dirname(config_file))
+        sys.dont_write_bytecode = True
+        mod = __import__(os.path.basename(config_file).rstrip(".py"))
+        config = mod.Plan
+        sys.dont_write_bytecode = False
+
+        # set configuration file as refinement plan
+        self.refinement_plan_file = config_file
+
+        # set parameter bounds
+        self.bounds = config.parameters
+
+        # handle configuration dict
+        for option, val in config.configuration.items():
+            setattr(self, option, val)
+
+        # handle solver dict
+        self.solver_kwargs = {option : val
+                              for option, val in config.solver.items()}
+
+        # do not handle items since configuration file
+        # can have class attributes
+        self.items = {}
