@@ -33,6 +33,11 @@ class Plan(plan.BasePlan):
             for j, _ in enumerate(self.detectors):
                 gsas.gsas_change_profile(j + 1, i + 1, 3)
 
+        # fit background
+        for det in self.detectors:
+            gsas.gsas_change_background(1, 1, 12) 
+        gsas.gsas_refine(12, plot=False)
+
     def compute(self):
 
         # copy experimental file
@@ -48,56 +53,9 @@ class Plan(plan.BasePlan):
                 gsas.gsas_change_lattice(i + 1, [self.get("A_ALUMINA"),
                                                  self.get("C_ALUMINA")])
 
-                # set atom positions
-                gsas.gsas_change_atom(i + 1, 1, "Z", self.get("Z_AL_ALUMINA"))
-                gsas.gsas_change_atom(i + 1, 2, "X", self.get("X_O_ALUMINA"))
-
-                # set isotropic thermal
-                gsas.gsas_change_atom(i + 1, 1, "UISO", self.get("UISO_AL_ALUMINA"))
-                gsas.gsas_change_atom(i + 1, 2, "UISO", self.get("UISO_O_ALUMINA"))
-
-                # loop over detector banks
-                # only one detector section
-                for j in range(self.detectors[0].bank_number):
-
-                    ## set phase scales
-                    #gsas.gsas_change_phase_fraction(
-                    #                    j + 1, i + 1,
-                    #                    self.get("PHFR_ALUMINA"))
-
-                    # set profile parameters
-                    gsas.gsas_change_profile_parameter(j + 1, i + 1, 1,
-                                                       self.get("GU_ALUMINA"))
-                    gsas.gsas_change_profile_parameter(j + 1, i + 1, 2,
-                                                       self.get("GV_ALUMINA"))
-                    gsas.gsas_change_profile_parameter(j + 1, i + 1, 3,
-                                                       self.get("GW_ALUMINA"))
-
-                    # set profile cutoff
-                    gsas.gsas_change_profile_cutoff(j + 1, i + 1, 0.00500)
-
             # otherwise raise error because refinement plan does not support this phase
             else:
                 raise NotImplementedError("Refinement plan cannot handle phase {}".format(phase))
-
-        # loop over detector banks
-        # only one detector section
-        for j in range(self.detectors[0].bank_number):
-
-            # set diffractometer zero correction
-            gsas.gsas_change_difc(j + 1, "Z", self.get("DIFC_Z"))
-
-            # set background coefficients
-            gsas.gsas_change_background_coeff(j + 1, 1, 12,
-                [self.get("BK1"), self.get("BK2"),
-                 self.get("BK3"), self.get("BK4"),
-                 self.get("BK5"), self.get("BK6"),
-                 self.get("BK7"), self.get("BK8"),
-                 self.get("BK9"), self.get("BK10"),
-                 self.get("BK11"), self.get("BK12")])
-
-            # set histogram scale
-            gsas.gsas_change_hscale(j + 1, self.get("HSCL"))
 
         # refine to get chi-squared
         gsas.gsas_refine(1, plot=False)
