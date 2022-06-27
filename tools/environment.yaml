@@ -1,4 +1,4 @@
-# Example of creating an Anconda environment with Spotlight and MILK
+# Example of creating an Anconda environment with Spotlight and MILK:
 # conda env create -f tools/environment.yaml
 
 name: spotlight-milk
@@ -20,8 +20,8 @@ dependencies:
   - scipy=1.8.1
 
   # for MILK
-  - tqdm
-  - prettytable
+  - tqdm=4.64.0
+  - prettytable=3.3.0
 
   # pip packages
   - pip:
