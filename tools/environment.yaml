@@ -27,5 +27,5 @@ dependencies:
   - pip:
     - git+https://github.com/lanl/MILK.git@f9f7257
     - git+https://github.com/lanl/spotlight.git@c62267c
-    - https://github.com/uqfoundation/mystic/archive/5b73d70.tar.gz
+    - mystic==0.3.9
 
