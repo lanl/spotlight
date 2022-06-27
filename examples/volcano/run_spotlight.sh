@@ -24,7 +24,6 @@ for N in 2 8 32; do
     ${EXE} --config-files ../config_analytical.py \
            --config-overrides \
                configuration:seed:${SEED} \
-               configuration:tag:${SEED} \
                configuration:num_solvers:${N} \
            --tmp-dir tmp
     
@@ -35,7 +34,6 @@ for N in 2 8 32; do
     ${EXE} --config-files ../config_analytical.py \
            --config-overrides \
                configuration:seed:${SEED} \
-               configuration:tag:${SEED} \
                configuration:num_solvers:${N} \
                surface:sign:-1 \
            --tmp-dir tmp
