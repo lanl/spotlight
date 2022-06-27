@@ -111,6 +111,9 @@ class ConfigurationFile(object):
 
             # set attributes from configuration file
             self.read_py_config(config_files[0])
+            if config_overrides:
+                for override in config_overrides:
+                    self.apply_override_py(override)
 
         # else do not recognize configuration file format
         else:
@@ -163,6 +166,25 @@ class ConfigurationFile(object):
             if not self.cp.has_section(section):
                 self.cp.add_section(section)
             self.cp.set(section, option, value)
+
+    def apply_override_py(self, override):
+        """ Applies an override to thie configuration.
+        """
+        section, option, value = override.split(":")
+        if value.isdigit():
+            val = int(value)
+        else:
+            try:
+                val = float(value)
+            except ValueError:
+                pass
+        if section == "configuration":
+            setattr(self, option, val)
+        else:
+            if not hasattr(self, section):
+                setattr(self, section, {})
+            obj = getattr(self, section)
+            obj[option] = val
 
     def setup_dir(self, tmp_dir=None, change=True):
         """ Copy files to temporary directory.
