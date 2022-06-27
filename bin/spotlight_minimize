@@ -68,7 +68,7 @@ fp_state = state_file.StateFile(output_file)
 
 # run one of ensemble of solvers
 for i in range(config.num_solvers):
-    local_tag = "_".join(map(str, [rank, i, config.tag]))
+    local_tag = "_".join(map(str, [rank, i, config.tag if hasattr(config, "tag") else seed]))
 
     # check if there is a previous state for a local solver
     fp_sol.arch.load(local_tag)

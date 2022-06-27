@@ -7,7 +7,7 @@ from spotlight import plan
 
 class Plan(plan.BasePlan):
 
-    # required to have solution_file, state_file, num_solvers, and tag
+    # required to have solution_file, state_file, and num_solvers
     configuration = {
         "solution_file" : "solution.db",
         "state_file" : "state.db",
