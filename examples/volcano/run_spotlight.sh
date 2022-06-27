@@ -21,16 +21,14 @@ for N in 2 8 32; do
     ${EXE} --config-files ../config_analytical.py \
            --config-overrides \
                configuration:seed:321 \
-               configuration:num_solvers:${N} \
-           --tmp-dir tmp
+               configuration:num_solvers:${N}
     
     # run optimization search for maxima
     ${EXE} --config-files ../config_analytical.py \
            --config-overrides \
                configuration:seed:123 \
                configuration:num_solvers:${N} \
-               surface:sign:-1 \
-           --tmp-dir tmp
+               surface:sign:-1
     
     # plot
     python ../spotlight_interpolate.py \
