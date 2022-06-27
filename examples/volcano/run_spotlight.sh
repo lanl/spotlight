@@ -3,7 +3,7 @@
 set -e
 
 # if MPI is installed then use it
-if ! [ -x "$(command -v git)" ]; then
+if ! [ -x "$(command -v mpirun)" ]; then
     export OMP_NUM_THREADS=1
     EXE="mpirun --oversubscribe -n 4 python -m cProfile -o analytical.pstat `which spotlight_minimize`"
 else
@@ -16,7 +16,6 @@ for N in 2 8 32; do
 # make a temporary directory for analysis
 mkdir -p tmp_map_${N}
 cd tmp_map_${N}
-cp ../config_base.ini ../plan_analytical.py .
 
 # store hostname
 echo `hostname` > host.txt
@@ -26,8 +25,7 @@ SEED=321
 
 # run optimization search in parallel
 # profile the execution
-${EXE} --config-files \
-           config_base.ini \
+${EXE} --config-files ../config_analytical.py \
        --config-overrides \
            configuration:seed:${SEED} \
            configuration:tag:${SEED} \
@@ -39,8 +37,7 @@ SEED=123
 
 # run optimization search in parallel
 # profile the execution
-${EXE} --config-files \
-           config_base.ini \
+${EXE} --config-files ../config_analytical.py \
        --config-overrides \
            configuration:seed:${SEED} \
            configuration:tag:${SEED} \
