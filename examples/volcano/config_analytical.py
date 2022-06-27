@@ -6,6 +6,8 @@ from scipy import stats
 from spotlight import plan
 
 def gaussian(x, y):
+    """ Creates a Gaussian.
+    """
     var = stats.multivariate_normal(mean=[0, 0], cov=[[0.5, 0],[0, 0.5]])
     return -50.0 * var.pdf([x, y])
 
