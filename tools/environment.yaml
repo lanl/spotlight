@@ -1,0 +1,31 @@
+# Example of creating an Anconda environment with Spotlight and MILK
+# conda env create -f tools/environment.yaml
+
+name: spotlight-milk
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - klepto=0.2.2
+  - matplotlib=3.5.2
+  - numpy=1.23.0
+  - pip=22.1.2
+  - python=3.8
+  - sphinx=5.0.2
+  - sphinxcontrib-programoutput=0.16
+
+  # for volcano function example
+  - scipy=1.8.1
+
+  # for MILK
+  - tqdm
+  - prettytable
+
+  # pip packages
+  - pip:
+    - git+https://github.com/lanl/MILK.git@f9f7257
+    - git+https://github.com/lanl/spotlight.git@c62267c
+    - https://github.com/uqfoundation/mystic/archive/5b73d70.tar.gz
+
