@@ -17,23 +17,17 @@ for N in 2 8 32; do
     mkdir -p tmp_map_${N}
     cd tmp_map_${N}
     
-    # random seed
-    SEED=321
-    
-    # run optimization search
+    # run optimization search for minima
     ${EXE} --config-files ../config_analytical.py \
            --config-overrides \
-               configuration:seed:${SEED} \
+               configuration:seed:321 \
                configuration:num_solvers:${N} \
            --tmp-dir tmp
     
-    # random seed
-    SEED=123
-    
-    # run optimization search
+    # run optimization search for maxima
     ${EXE} --config-files ../config_analytical.py \
            --config-overrides \
-               configuration:seed:${SEED} \
+               configuration:seed:123 \
                configuration:num_solvers:${N} \
                surface:sign:-1 \
            --tmp-dir tmp
