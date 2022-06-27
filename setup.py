@@ -53,6 +53,7 @@ def generate_version_module():
         info = __version__.Version()
         info.version = "static"
         info.release = "False"
+        info.last_relase = 0
 
     # contents of version module
     contents = """
