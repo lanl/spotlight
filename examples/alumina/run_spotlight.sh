@@ -34,9 +34,7 @@ ${EXE} --config-files \
            ../config_alumina.py \
        --config-overrides \
            configuration:seed:${SEED} \
-           configuration:tag:${SEED} \
-           phases-0:phase_file:alumina.exp \
-           phases-0:phase_number:1
+           configuration:tag:${SEED}
 
 # setup GSAS for global minima from optimization search
 spotlight_gsas_setup \
