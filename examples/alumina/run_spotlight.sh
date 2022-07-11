@@ -31,7 +31,7 @@ gsas_convert_cif alumina.cif alumina.exp
 
 # run optimization search
 ${EXE} --config-files \
-           ../plan_alumina.py \
+           ../config_alumina.py \
        --config-overrides \
            configuration:seed:${SEED} \
            configuration:tag:${SEED} \
