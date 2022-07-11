@@ -47,28 +47,17 @@ spotlight_gsas_setup \
 # so check if it is installed first
 cd tmp_minima
 for IDX in 1; do
-gsas_write_csv ${IDX} TRIAL hist_${IDX}.txt
-spotlight_plot_profile \
-    --input-file hist_${IDX}.txt \
-    --profile-file profile_${IDX}.png \
-    --residual-file residual_${IDX}.png \
-    --reflections-file reflections_${IDX}.png \
-    --phase-labels Alumina
-if [ -x "$(command -v convert)" ]; then
-convert -coalesce profile_${IDX}.png reflections_${IDX}.png residual_${IDX}.png alumina_${IDX}.pdf
-fi
+    gsas_write_csv ${IDX} TRIAL hist_${IDX}.txt
+    spotlight_plot_profile \
+        --input-file hist_${IDX}.txt \
+        --profile-file profile_${IDX}.png \
+        --residual-file residual_${IDX}.png \
+        --reflections-file reflections_${IDX}.png \
+        --phase-labels Alumina
+    if [ -x "$(command -v convert)" ]; then
+    convert -coalesce profile_${IDX}.png reflections_${IDX}.png residual_${IDX}.png alumina_${IDX}.pdf
+    fi
 done
 mv *.png *.pdf ..
 cd ..
 
-# plot profiling information
-# requires gprof2dot which is not an explicit dependency of Spotlight
-# so check if it is installed first
-if [ -x "$(command -v gprof2dot)" ]; then
-for IDX in $(seq 0 $((`getconf _NPROCESSORS_ONLN` - 1))); do
-gprof2dot -f pstats tmp_${IDX}/alumina.pstat | dot -Tpdf -o pstat_${IDX}.pdf
-done
-fi
-
-## make PDF
-#gsas_done
