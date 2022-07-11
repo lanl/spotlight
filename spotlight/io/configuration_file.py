@@ -31,7 +31,9 @@ class Item(object):
 
     def __init__(self, **kwargs):
         for key, val in kwargs.items():
-            if val.isdigit():
+            if not isinstance(val, str):
+                setattr(self, key, val)
+            elif val.isdigit():
                 setattr(self, key, int(val))
             else:
                 try:
@@ -184,7 +186,7 @@ class ConfigurationFile(object):
             if not hasattr(self, section):
                 setattr(self, section, {})
             obj = getattr(self, section)
-            obj[option] = val
+            obj[option] = value
 
     def setup_dir(self, tmp_dir=None, change=True):
         """ Copy files to temporary directory.
