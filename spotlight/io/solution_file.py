@@ -6,7 +6,7 @@ import numpy
 import os
 from klepto import archives
 
-class SolutionFile(object):
+class SolutionFile:
     """ This class handles reading and writing output data from the
     optimization analysis.
 

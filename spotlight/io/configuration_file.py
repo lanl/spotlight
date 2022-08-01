@@ -9,7 +9,7 @@ import sys
 from spotlight import filesystem
 from spotlight import solver
 
-class ConfigurationFile(object):
+class ConfigurationFile:
     """ This class manages a refinement plan. This is the top-level interface
     for interacting with a refinement.
 

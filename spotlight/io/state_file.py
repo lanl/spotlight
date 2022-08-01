@@ -6,7 +6,7 @@ import dill
 import numpy
 from klepto import archives
 
-class StateFile(object):
+class StateFile:
     """ This class handles reading and writing local optimization state data
     from the optimization analysis.
 
