@@ -25,12 +25,6 @@ This documentation has several sections for: guidance in installation, examples 
     example_alumina_solution
 
 .. toctree::
-    :caption: Lead Sulphate Example
-    :maxdepth: 1
-
-    example_lead_sulphate
-
-.. toctree::
     :caption: Code Documentation
     :maxdepth: 1
 
