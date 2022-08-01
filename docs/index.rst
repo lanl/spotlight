@@ -11,6 +11,7 @@ This documentation has several sections for: guidance in installation, examples 
     tutorial_introduction
     tutorial_installation
     tutorial_mystic
+    tutorial_mystic_multi
     tutorial_gsasii
     tutorial_milk
     tutorial_cinema
