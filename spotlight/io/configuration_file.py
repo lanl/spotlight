@@ -95,31 +95,18 @@ class ConfigurationFile(object):
     def __init__(self, config_files, tmp_dir=None, names=None, change=True,
                  copy=True, config_overrides=None):
 
-        # if configuration file is in ConfigParser format
-        if all([config_file.endswith(".ini") for config_file in config_files]):
+        # configuration file is a single Python file
+        if len(config_files) == 1:
 
-            # concatenate configuration files
-            self.cp = configparser.ConfigParser()
-            self.cp.read(config_files)
+            # set attributes from configuration file
+            self.read_config(config_files[0])
             if config_overrides:
                 for override in config_overrides:
                     self.apply_override(override)
 
-            # set attributes from configuration file
-            self.read_config()
-
-        # else if configuration file is a single Python file
-        elif len(config_files) == 1 and config_files[0].endswith(".py"):
-
-            # set attributes from configuration file
-            self.read_py_config(config_files[0])
-            if config_overrides:
-                for override in config_overrides:
-                    self.apply_override_py(override)
-
-        # else do not recognize configuration file format
+        # otherwise too many configuration files
         else:
-            raise ValueError("Do not recognize configuration file format!")
+            raise ValueError("You can only supply a single configuration file!")
 
         # refinement plan is not loaded until get_refinement_plan is called
         self.refinement_plan = None
@@ -144,32 +131,6 @@ class ConfigurationFile(object):
         return [self.bounds[name][1] for name in self.names]
 
     def apply_override(self, override):
-        """ Applies an override to the configuration.
-        """
-        section, option, value = override.split(":")
-        if hasattr(self, "items") and section == "parameters":
-            name = option.split("-")[0].upper()
-            if option.endswith("-min"):
-                self.bounds[name][0] = float(value)
-            elif option.endswith("-max"):
-                self.bounds[name][1] = float(value)
-            else:
-                raise KeyError("Do not recognize override {}!".format(override))
-        elif hasattr(self, "items"):
-            if "-" in section:
-                sec, i = section.split("-")
-                i = int(i)
-                setattr(self.items[sec][i], option, value)
-            else:
-                setattr(self.items[section], option, value)
-        else:
-            if option.startswith("-"):
-                self.cp.remove_option(section, option)
-            if not self.cp.has_section(section):
-                self.cp.add_section(section)
-            self.cp.set(section, option, value)
-
-    def apply_override_py(self, override):
         """ Applies an override to thie configuration.
         """
         section, option, value = override.split(":")
@@ -272,99 +233,6 @@ class ConfigurationFile(object):
         return local_solver
 
     def read_config(self, config_file=None):
-        """ Reads information from configuration file.
-    
-        Parameters
-        ----------
-        config_file : {None, str}
-           Path of configuration file to read. Default is ``None`` which reads
-           attribute ``config_file``.
-        """
-
-        # read configuration file
-        if config_file:
-            cp = configparser.ConfigParser()
-            cp.readfp(open(config_file, "r"))
-        else:
-            cp = self.cp
-
-        # read parameter names from [parameters]
-        section = "parameters"
-        names = []
-        for option in cp.options(section):
-            name = option.split("-")[0].upper()
-            if name not in names:
-                names.append(name)
-    
-        # make a dict of max and min boundaries for parameters in [parameters]
-        params = {}
-        for name in names:
-            lb = cp.getfloat(section, name + "-min")
-            ub = cp.getfloat(section, name + "-max")
-            params[name] = [lb, ub]
-        self.bounds = params   
- 
-        # get all sections that will become attributes
-        restricted_sections = ["configuration", "solver", "parameters"]
-        counts = {}
-        items = {}
-        secs = cp.sections()
-        secs.sort()
-        for sec in secs:
-
-            # skip restricted keys
-            if sec in restricted_sections:
-                continue
-
-            # count number in each section group
-            elif "-" in sec:
-                sec, _ = sec.split("-")
-                if sec not in counts.keys():
-                    counts[sec] = 0
-                counts[sec] += 1
-
-            # handle single sections
-            else:
-                kwargs = {opt : cp.get(sec, opt) for opt in cp.options(sec)}
-                items[sec] = Item(**kwargs)
-
-        # handle each section group
-        for sec, num in counts.items():
-            items[sec] = num * [None]
-            for i in range(num):
-                section_i = "{}-{}".format(sec, i)
-                kwargs = {opt : cp.get(section_i, opt) for opt in cp.options(section_i)}
-                items[sec][i] = Item(**kwargs)
-        self.items = items
-
-        # set attributes from [configuration]
-        section = "configuration"
-        for option in cp.options(section):
-            val = cp.get(section, option)
-            if val.isdigit():
-                setattr(self, option, int(val))
-            else:
-                try:
-                    val = float(val)
-                    setattr(self, option, val)
-                except ValueError:
-                    setattr(self, option, val)
-
-        # store all options from [solver]
-        self.solver_kwargs = {}
-        section = "solver"
-        for option in cp.options(section):
-            val = cp.get(section, option)
-            if val.isdigit():
-                self.solver_kwargs[option] = int(val)
-            else:
-                try:
-                    val = float(val)
-                    self.solver_kwargs[option] = val
-                except ValueError:
-                    self.solver_kwargs[option] = val
-
-    def read_py_config(self, config_file=None):
         """ Reads information from configuration file.
     
         Parameters
