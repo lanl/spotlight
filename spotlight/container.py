@@ -2,7 +2,7 @@
 given in its constructor.
 """
 
-class Container(object):
+class Container:
     """ This class contains information passed in the constructor. For example,
     information about the detector or instrument. Any keywords given to the
     constructor will be added as attributes.
