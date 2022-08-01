@@ -124,7 +124,7 @@ class ConfigurationFile(object):
         # refinement plan is not loaded until get_refinement_plan is called
         self.refinement_plan = None
 
-        # set atrributes for names and indices of parameters
+        # set attributes for names and indices of parameters
         self.names = list(names if names is not None else self.bounds.keys())
         self.idxs = {name : i for i, name in enumerate(self.names)}
 

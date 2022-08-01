@@ -10,29 +10,27 @@ set -e
 SEED=${1}
 SEED=${SEED:=123}
 
+# if MPI is installed then use it
+if [ -x "$(command -v mpirun)" ]; then
+    export OMP_NUM_THREADS=1
+    EXE="mpirun --oversubscribe -n 4 python -m cProfile -o analytical.pstat `which spotlight_minimize`"
+else
+    EXE=`which spotlight_minimize`
+fi
+
 # make a temporary directory for analysis
 mkdir -p tmp_spotlight_${SEED}
 cd tmp_spotlight_${SEED}
 cp ../INST_XRY.prm ../inst_d1a.prm ../PBSO4.cwn ../PBSO4.xra ../PbSO4-Wyckoff.cif .
-cp ../config_base.ini ../config_pbso4.ini ../plan_pbso4.py .
+cp ../config_pbso4.py .
 
-# store hostname
-echo `hostname` > host.txt
-
-# set the number of threads to use for parallel regions
-export OMP_NUM_THREADS=1
-
-# run optimization search in parallel
-# profile the execution
-mpirun python -m cProfile -o pbso4.pstat `which spotlight_minimize` \
+# run optimization search
+${EXE} \
     --config-files \
-        config_base.ini \
-        config_pbso4.ini \
+        config_pbso4.py \
     --config-overrides \
         configuration:seed:${SEED} \
         configuration:tag:${SEED} \
-        phases-0:phase_file:PbSO4-Wyckoff.cif \
-        phases-0:phase_label:"PBSO4" \
     --tmp-dir tmp
 
 # setup GSAS-II for global minima from optimization search
@@ -63,11 +61,3 @@ done
 mv *.png *.pdf ..
 cd ..
 
-# plot profiling information
-# requires gprof2dot which is not an explicit dependency of Spotlight
-# so check if it is installed first
-if [ -x "$(command -v gprof2dot)" ]; then
-for IDX in $(seq 0 $((`getconf _NPROCESSORS_ONLN` - 1))); do
-gprof2dot -f pstats tmp_${IDX}/pbso4.pstat | dot -Tpdf -o pstat_${IDX}.pdf
-done
-fi
