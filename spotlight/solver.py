@@ -6,10 +6,11 @@ import numpy
 from mystic import monitors as mystic_monitors
 from mystic import solvers as mystic_solvers
 from mystic import termination as mystic_termination
+from spotlight import container
 from spotlight import sampling
 from spotlight.io import solution_file
 
-class Solver(object):
+class Solver(container.Container):
     """ This manages an optimizer. This is the top-level interface for
     interacting with an optimization with Mystic.
 
@@ -50,33 +51,25 @@ class Solver(object):
         Number of steps in sampling. Only required for some sampling methods.
     """
 
-    def __init__(self, lower_bounds, upper_bounds, arch=None,
-                 iteration=None, sampling_data=None, step=None, nsteps=None,
+    def __init__(self, lower_bounds, upper_bounds,
+                 local_solver="powell", sampling_method="uniform",
+                 sampling_iteration_switch=None,
+                 arch=None, iteration=None, sampling_data=None, step=None, nsteps=None,
+                 max_iterations=None, max_evaluations=None, stop_change=None,
+                 stop_generations=None,
                  termination=None, verbose=False, **kwargs):
 
-        # set required options
-        self.lower_bounds = lower_bounds
-        self.upper_bounds = upper_bounds
-        special_options = ["local_solver", "sampling_method",
-                           "sampling_iteration_switch",
-                           "max_iterations", "max_evaluations", "stop_change",
-                           "stop_generations"]
-        for option in special_options:
-            if option == "local_solver":
-                _local_solver = kwargs[option]
-                del kwargs[option]
-            elif option in kwargs.keys():
-                setattr(self, option, kwargs[option])
-                del kwargs[option]
-            else:
-                setattr(self, option, None)
-
-        # save extra options to be passed to solve function
-        self.extra_options = kwargs
+        # set options as attributes
+        super().__init__(lower_bounds=lower_bounds, upper_bounds=upper_bounds,
+                         sampling_method=sampling_method,
+                         sampling_iteration_switch=sampling_iteration_switch,
+                         max_iterations=max_iterations, max_evaluations=max_evaluations,
+                         stop_change=stop_change,
+                         stop_generations=stop_generations, extra_options=kwargs)
 
         # initialize local solver
         ndim = len(lower_bounds)
-        self.local_solver = local_solvers[_local_solver](ndim)
+        self.local_solver = local_solvers[local_solver](ndim)
 
         # termination conditions
         termination = mystic_termination.NormalizedChangeOverGeneration if termination is None else termination
