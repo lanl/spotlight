@@ -1,5 +1,5 @@
-Optimiztion searches
-====================
+Running a single optimizer
+==========================
 
 .. contents:: :local:
 
@@ -25,11 +25,6 @@ Text...
 .. literalinclude:: _static/tutorial_mystic_solve.py
 
 .. image:: _static/tmp_single.png
-
-Termination
------------
-
-Text...
 
 Multi-dimensional
 -----------------

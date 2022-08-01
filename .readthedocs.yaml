@@ -1,3 +1,5 @@
+
+# readthedocs YAML format version
 version: 2
 
 # set Python version
@@ -5,6 +7,9 @@ build:
   os: ubuntu-20.04
   tools:
     python: "miniconda3-4.7"
+  jobs:
+    pre_install:
+      - bash ./_static/pre_install.sh
 
 # build with Sphinx
 sphinx:
