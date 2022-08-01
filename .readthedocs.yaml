@@ -9,7 +9,7 @@ build:
     python: "miniconda3-4.7"
   jobs:
     pre_install:
-      - bash ./_static/pre_install.sh
+      - bash ./docs/_static/pre_install.sh
 
 # build with Sphinx
 sphinx:
