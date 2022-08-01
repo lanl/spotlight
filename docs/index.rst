@@ -5,10 +5,15 @@ Spotlight is a Python package for parallelized optimization of Rietveld refineme
 This documentation has several sections for: guidance in installation, examples optimizing Rietveld refinement plans with documentation on the file formats, and code documentation for Spotlight.
 
 .. toctree::
-    :caption: Installation
+    :caption: Tutorial
     :maxdepth: 1
 
-    installation
+    tutorial_introduction
+    tutorial_installation
+    tutorial_mystic
+    tutorial_gsasii
+    tutorial_milk
+    tutorial_cinema
 
 .. toctree::
     :caption: Alumina Example
@@ -18,12 +23,6 @@ This documentation has several sections for: guidance in installation, examples 
     example_alumina_configuration
     example_alumina_refinement_plan
     example_alumina_solution
-
-.. toctree::
-    :caption: Lead Sulphate Example
-    :maxdepth: 1
-
-    example_lead_sulphate
 
 .. toctree::
     :caption: Code Documentation

@@ -92,7 +92,12 @@ html_theme = 'alabaster'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {"show_powered_by" : False}
+html_theme_options = {"show_powered_by" : False,
+                      "show_relbars" : True,
+                      "page_width" : "auto",
+                      "body_max_width" : "auto",
+                      "sidebar_width" : "320px",
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
