@@ -1,0 +1,16 @@
+version: 2
+
+# set Python version
+build:
+  os: ubuntu-20.04
+  tools:
+    python: "3.9"
+
+# build with Sphinx
+sphinx:
+   configuration: docs/conf.py
+
+# the Anaconda environment
+conda:
+  environment: tools/environment_rietveld.yaml
+
