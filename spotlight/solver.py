@@ -3,9 +3,9 @@
 
 import configparser
 import numpy
-from mystic import monitors
-from mystic import solvers
-from mystic import termination
+from mystic import monitors as mystic_monitors
+from mystic import solvers as mystic_solvers
+from mystic import termination as mystic_termination
 from spotlight import sampling
 from spotlight.io import solution_file
 
@@ -52,7 +52,7 @@ class Solver(object):
 
     def __init__(self, lower_bounds, upper_bounds, arch=None,
                  iteration=None, sampling_data=None, step=None, nsteps=None,
-                 verbose=False, **kwargs):
+                 termination=None, verbose=False, **kwargs):
 
         # set required options
         self.lower_bounds = lower_bounds
@@ -79,20 +79,20 @@ class Solver(object):
         self.local_solver = local_solvers[_local_solver](ndim)
 
         # termination conditions
+        termination = mystic_termination.NormalizedChangeOverGeneration if termination is None else termination
         self.local_solver.SetEvaluationLimits(self.max_iterations,
                                               self.max_evaluations)
         if self.stop_change is not None or \
            self.stop_generations is not None:
-            self.stop = termination.NormalizedChangeOverGeneration(
-                            self.stop_change, self.stop_generations)
+            self.stop = termination(self.stop_change, self.stop_generations)
         else:
             self.stop = None
 
         # add monitors
         if verbose:
-            self.stepmon = monitors.VerboseMonitor(1)
+            self.stepmon = mystic_monitors.VerboseMonitor(1)
         else:
-            self.stepmon = monitors.Monitor()
+            self.stepmon = mystic_monitors.Monitor()
         self.local_solver.SetGenerationMonitor(self.stepmon)
 
         # set bounds
@@ -165,6 +165,6 @@ class Solver(object):
 
 # dict of local solvers
 local_solvers = {
-    "nelder_mead" : solvers.NelderMeadSimplexSolver,
-    "powell" : solvers.PowellDirectionalSolver,
+    "nelder_mead" : mystic_solvers.NelderMeadSimplexSolver,
+    "powell" : mystic_solvers.PowellDirectionalSolver,
 }

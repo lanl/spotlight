@@ -20,6 +20,8 @@ Optimizers
 
 Text...
 
+.. literalinclude:: _static/tutorial_spotlight_solve.py
+
 Termination
 -----------
 
