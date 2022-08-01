@@ -11,6 +11,8 @@ Spotlight uses Mystic (https://mystic.readthedocs.io/en/latest/) to perform the 
 Designing a cost function
 -------------------------
 
+Designing a cost function...
+
 .. literalinclude:: _static/tutorial_mystic_cost_function.py
 
 Optimizers
