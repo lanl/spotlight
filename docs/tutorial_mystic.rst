@@ -13,7 +13,7 @@ Designing a cost function
 
 Designing a cost function...
 
-.. literalinclude:: _static/tutorial_mystic_cost_function.py
+.. literalinclude:: _static/tutorial_mystic_cost.py
 
 .. image:: _static/tmp_cost.png
 
@@ -25,14 +25,4 @@ Text...
 .. literalinclude:: _static/tutorial_mystic_solve.py
 
 .. image:: _static/tmp_single.png
-
-Multi-dimensional
------------------
-
-Text...
-
-Searches and multiprocessing
-----------------------------
-
-Text...
 
