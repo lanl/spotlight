@@ -6,6 +6,7 @@ import sys
 import GSASIIlattice as lattice
 import GSASIIscriptable as gsasii
 from spotlight import plan
+from spotlight.container import Container
 
 def silent_stdout(func):
     """ Decorator to silence stdout.
@@ -29,6 +30,44 @@ def silent_stdout(func):
 class Plan(plan.BasePlan):
     name = "plan_pbso4"
     gpx = None
+
+    # required to have solution_file, state_file, and num_solvers
+    configuration = {
+        "solution_file" : "solution.db",
+        "state_file" : "state.db",
+        "num_solvers" : 3,
+        "checkpoint_stride" : 1,
+    }
+
+    # required to have local solver and sampling method
+    # all other special options get added to a Solver instance
+    # any non-special options are passed to the Solver.solve function
+    solver = {
+        "local_solver" : "powell",
+        "max_evaluations" : 25,
+        "sampling_method" : "uniform",
+    }
+
+    # define a list of detectors
+    detectors = [Container(data_file="../PBSO4.xra",
+                           detector_file="../INST_XRY.prm",
+                           min_two_theta=16.0,
+                           max_two_theta=158.4),
+                 Container(data_file="../PBSO4.cwn",
+                           detector_file="../inst_d1a.prm",
+                           min_two_theta=19.0,
+                           max_two_theta=153.0)]
+
+    phases = [Container(phase_file="../PbSO4-Wyckoff.cif",
+                        phase_label="PBSO4")]
+
+    # parameters names and bounds
+    # in compute function use self.get("x") to use optimizer's value for "x"
+    parameters = {
+        "PBSO4_A" : [7.6266, 9.3214], # 8.474 +/- 10%
+        "PBSO4_B" : [4.8546, 5.9334], # 5.394 +/- 10%
+        "PBSO4_C" : [6.2586, 7.6494], # 6.954 +/- 10%
+    }
 
     @silent_stdout
     def initialize(self):

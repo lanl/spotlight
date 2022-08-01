@@ -38,7 +38,7 @@ class BasePlan(models.AbstractFunction):
     """
 
     def __init__(self, idxs, bounds, ndim, initialize=True, **kwargs):
-        super(BasePlan, self).__init__(ndim=ndim)
+        super().__init__(ndim=ndim)
 
         # store map to parameters
         self.idxs = idxs

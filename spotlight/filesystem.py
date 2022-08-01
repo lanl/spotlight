@@ -58,7 +58,7 @@ def cp(paths, dest=None):
         try:
             shutil.copyfile(path, final_path)
         except shutil.SameFileError:
-            print("File {} already exists!".format(path))
+            print(f"File {path} already exists!")
 
     # typecast paths to str
     paths_out = [os.path.basename(path) for path in paths_list]
