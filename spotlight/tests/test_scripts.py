@@ -107,6 +107,3 @@ for script_file in script_files:
                                    mod_name=mod_name, language=language)
     setattr(TestScripts, name, _function)
 
-if __name__ == "__main__":
-    unittest.main()
-
