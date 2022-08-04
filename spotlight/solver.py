@@ -103,7 +103,7 @@ class Solver(container.Container):
                 raise ValueError("Must give iteration with tolerance sampling.")
         if self.sampling_method == "linspace":
             args += [step, nsteps]
-        p0 = sampling.sampling_methods[self.sampling_method](*args)
+        p0 = sampling.sampling_methods[self.sampling_method]().sample(*args)
         self.local_solver.SetInitialPoints(p0)
         self.local_solver.SetStrictRanges(self.lower_bounds, self.upper_bounds)
 
