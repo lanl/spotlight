@@ -8,30 +8,6 @@ from spotlight import plan
 
 class Plan(plan.BasePlan):
 
-    # required to have solution_file, state_file, and num_solvers
-    configuration = {
-        "solution_file" : "solution.db",
-        "state_file" : "state.db",
-        "checkpoint_stride" : 1,
-    }
-
-    # required to have local solver and sampling method
-    # all other special options get added to a Solver instance
-    # any non-special options are passed to the Solver.solve function
-    solver = {
-        "local_solver" : "powell",
-        "stop_change" : 0.1,
-        "stop_generations" : 5,
-        "sampling_method" : "uniform",
-    }
-
-    # parameters names and bounds
-    # in compute function use self.get("x") to use optimizer's value for "x"
-    parameters = {
-        "x" : [-9.5, 9.5],
-        "y" : [-9.5, 9.5],
-    }
-
     def initialize(self):
         """ Executed once at the beginning to set up the problem.
         """
@@ -63,3 +39,19 @@ class Plan(plan.BasePlan):
         return stat
 
 dr = driver.Driver()
+
+# add plan
+
+# add sampling
+
+# add solver
+
+# minimize
+
+# flip to find maxima
+
+# minimize
+
+# visualize
+
+
