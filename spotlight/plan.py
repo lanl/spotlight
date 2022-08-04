@@ -11,13 +11,6 @@ class BasePlan(models.AbstractFunction):
     ----------
     idxs : dict
         A ``dict`` with key parameter and value index of parameter.
-    bounds : dict
-        A ``dict`` with key parameter name and value a tuple of lower and upper
-        bounds.
-    detectors : list
-        A list of ``Dectector`` instances.
-    phases : list
-        A list of ``Phase`` instances.
     _p : list
         A list of the latest parameters sent to the optimized function. The list should
         be indexed by ``idxs``.
@@ -26,23 +19,13 @@ class BasePlan(models.AbstractFunction):
     ----------
     idxs : dict
         A ``dict`` with key parameter and value index of parameter.
-    bounds : dict
-        A ``dict`` with key parameter name and value a tuple of lower and upper
-        bounds.
-    data_file : str
-        Path to experimental data file.
-    detector : Detector
-        A ``Dectector`` instance.
-    phases : list
-        A list of ``Phase`` instances.
     """
 
-    def __init__(self, idxs, bounds, ndim, initialize=True, **kwargs):
-        super().__init__(ndim=ndim)
-
+    def __init__(self, names, initialize=True, **kwargs):
+        super().__init__(ndim=len(names))
+ 
         # store map to parameters
-        self.idxs = idxs
-        self.bounds = bounds
+        self.idxs = {name : i for i, name in enumerate(names)}
         self._p = None
 
         # store input files
