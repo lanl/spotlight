@@ -7,6 +7,15 @@ class BasePlan(models.AbstractFunction):
     """ This class describes a refinement plan to optimize. Users should implement
     their own subclass of this class.
 
+    There are several key functions to this class.
+
+    The ``BasePlan.initialize`` is a function that is executed once when an instance
+    of the class is initialized. This is useful for doing things that require a one-time
+    setup. For example, reading data files, phase files, or setting up directories.
+
+    The ``BasePlan.compute`` should implement the cost function to be minimized. It
+    should return a single ``float`` that is used by the solver to find the mimima.
+
     Attributes
     ----------
     idxs : dict
