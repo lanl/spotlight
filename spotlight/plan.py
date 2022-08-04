@@ -10,15 +10,16 @@ class BasePlan(models.AbstractFunction):
     Attributes
     ----------
     idxs : dict
-        A ``dict`` with key parameter and value index of parameter.
+        A ``dict`` with key parameter and value index of parameter. E.g. ``{"x" : 1, "y" : 2}``.
+        This corresponds to the index of the parameter given in ``names``.
     _p : list
         A list of the latest parameters sent to the optimized function. The list should
         be indexed by ``idxs``.
 
     Parameters
     ----------
-    idxs : dict
-        A ``dict`` with key parameter and value index of parameter.
+    names : list
+        A ``list`` of parameter names. E.g. ``["x", "y"]``.
     """
 
     def __init__(self, names, initialize=True):
