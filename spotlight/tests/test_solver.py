@@ -67,8 +67,7 @@ class TestContainer(unittest.TestCase):
 
     def test_solver(self):
 
-        p = Plan(["x", "y"], ndim=2,
-                 initialize=True)
+        p = Plan(["x", "y"])
 
         s = solver.Solver([-9.5, -9.5], [9.5, 9.5],
                           local_solver="powell",

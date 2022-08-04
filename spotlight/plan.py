@@ -21,16 +21,12 @@ class BasePlan(models.AbstractFunction):
         A ``dict`` with key parameter and value index of parameter.
     """
 
-    def __init__(self, names, initialize=True, **kwargs):
+    def __init__(self, names, initialize=True):
         super().__init__(ndim=len(names))
  
         # store map to parameters
         self.idxs = {name : i for i, name in enumerate(names)}
         self._p = None
-
-        # store input files
-        for key, val in kwargs.items():
-            setattr(self, key, val)
 
         # setup initial porition of refinement plan
         if initialize:

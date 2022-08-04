@@ -126,17 +126,6 @@ class ConfigurationFile:
         else:
             tmp_dir = "."
 
-        # copy files to temporary dir
-        for key in self.items.keys():
-            items = self.items[key] if isinstance(self.items[key], list) \
-                        else [self.items[key]]
-            for item in items:
-                for attr in dir(item):
-                    if attr.endswith("_file"):
-                        new_file = filesystem.cp(getattr(item, attr), tmp_dir) \
-                               if tmp_dir else getattr(item, attr)
-                        setattr(item, attr, new_file)
-
         # copy refinement plan file to temporary dir
         self.refinement_plan_file = filesystem.cp(self.refinement_plan_file, tmp_dir) \
                              if tmp_dir else self.refinement_plan_file
@@ -176,7 +165,7 @@ class ConfigurationFile:
         # initialize refinement plan
         ndim = len(self.names)
         cost = self.refinement_plan.Plan(self.idxs, self.bounds, ndim=ndim,
-                                         initialize=initialize, **self.items)
+                                         initialize=initialize)
 
         return cost
 
@@ -230,6 +219,3 @@ class ConfigurationFile:
         self.solver_kwargs = {option : val
                               for option, val in config.solver.items()}
 
-        # do not handle items since configuration file
-        # can have class attributes
-        self.items = {}
