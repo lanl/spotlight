@@ -6,110 +6,131 @@ few times.
 
 import numpy
 from mystic import math
+from spotlight import container
 
-def uniform(lower_bounds, upper_bounds):
-    """ Returns a new, single point via uniform distribution.
+class SamplingBase(container.Container):
 
-    Parameters
-    ----------
-    lower_bounds : list
-        List of ``float`` that are lower bounds. List is indexed by parameter.
-    upper_bounds : list
-        List of ``float`` that are upper bounds. List is indexed by parameter.
+    def __init__(self, lower_bounds, upper_bounds):
+        super().__init__(lower_bounds=lower_bounds, upper_bounds=upper_bounds)
 
-    Returns
-    -------
-    pts : numpy.array
-        An array with new point.
-    """
-    ndim = len(lower_bounds)
-    pts = numpy.zeros(ndim)
-    for j in range(ndim):
-        lb = lower_bounds[j]
-        ub = upper_bounds[j]
-        pts[j] = numpy.random.uniform(lb, ub)
-    return pts
+    def sample(self, *args, **kwargs):
+        raise NotImplementedError
 
-def tolerance(lower_bounds, upper_bounds, data=None):
-    """ Returns a new, single point some tolerence away from existing points.
+class UniformSampling(SamplingBase):
 
-    Parameters
-    ----------
-    lower_bounds : list
-        List of ``float`` that are lower bounds. List is indexed by parameter.
-    upper_bounds : list
-        List of ``float`` that are upper bounds. List is indexed by parameter.
-    data : {None, list}
-        List of tuples. Each tuple is a list of ``float`` that are previous
-        data points.
+    def sample(self):
+        """ Returns a new, single point via uniform distribution.
+    
+        Parameters
+        ----------
+        lower_bounds : list
+            List of ``float`` that are lower bounds. List is indexed by parameter.
+        upper_bounds : list
+            List of ``float`` that are upper bounds. List is indexed by parameter.
+    
+        Returns
+        -------
+        pts : numpy.array
+            An array with new point.
+        """
+        ndim = len(self.lower_bounds)
+        pts = numpy.zeros(ndim)
+        for j in range(ndim):
+            lb = self.lower_bounds[j]
+            ub = self.upper_bounds[j]
+            pts[j] = numpy.random.uniform(lb, ub)
+        return pts
 
-    Returns
-    -------
-    pts : numpy.array
-        An array with new point.
-    """
-    rtol = None
-    dist = None
-    n_new_pts = 1
-    data = [] if data == None else data
-    if len(data) == 0:
-        return uniform(lower_bounds, upper_bounds)
-    pts = math.fillpts(lower_bounds, upper_bounds, n_new_pts, data, rtol, dist)
-    return pts[0]
+class ToleranceSampling(SamplingBase):
 
-def linspace(lower_bounds, upper_bounds, step=0, nsteps=1):
-    """ Returns a new, single point linearlly-spaced ``i`` from the lower
-    boundary.
+    def __init__(self, lower_bounds, upper_bounds, data=None):
+        super().__init__(lower_bounds=lower_bounds, upper_bounds=upper_bounds, data=data)
 
-    Parameters
-    ----------
-    lower_bounds : list
-        List of ``float`` that are lower bounds. List is indexed by parameter.
-    upper_bounds : list
-        List of ``float`` that are upper bounds. List is indexed by parameter.
-    step : int
-        Index to select.
-    nsteps : int
-        Total number of steps.
+    def sample(self):
+        """ Returns a new, single point some tolerence away from existing points.
+    
+        Parameters
+        ----------
+        lower_bounds : list
+            List of ``float`` that are lower bounds. List is indexed by parameter.
+        upper_bounds : list
+            List of ``float`` that are upper bounds. List is indexed by parameter.
+        data : {None, list}
+            List of tuples. Each tuple is a list of ``float`` that are previous
+            data points.
+    
+        Returns
+        -------
+        pts : numpy.array
+            An array with new point.
+        """
+        rtol = None
+        dist = None
+        n_new_pts = 1
+        data = [] if self.data == None else self.data
+        if len(data) == 0:
+            return uniform(self.lower_bounds, self.upper_bounds)
+        pts = math.fillpts(self.lower_bounds, self.upper_bounds, n_new_pts, data, rtol, dist)
+        return pts[0]
 
-    Returns
-    -------
-    pts : numpy.array
-        An array with new point.
-    """
-    ndim = len(lower_bounds)
-    pts = numpy.zeros(ndim)
-    for j in range(ndim):
-        step_size = (upper_bounds[j] - lower_bounds[j]) / (nsteps)
-        pts[j] = step * step_size + lower_bounds[j] + 0.5 * step_size
-    return pts
+class LinearSampling(SamplingBase):
 
-def midpoint(lower_bounds, upper_bounds):
-    """ Returns a new, single point at the center.
+    def __init__(self, lower_bounds, upper_bounds, step=0, nsteps=1):
+        super().__init__(lower_bounds=lower_bounds, upper_bounds=upper_bounds,
+                         step=step, nsteps=nsteps)
 
-    Parameters
-    ----------
-    lower_bounds : list
-        List of ``float`` that are lower bounds. List is indexed by parameter.
-    upper_bounds : list
-        List of ``float`` that are upper bounds. List is indexed by parameter.
+    def sample(self, step=None):
+        """ Returns a new, single point linearlly-spaced ``i`` from the lower
+        boundary.
+    
+        Parameters
+        ----------
+        step : int
+            Index to select.
+    
+        Returns
+        -------
+        pts : numpy.array
+            An array with new point.
+        """
+        step = self.step if step is None else step
+        ndim = len(self.lower_bounds)
+        pts = numpy.zeros(ndim)
+        for j in range(ndim):
+            step_size = (self.upper_bounds[j] - self.lower_bounds[j]) / (self.nsteps)
+            pts[j] = step * step_size + self.lower_bounds[j] + 0.5 * step_size
+        return pts
 
-    Returns
-    -------
-    pts : numpy.array
-        An array with new point.
-    """
-    ndim = len(lower_bounds)
-    pts = numpy.zeros(ndim)
-    for j in range(ndim):
-        lb = lower_bounds[j]
-        ub = upper_bounds[j]
-        pts[j] = (ub - lb) / 2.0 + lb
-    return pts
+class MidpointSampling(SamplingBase):
+
+    def sample(self):
+        """ Returns a new, single point at the center.
+    
+        Parameters
+        ----------
+        lower_bounds : list
+            List of ``float`` that are lower bounds. List is indexed by parameter.
+        upper_bounds : list
+            List of ``float`` that are upper bounds. List is indexed by parameter.
+    
+        Returns
+        -------
+        pts : numpy.array
+            An array with new point.
+        """
+        ndim = len(self.lower_bounds)
+        pts = numpy.zeros(ndim)
+        for j in range(ndim):
+            lb = self.lower_bounds[j]
+            ub = self.upper_bounds[j]
+            pts[j] = (ub - lb) / 2.0 + lb
+        return pts
 
 # dict of sampling methods
 sampling_methods = {
-    "linspace" : linspace,
-    "tolerance" : tolerance,
-    "uniform" : uniform,
+    "linspace" : LinearSampling,
+    "midpoint" : MidpointSampling,
+    "tolerance" : ToleranceSampling,
+    "uniform" : UniformSampling,
 }
+
