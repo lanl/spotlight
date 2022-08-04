@@ -67,12 +67,7 @@ class TestContainer(unittest.TestCase):
 
     def test_solver(self):
 
-        idxs = {"x" : 0,
-                "y" : 1}
-        bounds = {"x" : (-9.5, 9.5),
-                  "y" : (-9.5, 9.5)}
-        p = Plan(idxs, bounds, ndim=2,
-                 initialize=True)
+        p = Plan(["x", "y"])
 
         s = solver.Solver([-9.5, -9.5], [9.5, 9.5],
                           local_solver="powell",
