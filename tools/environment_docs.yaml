@@ -1,12 +1,11 @@
 # Example of creating an Anconda environment with Spotlight and MILK:
 # conda env create -f tools/environment_milk.yaml
 
-name: spotlight-milk
+name: spotlight-docs
 
 channels:
   - conda-forge
   - defaults
-  - briantoby
 
 dependencies:
   - klepto=0.2.2
@@ -23,9 +22,6 @@ dependencies:
   # for MILK
   - tqdm=4.64.0
   - prettytable=3.3.0
-
-  # for GSAS-II
-  - gsas2pkg
 
   # pip packages
   - pip:
