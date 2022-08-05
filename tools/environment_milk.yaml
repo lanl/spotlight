@@ -6,7 +6,6 @@ name: spotlight-milk
 channels:
   - conda-forge
   - defaults
-  - briantoby
 
 dependencies:
   - klepto=0.2.2
@@ -14,6 +13,11 @@ dependencies:
   - numpy=1.23.0
   - pip=22.1.2
   - python=3.8
+  - openmpi=4.1.4
+  - mpi4py=3.1.3
+
+  # for documentation
+  - nbsphinx=0.8.9
   - sphinx=5.0.2
   - sphinxcontrib-programoutput=0.16
 
@@ -23,9 +27,6 @@ dependencies:
   # for MILK
   - tqdm=4.64.0
   - prettytable=3.3.0
-
-  # for GSAS-II
-  - gsas2pkg
 
   # pip packages
   - pip:
