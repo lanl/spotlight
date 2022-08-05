@@ -9,6 +9,9 @@ docs/_build/
 docs/spotlight*.rst
 tmp*
 
+# notebook files
+.ipynb_checkpoints/
+
 # examples files
 examples/*/slurm*
 examples/*/tmp*
