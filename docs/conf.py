@@ -52,6 +52,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.napoleon',
     'sphinxcontrib.programoutput',
+    'nbsphinx',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
