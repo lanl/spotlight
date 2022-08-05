@@ -17,5 +17,5 @@ sphinx:
 
 # the Anaconda environment
 conda:
-  environment: tools/environment_milk.yaml
+  environment: tools/environment_docs.yaml
 

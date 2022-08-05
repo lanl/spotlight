@@ -1,7 +1,9 @@
-# Example of creating an Anconda environment with Spotlight and MILK:
-# conda env create -f tools/environment_milk.yaml
+# Example of creating an Anconda environment with Spotlight and MILK.
+# This is only meant for use by readthedocs, it does not contain
+# a comprehensive environment a developer or user may need:
+# conda env create -f tools/environment_docs.yaml
 
-name: spotlight-milk
+name: spotlight-docs
 
 channels:
   - conda-forge
