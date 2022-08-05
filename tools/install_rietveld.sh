@@ -3,7 +3,7 @@
 set -e 
 
 # install and load Anaconda env
-conda env create -f environment_reitveld.yaml
+conda env create -f environment_rietveld.yaml
 conda activate spotlight-rietveld
 
 # build GSAS-II
