@@ -10,11 +10,11 @@ This documentation has several sections for: guidance in installation, examples 
 
     tutorial_introduction
     tutorial_installation
-    tutorial_mystic
+    notebooks/tutorial_mystic_single.ipynb
     notebooks/tutorial_mystic.ipynb
     tutorial_mystic_multi
-    tutorial_gsasii
     tutorial_milk
+    tutorial_gsasii
     tutorial_cinema
 
 .. toctree::
