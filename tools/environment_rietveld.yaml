@@ -26,9 +26,13 @@ dependencies:
   # for volcano function example
   - scipy=1.8.1
 
+  # for ML example
+  - scikit-learn=1.1.2
+
   # for MILK
   - tqdm=4.64.0
   - prettytable=3.3.0
+  - pandas=1.4.3
 
   # for GSAS-II
   - gsas2pkg=2
