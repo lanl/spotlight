@@ -12,6 +12,7 @@ This documentation has several sections for: guidance in installation, examples 
     tutorial_installation
     notebooks/tutorial_mystic_single.ipynb
     notebooks/tutorial_mystic_multi.ipynb
+    notebooks/tutorial_mystic_surrogate.ipynb
     tutorial_milk
     tutorial_gsasii
     tutorial_cinema

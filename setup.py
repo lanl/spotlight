@@ -133,6 +133,7 @@ scripts_list = [
 # a list of all python packages to be installed
 packages_list = [
     "spotlight",
+    "spotlight.bridge",
     "spotlight.io",
 ]
 
