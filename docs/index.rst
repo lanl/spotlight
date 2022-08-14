@@ -2,7 +2,9 @@ Spotlight
 =========
 
 Spotlight is a Python package for parallelized optimization of Rietveld refinement plans.
-This documentation has several sections for: guidance in installation, examples optimizing Rietveld refinement plans with documentation on the file formats, and code documentation for Spotlight.
+This documentation contains a tutorial with several sections for: guidance in installation, how to use some important functionality in `Mystic
+<https://github.com/uqfoundation/mystic>`_, and how to apply Mystic to Rietveld analysis using `MILK <https://github.com/lanl/MILK>`_.
+The sections following the tutorial give some more examples optimizing Rietveld refinement plans and code documentation for Spotlight.
 
 .. toctree::
     :caption: Tutorial
