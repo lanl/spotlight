@@ -1,8 +1,10 @@
 Spotlight
 =========
 
-Spotlight is a Python package for parallelized optimization of Rietveld refinement plans.
-This documentation has several sections for: guidance in installation, examples optimizing Rietveld refinement plans with documentation on the file formats, and code documentation for Spotlight.
+**Spotlight** is a Python package for parallelized optimization of Rietveld analysis.
+Spotlight leverages an optimization package called `Mystic <https://github.com/uqfoundation/mystic>`_ for optmization and includes additional modules that can be useful for Rietveld analysis.
+This documentation contains a tutorial with several sections for: guidance in installation, how to use some basic functionality in Mystic, and how to apply Mystic to Rietveld analysis using `MILK <https://github.com/lanl/MILK>`_.
+The sections following the tutorial give source code documentation for Spotlight.
 
 .. toctree::
     :caption: Tutorial
@@ -13,18 +15,7 @@ This documentation has several sections for: guidance in installation, examples 
     notebooks/tutorial_mystic_single.ipynb
     notebooks/tutorial_mystic_multi.ipynb
     notebooks/tutorial_mystic_surrogate.ipynb
-    tutorial_milk
-    tutorial_gsasii
-    tutorial_cinema
-
-.. toctree::
-    :caption: Alumina Example
-    :maxdepth: 1
-
-    example_alumina
-    example_alumina_configuration
-    example_alumina_refinement_plan
-    example_alumina_solution
+    notebooks/tutorial_milk_surrogate.ipynb
 
 .. toctree::
     :caption: Code Documentation
