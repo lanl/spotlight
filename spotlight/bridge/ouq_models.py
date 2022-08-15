@@ -651,7 +651,7 @@ class LearnedModel(OUQModel):
             data = ds.from_archive(mc.archive.read(data))
         x = getattr(data, 'coords', getattr(data, 'x', None))
         z = getattr(data, 'values', getattr(data, 'y', None))
-        from estimator import Estimator
+        from spotlight.bridge.estimator import Estimator
         estm = Estimator(x, z, **self.__kwds__)
         self.__func__ = estm.Train() #XXX: Error for zero-size?
         self.__model__ = _init_axis(estm.model)
