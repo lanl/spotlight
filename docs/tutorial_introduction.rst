@@ -3,9 +3,6 @@ Introduction
 
 .. contents:: :local:
 
-What is an ensemble of optimizers
----------------------------------
-
 Rietveld analysis of tens or hundreds of powder diffraction datasets from parametric or time-resolved experiments often poses a bottleneck.
 High temperature annealing studies, during which phase transformations occur and lattice parameters may change due to repartitioning of elements, are prime examples where automation by a simple phase identification from a database of room temperature structures or automation by sequential refinements is likely to fail. 
 To address this problem, we present a Python packaged named **Spotlight** which uses an *ensemble of optimizers* to guide the analysis to the best fit parameters over many subprocesses and across machines which allows the analyst to harness the computational capacity of high-performance computing clusters for Rietveld analyses.
@@ -48,4 +45,9 @@ The following pages of this tutorial demonstrates:
  * How to execute these ensembles in parallel,
  * How to create a surrogate model and use the surrogate model to optimize an expensive cost function,
  * And how to apply what we have learned to a Rietveld analysis using **MILK** which is interface to the MAUD Rietveld software.
+
+.. note::
+
+    This tutorial is written using Python notebooks in ``spotlight/docs/notebooks``.
+    You can create a server to load the notebooks using ``python -m notebook``.
 
