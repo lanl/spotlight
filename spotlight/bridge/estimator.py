@@ -211,7 +211,7 @@ class Estimator(object):
                     estimator = clone(learner.estimator)
                     transform = clone(learner.transform)
                     from mystic.math.interpolate import _getaxis
-                    from spotlight.bridge.ml import Estimator as Learner
+                    from spotlight.brdige.ml import Estimator as Learner
                     func = Learner(estimator, transform)
                     with np.warnings.catch_warnings(): #FIXME: enable warn=True
                         np.warnings.filterwarnings('ignore')
