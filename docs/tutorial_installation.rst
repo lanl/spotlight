@@ -21,6 +21,8 @@ Follow the steps below to start using Spotlight!
     .. literalinclude:: ../tools/install_rietveld.sh
        :language: bash
 
+   If you do not want to have to set ``PYTHONPATH`` and ``MAUD_PATH`` everytime you load the Anaconda env, you can create and add these commands to ``${CONDA_PREFIX}/etc/conda/activate.d/post.sh`` like is shown above in the commented out snippet.
+
 #. Activate the environment by running the following command.
 
     .. code-block:: bash
