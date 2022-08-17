@@ -44,7 +44,7 @@ dependencies:
   # pip packages
   - pip:
     - git+https://github.com/lanl/MILK.git@889d914
-    - git+https://github.com/lanl/spotlight.git@81537f2
+    - git+https://github.com/lanl/spotlight.git@37dd95d
     - mystic==0.3.9
     - pyina==0.2.6
     - pathos==0.2.9
