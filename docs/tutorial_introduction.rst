@@ -48,6 +48,7 @@ The following pages of this tutorial demonstrates:
 
 .. note::
 
-    This tutorial is written using Python notebooks in [``spotlight/docs/notebooks``](https://github.com/lanl/spotlight/tree/master/docs/notebooks).
+    This tutorial is written using Python notebooks here: https://github.com/lanl/spotlight/tree/master/docs/notebooks
+
     You can create a server to load the notebooks using ``python -m notebook``.
 
