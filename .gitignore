@@ -11,6 +11,7 @@ tmp*
 
 # notebook files
 .ipynb_checkpoints/
+docs/notebooks/template.par
 
 # examples files
 examples/*/slurm*
