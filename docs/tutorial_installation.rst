@@ -15,13 +15,10 @@ Follow the steps below to start using Spotlight!
 
 #. Create a new conda environment using the ``environment_rietveld.yaml`` file.
    There are two important things to note during this step.
-   If building GSAS-II and you are behind a firewall (e.g. at LANL), then you will need to compile some fortran modules using ``scons`` as shown below.
    You will also need to set ``MAUD_PATH`` to our MAUD installation in order to do the parts of this tutorial that use MILK and MAUD.
 
-    .. literalinclude:: ../tools/install_rietveld.sh
+    .. literalinclude:: ../tools/install_rietveld_sm.sh
        :language: bash
-
-   If you do not want to have to set ``PYTHONPATH`` and ``MAUD_PATH`` everytime you load the Anaconda env, you can create and add these commands to ``${CONDA_PREFIX}/etc/conda/activate.d/post.sh`` like is shown above in the commented out snippet.
 
 #. Activate the environment by running the following command.
 

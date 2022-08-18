@@ -4,7 +4,7 @@
 name: spotlight-rietveld
 
 channels:
-  - briantoby
+#  - briantoby
   - conda-forge
   - defaults
 
@@ -33,17 +33,20 @@ dependencies:
   - tqdm=4.64.0
   - prettytable=3.3.0
   - pandas=1.4.3
+  - pydantic=1.9.2
+  - seaborn=0.11.2
+  - spyder=5.2.2
 
-  # for GSAS-II
-  - gsas2pkg=2
-  - pyfai=0.21.3
-  - pydantic=1.9.1
-  - scons=4.3.0
-  - spyder-kernels=2.1
+#  # for GSAS-II
+#  - gsas2pkg=2
+#  - pyfai=0.21.3
+#  - pydantic=1.9.1
+#  - scons=4.3.0
+#  - spyder-kernels=2.1
 
   # pip packages
   - pip:
-    - git+https://github.com/lanl/MILK.git@889d914
+    - git+https://github.com/lanl/MILK.git@v0.2
     - git+https://github.com/lanl/spotlight.git@3855d12
     - mystic==0.3.9
     - pyina==0.2.6
