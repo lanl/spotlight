@@ -164,7 +164,7 @@ class ConfigurationFile:
 
         # initialize refinement plan
         ndim = len(self.names)
-        cost = self.refinement_plan.Plan(self.idxs, self.bounds, ndim=ndim,
+        cost = self.refinement_plan.Plan(self.names,
                                          initialize=initialize)
 
         return cost
