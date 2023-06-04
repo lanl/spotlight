@@ -105,7 +105,7 @@ project_keywords = ["crystallography"]
 install_requires = [
 ]
 
-# a list of all executables to be installed
+# a list of all bash executables to be installed
 scripts_list = [
     "bin/gsas/gsas_change_absorption",
     "bin/gsas/gsas_change_background_coeff",
@@ -121,19 +121,13 @@ scripts_list = [
     "bin/gsas/gsas_change_spherical_harmonic_coeff",
     "bin/gsas/gsas_constrain_delete",
     "bin/gsas/gsas_write_csv",
-    "bin/gsasii/gsasii_write_csv",
-    "bin/gsasii/gsasii_print_lattice",
-    "bin/spotlight_gsas_setup",
-    "bin/spotlight_gsas_summary",
-    "bin/spotlight_inspect",
-    "bin/spotlight_minimize",
-    "bin/spotlight_plot_profile",
 ]
 
 # a list of all python packages to be installed
 packages_list = [
     "spotlight",
     "spotlight.bridge",
+    "spotlight.cli",
     "spotlight.io",
 ]
 
@@ -157,6 +151,17 @@ core.setup(name=project_name,
            keywords=project_keywords,
            install_requires=install_requires,
            scripts=scripts_list,
+           entry_points={
+               "console_scripts" : [
+                   "gsasii_write_csv = spotlight.cli.gsasii_write_csv:main",
+                   "gsasii_print_lattice = spotlight.cli.gsasii_print_lattice:main",
+                   "spotlight_gsas_setup = spotlight.cli.spotlight_gsas_setup:main",
+                   "spotlight_gsas_summary = spotlight.cli.spotlight_gsas_summary:main",
+                   "spotlight_inspect = spotlight.cli.spotlight_inspect:main",
+                   "spotlight_minimize = spotlight.cli.spotlight_minimize:main",
+                   "spotlight_plot_profile = spotlight.cli.spotlight_plot_profile:main",
+               ],
+           },
            packages=packages_list,
            package_data=data_dict,
            test_suite=test_suite,
