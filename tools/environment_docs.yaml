@@ -22,7 +22,7 @@ dependencies:
   - nbsphinx=0.8.9
   - sphinx=5.0.2
   - sphinxcontrib-programoutput=0.16
-  - ipykernel
+  - ipykernel=5.1.1
 
   # for volcano function example
   - scipy=1.8.1
