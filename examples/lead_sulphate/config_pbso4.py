@@ -48,11 +48,11 @@ class Plan(plan.BasePlan):
     }
 
     # define a list of detectors
-    detectors = [Container(data_file="../PBSO4.XRA",
-                           detector_file="../INST_XRY.PRM",
+    detectors = [Container(data_file="../PBSO4.xra",
+                           detector_file="../INST_XRY.prm",
                            min_two_theta=16.0,
                            max_two_theta=158.4),
-                 Container(data_file="../PBSO4.CWN",
+                 Container(data_file="../PBSO4.cwn",
                            detector_file="../inst_d1a.prm",
                            min_two_theta=19.0,
                            max_two_theta=153.0)]
