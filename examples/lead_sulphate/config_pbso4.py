@@ -34,7 +34,7 @@ class Plan(plan.BasePlan):
     configuration = {
         "solution_file" : "solution.db",
         "state_file" : "state.db",
-        "num_solvers" : 100,
+        "num_solvers" : 3,
         "checkpoint_stride" : 1,
     }
 
