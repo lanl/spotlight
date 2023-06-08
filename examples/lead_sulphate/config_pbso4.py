@@ -97,7 +97,7 @@ class Plan(plan.BasePlan):
         self.gpx.do_refinements([{}])
         self.gpx.save("step_1.gpx")
 
-    #@silent_stdout
+    @silent_stdout
     def compute(self):
 
         # create a GSAS-II project
