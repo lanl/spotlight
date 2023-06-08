@@ -1,10 +1,10 @@
-""" A refinement plan for lead sulphate.
+""" A refinement plan for lead sulphate using GSAS-II using revision r5609.
 """
 
 import io
 import sys
-import GSASIIlattice as lattice
 import GSASIIscriptable as gsasii
+import GSASIIlattice as lattice
 from spotlight import plan
 from spotlight.container import Container
 
@@ -29,13 +29,12 @@ def silent_stdout(func):
 
 class Plan(plan.BasePlan):
     name = "plan_pbso4"
-    gpx = None
 
     # required to have solution_file, state_file, and num_solvers
     configuration = {
         "solution_file" : "solution.db",
         "state_file" : "state.db",
-        "num_solvers" : 3,
+        "num_solvers" : 100,
         "checkpoint_stride" : 1,
     }
 
@@ -49,11 +48,11 @@ class Plan(plan.BasePlan):
     }
 
     # define a list of detectors
-    detectors = [Container(data_file="../PBSO4.xra",
-                           detector_file="../INST_XRY.prm",
+    detectors = [Container(data_file="../PBSO4.XRA",
+                           detector_file="../INST_XRY.PRM",
                            min_two_theta=16.0,
                            max_two_theta=158.4),
-                 Container(data_file="../PBSO4.cwn",
+                 Container(data_file="../PBSO4.CWN",
                            detector_file="../inst_d1a.prm",
                            min_two_theta=19.0,
                            max_two_theta=153.0)]
@@ -64,9 +63,9 @@ class Plan(plan.BasePlan):
     # parameters names and bounds
     # in compute function use self.get("x") to use optimizer's value for "x"
     parameters = {
-        "PBSO4_A" : [7.6266, 9.3214], # 8.474 +/- 10%
-        "PBSO4_B" : [4.8546, 5.9334], # 5.394 +/- 10%
-        "PBSO4_C" : [6.2586, 7.6494], # 6.954 +/- 10%
+        "PBSO4_A" : [8.474 * 0.95, 8.474 * 1.05], # 8.474 +/- 5%
+        "PBSO4_B" : [5.394 * 0.95, 5.394 * 1.05], # 5.394 +/- 5%
+        "PBSO4_C" : [6.954 * 0.95, 6.954 * 1.05], # 6.954 +/- 5%
     }
 
     @silent_stdout
@@ -98,7 +97,7 @@ class Plan(plan.BasePlan):
         self.gpx.do_refinements([{}])
         self.gpx.save("step_1.gpx")
 
-    @silent_stdout
+    #@silent_stdout
     def compute(self):
 
         # create a GSAS-II project
@@ -137,83 +136,95 @@ class Plan(plan.BasePlan):
         self.gpx.set_refinement(args)
         self.gpx.do_refinements([{}])
 
-        # get histograms and phases
-        hist1, hist2 = self.gpx.histograms()
-        phase1 = self.gpx.phases()[0]
-
-        # turn on Dij terms (HAP) for phase 1 only
-        args6 = {
-            "set" : {
-                "HStrain" : True
-            },
-            "histograms" : [hist1],
-            "phases" : [phase1],
-        }
-        
-        # turn on size and strain broadening (HAP) for histogram 1 only 
-        args7 = {
-            "set" : {
-                "Mustrain" : {
-                    "type" : "isotropic",
-                    "refine" : True,
-                },
-                "Size" : {
-                    "type" : "isotropic",
-                    "refine" : True},
-                },
-            "histograms" : [hist1],
-        }
-        
-        # turn on sample parameters and radius (Hist)
-        # turn on atom parameters (phase)
-        args8a = {
-            "set" : {
-                "Sample Parameters" :
-                    ["Shift"]
-            },
-            "histograms" : [hist1],
-            "skip": True,
-        }
-        args8b = {
-            "set": {
-                "Atoms" : {
-                    "all" : "XU",
-                },
-                "Sample Parameters" : ["DisplaceX", "DisplaceY"],
-            },
-            "histograms" : [hist2],
-        }
-
-        # change data limits and instrument parmeter refinements (Hist)
-        args9a = {
-            "set": {
-                "Limits" : [16.0, 158.4],
-            },
-            "histograms" : [hist1],
-            "skip": True,
-        }
-        args9b = {
-            "set": {
-                "Limits" : [19.0, 153.0],
-            },
-            "histograms" : [hist2],
-            "skip": True,
-        }
-        args9c = {
-            "set": {
-                "Instrument Parameters" : ["U", "V", "W"],
-            },
-        }
-
-        # change number of cycles and radius
-        self.gpx.data["Controls"]["data"]["max cyc"] = 8
-        hist2.data["Sample Parameters"]["Gonio. radius"] = 650.0
-
-        # refine
-        args_list = [args6, args7, args8a, args8b, args9a, args9b, args9c]
-        self.gpx.do_refinements(args_list)
-
         # get minimization statistic
         stat = self.gpx["Covariance"]["data"]["Rvals"]["Rwp"]
 
+        print(f"The Rwp value is {stat} for {a}, {b}, {c}")
+
         return stat
+
+#        # The above will find starting refinement parameters
+#        # The following is the remainder of the refinement
+#
+#        # get histograms and phases
+#        hist1, hist2 = self.gpx.histograms()
+#        phase1 = self.gpx.phases()[0]
+#
+#        # turn on Dij terms (HAP) for phase 1 only
+#        args6 = {
+#            "set" : {
+#                "HStrain" : True
+#            },
+#            "histograms" : [hist1],
+#            "phases" : [phase1],
+#        }
+#        
+#        # turn on size and strain broadening (HAP) for histogram 1 only 
+#        args7 = {
+#            "set" : {
+#                "Mustrain" : {
+#                    "type" : "isotropic",
+#                    "refine" : True,
+#                },
+#                "Size" : {
+#                    "type" : "isotropic",
+#                    "refine" : True},
+#                },
+#            "histograms" : [hist1],
+#        }
+#        
+#        # turn on sample parameters and radius (Hist)
+#        # turn on atom parameters (phase)
+#        args8a = {
+#            "set" : {
+#                "Sample Parameters" :
+#                    ["Shift"]
+#            },
+#            "histograms" : [hist1],
+#            "skip": True,
+#        }
+#        args8b = {
+#            "set": {
+#                "Atoms" : {
+#                    "all" : "XU",
+#                },
+#                "Sample Parameters" : ["DisplaceX", "DisplaceY"],
+#            },
+#            "histograms" : [hist2],
+#        }
+#
+#        # change data limits and instrument parmeter refinements (Hist)
+#        args9a = {
+#            "set": {
+#                "Limits" : [16.0, 158.4],
+#            },
+#            "histograms" : [hist1],
+#            "skip": True,
+#        }
+#        args9b = {
+#            "set": {
+#                "Limits" : [19.0, 153.0],
+#            },
+#            "histograms" : [hist2],
+#            "skip": True,
+#        }
+#        args9c = {
+#            "set": {
+#                "Instrument Parameters" : ["U", "V", "W"],
+#            },
+#        }
+#
+#        # change number of cycles and radius
+#        self.gpx.data["Controls"]["data"]["max cyc"] = 8
+#        hist2.data["Sample Parameters"]["Gonio. radius"] = 650.0
+#
+#        # refine
+#        args_list = [args6, args7, args8a, args8b, args9a, args9b, args9c]
+#        self.gpx.do_refinements(args_list)
+#
+#        # get minimization statistic
+#        stat = self.gpx["Covariance"]["data"]["Rvals"]["Rwp"]
+#
+#        print(f"The Rwp value is {stat} for {p}")
+#
+#        return stat

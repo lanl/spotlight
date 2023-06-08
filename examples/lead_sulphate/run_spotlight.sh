@@ -55,7 +55,7 @@ spotlight_plot_profile \
     --reflections-file reflections_${IDX}.png \
     --phase-labels PBSO4
 if [ -x "$(command -v convert)" ]; then
-convert -coalesce profile_${IDX}.png reflections_${IDX}.png residual_${IDX}.png alumina_${IDX}.pdf
+convert -coalesce profile_${IDX}.png reflections_${IDX}.png residual_${IDX}.png lead_sulphate_${IDX}.pdf
 fi
 done
 mv *.png *.pdf ..
