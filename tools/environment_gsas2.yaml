@@ -24,8 +24,11 @@ dependencies:
   # for ML example
   - scikit-learn=1.1.2
 
-# for GSAS-II
+  # for GSAS-II
   - gsas2pkg=2
+
+  # for GSAS-II notebook
+  - jupyterlab=3.3.2
 
   # pip packages
   - pip:
