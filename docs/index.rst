@@ -7,7 +7,7 @@ This documentation contains a tutorial with several sections for: guidance in in
 The sections following the tutorial give source code documentation for Spotlight.
 
 .. toctree::
-    :caption: Tutorial
+    :caption: MILK Tutorial
     :maxdepth: 1
 
     tutorial_introduction
@@ -16,6 +16,12 @@ The sections following the tutorial give source code documentation for Spotlight
     notebooks/tutorial_mystic_multi.ipynb
     notebooks/tutorial_mystic_surrogate.ipynb
     notebooks/tutorial_milk_surrogate.ipynb
+
+.. toctree::
+    :caption: GSAS-II Tutorial
+    :maxdepth: 1
+
+    notebooks/tutorial_gsas2.ipynb
 
 .. toctree::
     :caption: Code Documentation
