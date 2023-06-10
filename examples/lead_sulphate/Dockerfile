@@ -36,6 +36,12 @@ RUN mkdir -p ${GSAS2_PATH} \
     && python ./bootstrap.py noproxy
 
 # Get Spotlight repo for examples (change this to just git clone -b <tag> when we want to use a tagged version instead of by commit)
+
+# TODO: After spolight version 0.10.3 is released, use following instead
+#     ARG ${SPOTLIGHT_VERSION}="v0.10.3"
+# and
+#     RUN git clone -b ${SPOTLIGHT_VERSION} https://github.com/lanl/spotlight.git
+
 RUN git clone https://github.com/lanl/spotlight.git \
     && cd spotlight \
     && git checkout ${SPOTLIGHT_VERSION}
