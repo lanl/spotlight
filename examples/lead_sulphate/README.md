@@ -28,7 +28,6 @@ Run the example:
 bash ./run_spotlight.sh
 ```
 
-
 # Example using docker (on linux)
 
 First, you will need [Docker][docker] installed on your machine.
@@ -46,3 +45,7 @@ docker run -v ./output:/app/tmp_spotlight_123 spotlight-gsas2-pbso4
 _DISCLAIMER: you may need to delete the `output/` directory using `sudo`_
 _i.e. `sudo rm -rf output/`_
 _This is due to `root` writing these files inside the container._
+
+[gsas2]: https://subversion.xray.aps.anl.gov/trac/pyGSAS
+[conda]: https://docs.conda.io/en/latest/
+[docker]: https://docs.docker.com/
