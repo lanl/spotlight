@@ -6,12 +6,15 @@
 
 set -e
 
+# Can be used to override using MPI ("" for true, false otherwise)
+USE_MPI=""
+
 # random seed
 SEED=${1}
 SEED=${SEED:=123}
 
 # if MPI is installed then use it
-if [ -x "$(command -v mpirun)" ]; then
+if [ -x "$(command -v mpirun)" ] && [ $USE_MPIRUN ]; then
     export OMP_NUM_THREADS=1
     EXE="mpirun --oversubscribe -n 4 python -m cProfile -o analytical.pstat `which spotlight_minimize`"
 else
