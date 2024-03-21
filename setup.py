@@ -96,7 +96,7 @@ version = generate_version_module()
 
 # meta-data about the package
 project_name = "spotlight"
-project_version = version.last_release if version.release == "True" else None
+project_version = version.last_release if version.release == "True" else version.last_release + ".dev0"
 project_url = "https://github.lanl.gov/lanl/spotlight"
 project_description = "A package for parallel optimization and Rietveld refinement."
 project_keywords = ["crystallography"]

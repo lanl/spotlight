@@ -49,6 +49,10 @@ class Solver(container.Container):
         Select step in sampling. Only required for some sampling methods.
     nsteps : int
         Number of steps in sampling. Only required for some sampling methods.
+    ensemble_solver : str
+        Wrap the local solver in an ensemble solver that launches many solvers.
+    nsolvers : int
+        The number of solvers for an ensemble solver ot use.
     """
 
     def __init__(self, lower_bounds, upper_bounds,
@@ -56,8 +60,8 @@ class Solver(container.Container):
                  sampling_iteration_switch=None,
                  arch=None, iteration=None, sampling_data=None, step=None, nsteps=None,
                  max_iterations=None, max_evaluations=None, stop_change=None,
-                 stop_generations=None,
-                 termination=None, verbose=False, **kwargs):
+                 stop_generations=None, termination=None, verbose=False,
+                 ensemble_solver=None, nsolvers=None, **kwargs):
 
         # set options as attributes
         super().__init__(lower_bounds=lower_bounds, upper_bounds=upper_bounds,
@@ -69,7 +73,11 @@ class Solver(container.Container):
 
         # initialize local solver
         ndim = len(lower_bounds)
-        self.local_solver = local_solvers[local_solver](ndim)
+        if ensemble_solver is not None:
+            self.local_solver = ensemble_solvers[ensemble_solver](dim=ndim, npts=nsolvers)
+            self.local_solver.SetNestedSolver(local_solvers[local_solver](ndim))
+        else:
+            self.local_solver = local_solvers[local_solver](ndim)
 
         # termination conditions
         termination = mystic_termination.NormalizedChangeOverGeneration if termination is None else termination
@@ -103,8 +111,9 @@ class Solver(container.Container):
                 raise ValueError("Must give iteration with tolerance sampling.")
         if self.sampling_method == "linspace":
             args += [step, nsteps]
-        p0 = sampling.sampling_methods[self.sampling_method](*args).sample()
-        self.local_solver.SetInitialPoints(p0)
+        if not nsolvers:
+            p0 = sampling.sampling_methods[self.sampling_method](*args).sample()
+            self.local_solver.SetInitialPoints(p0)
         self.local_solver.SetStrictRanges(self.lower_bounds, self.upper_bounds)
 
     @property
@@ -160,4 +169,10 @@ class Solver(container.Container):
 local_solvers = {
     "nelder_mead" : mystic_solvers.NelderMeadSimplexSolver,
     "powell" : mystic_solvers.PowellDirectionalSolver,
+}
+
+# dict of ensemble solvers
+ensemble_solvers = {
+    "buckshot" : mystic_solvers.BuckshotSolver,
+    "lattice" : mystic_solvers.LatticeSolver,
 }
